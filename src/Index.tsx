@@ -101,7 +101,7 @@ const ITEMS: AppItem[] = [
   {
     id: 3,
     label: "Vocabulary Cards",
-    description: "Build your vocabulary step by step",
+    description: "Practise English words in an interactive way",
     cta: "",
     href: "#",
     bgFrom: "#404040",
