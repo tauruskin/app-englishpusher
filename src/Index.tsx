@@ -195,8 +195,6 @@ function MobileCard({ item }: { item: AppItem }) {
   return (
     <a
       href={item.href}
-      target="_blank"
-      rel="noopener noreferrer"
       className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-xl"
       aria-label={`Open ${item.label}`}
     >
@@ -232,7 +230,7 @@ function AccordionPanel({
       onMouseEnter={onHover}
       onClick={() => {
         if (!item.disabled && item.href !== "#") {
-          window.open(item.href, "_blank", "noopener,noreferrer");
+          window.location.href = item.href;
         }
       }}
     >
