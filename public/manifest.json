@@ -1,0 +1,23 @@
+{
+  "name": "Englishpusher Learning Apps",
+  "short_name": "Englishpusher",
+  "description": "Learn English with tutor Tetiana — grammar, vocabulary and more.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf8f5",
+  "theme_color": "#f07c1a",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon_512.ico",
+      "sizes": "512x512",
+      "type": "image/x-icon",
+      "purpose": "any maskable"
+    }
+  ]
+}
