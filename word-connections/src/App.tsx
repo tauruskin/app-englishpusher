@@ -100,7 +100,7 @@ function WordTile({
     <button
       onClick={onToggle}
       className={[
-        "relative h-20 rounded-xl font-display font-semibold text-base uppercase tracking-wide",
+        "relative h-16 md:h-20 rounded-xl font-display font-semibold text-[10px] sm:text-xs md:text-base uppercase tracking-wide leading-tight px-1",
         "transition-all duration-150 select-none",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand",
         shaking ? "animate-shake" : "",
@@ -682,8 +682,8 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-3">
-        <div className="mx-auto max-w-lg text-center text-xs text-neutral-500">
+      <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-4">
+        <div className="mx-auto max-w-2xl text-center text-sm text-neutral-400">
           Copyright &copy; 2026 &mdash;{" "}
           <a
             href="https://englishpusher.in.ua"
