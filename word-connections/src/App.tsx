@@ -498,7 +498,7 @@ function GameBoard({
       {/* Category list */}
       <div className="rounded-xl border border-neutral-200 bg-white px-4 py-3">
         <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wide mb-2">
-          Find these categories
+          Sort the words into these categories
         </p>
         <div className="flex flex-wrap gap-2">
           {puzzle.groups
