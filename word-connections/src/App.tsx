@@ -514,7 +514,7 @@ function GameBoard({
                     "rounded-full px-3 py-1 text-xs font-semibold transition-all duration-300",
                     solved
                       ? `${style.bg} ${style.text} line-through opacity-50`
-                      : "bg-neutral-100 text-neutral-600",
+                      : `${style.bg} ${style.text} opacity-70`,
                   ].join(" ")}
                 >
                   {g.category}
