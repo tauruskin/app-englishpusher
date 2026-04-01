@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, BookOpen, Trophy, Layers, Instagram, type LucideIcon } from "lucide-react";
+import { ArrowRight, BookOpen, Trophy, Layers, Grid2x2, Instagram, type LucideIcon } from "lucide-react";
 import teacherCelebrate from "./assets/teacher-celebrate.png";
 
 // ---------------------------------------------------------------------------
@@ -100,6 +100,18 @@ const ITEMS: AppItem[] = [
   },
   {
     id: 3,
+    label: "Word Connections",
+    description: "Group 16 words into 4 categories — can you find them all?",
+    cta: "Start playing",
+    href: "/word-connections/",
+    bgFrom: "#065f46",
+    bgTo: "#022c22",
+    borderColor: "#10b981",
+    Icon: Grid2x2,
+    disabled: false,
+  },
+  {
+    id: 4,
     label: "Vocabulary Cards",
     description: "Practise English words in an interactive way",
     cta: "",

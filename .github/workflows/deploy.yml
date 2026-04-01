@@ -27,6 +27,13 @@ jobs:
 
       - run: npm run build
 
+      - name: Build word-connections
+        run: |
+          cd word-connections
+          npm install
+          npm run build
+          cp -r dist ../dist/word-connections
+
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

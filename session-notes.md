@@ -67,3 +67,43 @@
 
 - [ ] Vocabulary Cards app — future project, card already stubbed as Coming Soon
 - [ ] Verify custom domain DNS (CNAME `app.englishpusher.in.ua`) is pointed at GitHub Pages
+
+---
+
+## 2026-04-01 — Word Connections game
+
+### What was done
+
+**New game: `word-connections/`**
+- Built as a separate Vite + React + TypeScript project inside the same repo
+- Deploys to `app.englishpusher.in.ua/word-connections/` (not a separate subdomain)
+- GitHub Actions workflow updated to build both projects and merge into one `dist/`
+- Hub landing page updated: added Word Connections as card 3 (green), Vocabulary Cards moved to card 4 (still Coming Soon)
+
+**Game mechanics**
+- 4×4 grid of word tiles, select up to 4, submit to check
+- Correct → group revealed with difficulty colour (yellow/green/blue/purple)
+- Wrong → grid shakes, lose a life dot; "One away!" toast when 3/4 correct
+- 4 lives total; win/lose end screen with all answers revealed
+- Shuffle and Deselect All buttons
+- Hint tooltip next to puzzle title (hover/tap) showing the 4 category names
+- Category names always visible as pills below the top bar during play (solved ones get strikethrough + colour)
+- Teacher thinking image in left sidebar on menu screen (desktop only) with speech bubble
+
+**Puzzle content — real student vocabulary (5 puzzles)**
+1. Feelings & Emotions — -ed/-ing adjective trap (purple group: boring/exciting/frightening/exhausting)
+2. Adverbs of Frequency — "spot the noun" trap (purple: frequency/frequently/generally/annually)
+3. Jobs & Work — hands-on vs people-facing jobs + work status + career nouns
+4. Personality & Relationships — phrasal verbs as hardest group (get on well with / take after / look up to / stay in touch with)
+5. Stative Verbs — split into 4 grammar categories (emotions / thinking / senses / possession)
+
+**Design decisions**
+- Decided NOT to show answer words in the hint tooltip — would give away answers and remove the challenge
+- Category names visible during play is sufficient scaffolding
+- `usePolling: true` added to both Vite configs to fix HMR not working from WSL on Windows filesystem
+
+### Pending / known TODOs
+
+- [ ] Vocabulary Cards app — future project
+- [ ] Verify DNS CNAME `app.englishpusher.in.ua` → GitHub Pages
+- [ ] Add more puzzles as teacher covers new vocabulary topics
