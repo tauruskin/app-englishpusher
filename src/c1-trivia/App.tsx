@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { RotateCcw, CheckCircle2, XCircle } from "lucide-react";
 import { WORDS, type C1Word } from "./data.ts";
@@ -21,6 +21,19 @@ interface Question {
   correctAnswer: string;
   shownDefinition?: string; // for true-false, may be a wrong definition
 }
+
+interface QuestionResult {
+  word: C1Word;
+  wasCorrect: boolean;
+  type: QuestionType;
+}
+
+const TYPE_LABEL: Record<QuestionType, string> = {
+  "fill-blank":  "Fill in blank",
+  "def-to-word": "Match definition",
+  "word-to-def": "Match meaning",
+  "true-false":  "True / False",
+};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -262,54 +275,115 @@ function StartScreen({ onStart }: { onStart: () => void }) {
 function EndScreen({
   score,
   total,
+  results,
   onReplay,
   onMenu,
+  onPracticeWeak,
 }: {
   score: number;
   total: number;
+  results: QuestionResult[];
   onReplay: () => void;
   onMenu: () => void;
+  onPracticeWeak: () => void;
 }) {
   const pct = Math.round((score / total) * 100);
-  const won = pct >= 70;
   const teacher = pct >= 90 ? teacherCelebrate : pct >= 50 ? teacherCorrect : teacherSad;
+  const message = pct >= 90 ? "Outstanding! 🎉" : pct >= 70 ? "Well done! 👏" : pct >= 50 ? "Good effort! 💪" : "Keep practising! 📚";
+
+  const correct = results.filter((r) => r.wasCorrect);
+  const wrong = results.filter((r) => !r.wasCorrect);
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className="flex flex-col items-center gap-6 w-full max-w-sm text-center"
+      className="flex gap-8 items-start w-full max-w-3xl"
     >
-      <img src={teacher} alt="Teacher reaction" className="h-36 w-auto select-none" draggable={false} />
-
-      <div>
-        <div className="font-display text-5xl font-bold text-neutral-900">
-          {score}<span className="text-2xl text-neutral-400">/{total}</span>
-        </div>
-        <div className="text-neutral-500 text-sm mt-1">{pct}% correct</div>
-        <h2 className="font-display text-xl font-bold text-neutral-800 mt-3">
-          {pct >= 90 ? "Outstanding! 🎉" : pct >= 70 ? "Well done! 👏" : pct >= 50 ? "Good effort! 💪" : "Keep practising! 📚"}
-        </h2>
-        <p className="text-sm text-neutral-500 mt-1">
-          {won ? "You have a strong command of C1 vocabulary." : "Review these words and try again — you'll get there!"}
-        </p>
+      {/* Teacher — desktop sidebar */}
+      <div className="hidden md:flex flex-col items-center shrink-0 w-40 pt-2 select-none pointer-events-none">
+        <img src={teacher} alt="Teacher reaction" className="h-52 w-auto" draggable={false} />
+        <p className="text-xs text-center text-neutral-500 mt-2 font-medium">{message}</p>
       </div>
 
-      <div className="flex gap-3 w-full">
-        <button
-          onClick={onReplay}
-          className="flex-1 rounded-xl bg-purple-600 text-white font-display font-semibold py-3 text-sm hover:bg-purple-700 transition-colors"
-        >
-          <RotateCcw size={14} className="inline mr-1.5 -mt-0.5" />
-          Try again
-        </button>
-        <button
-          onClick={onMenu}
-          className="flex-1 rounded-xl bg-white border border-neutral-200 text-neutral-700 font-display font-semibold py-3 text-sm hover:border-neutral-400 transition-colors"
-        >
-          Back
-        </button>
+      {/* Main content */}
+      <div className="flex-1 flex flex-col gap-4">
+
+        {/* Mobile teacher */}
+        <div className="flex md:hidden justify-center">
+          <img src={teacher} alt="Teacher reaction" className="h-32 w-auto select-none" draggable={false} />
+        </div>
+
+        {/* Score box */}
+        <div className="rounded-2xl bg-white border border-neutral-200 px-6 py-5 text-center shadow-sm">
+          <div className="font-display text-5xl font-bold text-purple-600">
+            {pct}<span className="text-2xl font-normal text-neutral-400">%</span>
+          </div>
+          <div className="text-neutral-500 text-sm mt-1">
+            <span className="font-semibold text-neutral-700">{score}</span> out of{" "}
+            <span className="font-semibold text-neutral-700">{total}</span> correct
+          </div>
+        </div>
+
+        {/* Words you know */}
+        {correct.length > 0 && (
+          <div>
+            <p className="text-sm font-semibold text-green-700 mb-2">
+              ✅ Words you know ({correct.length})
+            </p>
+            <div className="max-h-44 overflow-y-auto rounded-xl border border-neutral-200 bg-white divide-y divide-neutral-100">
+              {correct.map((r, i) => (
+                <div key={i} className="flex items-center justify-between px-4 py-2.5">
+                  <span className="font-semibold text-neutral-800 text-sm">{r.word.word}</span>
+                  <span className="text-xs text-neutral-400">{TYPE_LABEL[r.type]}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Words to practice */}
+        {wrong.length > 0 && (
+          <div>
+            <p className="text-sm font-semibold text-red-600 mb-2">
+              ❌ Words to practise ({wrong.length})
+            </p>
+            <div className="max-h-44 overflow-y-auto rounded-xl border border-neutral-200 bg-white divide-y divide-neutral-100">
+              {wrong.map((r, i) => (
+                <div key={i} className="flex items-center justify-between px-4 py-2.5">
+                  <span className="font-semibold text-neutral-800 text-sm">{r.word.word}</span>
+                  <span className="text-xs text-neutral-400">{TYPE_LABEL[r.type]}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Buttons */}
+        <div className="flex gap-3">
+          {wrong.length > 0 && (
+            <button
+              onClick={onPracticeWeak}
+              className="flex-1 rounded-xl bg-red-500 text-white font-display font-semibold py-3 text-sm hover:bg-red-600 transition-colors shadow-sm"
+            >
+              Practice weak words
+            </button>
+          )}
+          <button
+            onClick={onReplay}
+            className="flex-1 rounded-xl bg-purple-600 text-white font-display font-semibold py-3 text-sm hover:bg-purple-700 transition-colors"
+          >
+            <RotateCcw size={14} className="inline mr-1.5 -mt-0.5" />
+            Play again
+          </button>
+          <button
+            onClick={onMenu}
+            className="flex-1 rounded-xl bg-white border border-neutral-200 text-neutral-700 font-display font-semibold py-3 text-sm hover:border-neutral-400 transition-colors"
+          >
+            Back
+          </button>
+        </div>
       </div>
     </motion.div>
   );
@@ -324,12 +398,13 @@ function GameScreen({
   onFinish,
 }: {
   questions: Question[];
-  onFinish: (score: number) => void;
+  onFinish: (score: number, results: QuestionResult[]) => void;
 }) {
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [score, setScore] = useState(0);
+  const resultsRef = useRef<QuestionResult[]>([]);
 
   const question = questions[index];
   const isCorrect = selected !== null ? selected === question.correctAnswer : null;
@@ -338,13 +413,13 @@ function GameScreen({
   const handleAnswer = useCallback(
     (option: string) => {
       if (isAnswered) return;
+      const correct = option === question.correctAnswer;
       setSelected(option);
       setIsAnswered(true);
-      if (option === question.correctAnswer) {
-        setScore((s) => s + 1);
-      }
+      if (correct) setScore((s) => s + 1);
+      resultsRef.current.push({ word: question.targetWord, wasCorrect: correct, type: question.type });
     },
-    [isAnswered, question.correctAnswer]
+    [isAnswered, question]
   );
 
   // Auto-advance after feedback
@@ -352,7 +427,8 @@ function GameScreen({
     if (!isAnswered) return;
     const timer = setTimeout(() => {
       if (index + 1 >= questions.length) {
-        onFinish(score + (selected === question.correctAnswer ? 1 : 0));
+        const finalScore = score + (selected === question.correctAnswer ? 1 : 0);
+        onFinish(finalScore, resultsRef.current);
       } else {
         setIndex((i) => i + 1);
         setSelected(null);
@@ -362,7 +438,6 @@ function GameScreen({
     return () => clearTimeout(timer);
   }, [isAnswered, index, questions.length, onFinish, score, selected, question.correctAnswer]);
 
-  // Fix: calculate score correctly at end
   const currentScore = score;
 
   function getOptionState(option: string): "default" | "correct" | "wrong" | "disabled" {
@@ -486,15 +561,27 @@ export default function App() {
   const [phase, setPhase] = useState<Phase>("start");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [finalScore, setFinalScore] = useState(0);
+  const [results, setResults] = useState<QuestionResult[]>([]);
 
   function startGame() {
     setQuestions(buildQuestions());
     setPhase("playing");
   }
 
-  function handleFinish(score: number) {
+  function handleFinish(score: number, res: QuestionResult[]) {
     setFinalScore(score);
+    setResults(res);
     setPhase("end");
+  }
+
+  function practiceWeakWords() {
+    const weakWords = results.filter((r) => !r.wasCorrect).map((r) => r.word);
+    const newQuestions = weakWords.map((word) => {
+      const type = QUESTION_TYPES[Math.floor(Math.random() * QUESTION_TYPES.length)];
+      return generateQuestion(word, WORDS, type);
+    });
+    setQuestions(newQuestions);
+    setPhase("playing");
   }
 
   return (
@@ -537,9 +624,11 @@ export default function App() {
             <motion.div key="end" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <EndScreen
                 score={finalScore}
-                total={QUESTIONS_PER_ROUND}
+                total={questions.length}
+                results={results}
                 onReplay={startGame}
                 onMenu={() => setPhase("start")}
+                onPracticeWeak={practiceWeakWords}
               />
             </motion.div>
           )}
