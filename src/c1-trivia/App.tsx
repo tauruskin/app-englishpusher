@@ -397,6 +397,48 @@ function EndScreen({
 }
 
 // ---------------------------------------------------------------------------
+// Fill-blank text input
+// ---------------------------------------------------------------------------
+
+function FillBlankInput({
+  isAnswered,
+  onSubmit,
+}: {
+  isAnswered: boolean;
+  onSubmit: (value: string) => void;
+}) {
+  const [value, setValue] = useState("");
+
+  function submit() {
+    if (!value.trim() || isAnswered) return;
+    onSubmit(value.trim());
+  }
+
+  return (
+    <div className="flex gap-2">
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => { if (e.key === "Enter") submit(); }}
+        disabled={isAnswered}
+        placeholder="Type the missing word…"
+        // eslint-disable-next-line jsx-a11y/no-autofocus
+        autoFocus
+        className="flex-1 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm font-semibold text-neutral-800 placeholder:font-normal placeholder:text-neutral-400 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-100 disabled:opacity-60 transition-colors"
+      />
+      <button
+        onClick={submit}
+        disabled={isAnswered || !value.trim()}
+        className="rounded-xl bg-purple-600 text-white px-5 py-3 text-sm font-semibold hover:bg-purple-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+      >
+        Check
+      </button>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Game screen
 // ---------------------------------------------------------------------------
 
@@ -410,19 +452,24 @@ function GameScreen({
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [score, setScore] = useState(0);
   const resultsRef = useRef<QuestionResult[]>([]);
 
   const question = questions[index];
-  const isCorrect = selected !== null ? selected === question.correctAnswer : null;
   const teacher = isCorrect === true ? teacherCorrect : isCorrect === false ? teacherSad : teacherThinking;
+
+  const normalize = (s: string) => s.trim().toLowerCase();
 
   const handleAnswer = useCallback(
     (option: string) => {
       if (isAnswered) return;
-      const correct = option === question.correctAnswer;
+      const correct = question.type === "fill-blank"
+        ? normalize(option) === normalize(question.correctAnswer)
+        : option === question.correctAnswer;
       setSelected(option);
       setIsAnswered(true);
+      setIsCorrect(correct);
       if (correct) setScore((s) => s + 1);
       resultsRef.current.push({ word: question.targetWord, wasCorrect: correct, type: question.type });
     },
@@ -434,16 +481,16 @@ function GameScreen({
     if (!isAnswered) return;
     const timer = setTimeout(() => {
       if (index + 1 >= questions.length) {
-        const finalScore = score + (selected === question.correctAnswer ? 1 : 0);
-        onFinish(finalScore, resultsRef.current);
+        onFinish(score + (isCorrect ? 1 : 0), resultsRef.current);
       } else {
         setIndex((i) => i + 1);
         setSelected(null);
         setIsAnswered(false);
+        setIsCorrect(null);
       }
     }, 1800);
     return () => clearTimeout(timer);
-  }, [isAnswered, index, questions.length, onFinish, score, selected, question.correctAnswer]);
+  }, [isAnswered, index, questions.length, onFinish, score, isCorrect]);
 
   const currentScore = score;
 
@@ -512,17 +559,21 @@ function GameScreen({
               <QuestionPrompt question={question} />
             </div>
 
-            {/* Options */}
-            <div className={`grid gap-2.5 ${question.type === "true-false" ? "grid-cols-2" : "grid-cols-1"}`}>
-              {question.options.map((option) => (
-                <OptionButton
-                  key={option}
-                  label={option}
-                  onClick={() => handleAnswer(option)}
-                  state={getOptionState(option)}
-                />
-              ))}
-            </div>
+            {/* Options / Input */}
+            {question.type === "fill-blank" ? (
+              <FillBlankInput isAnswered={isAnswered} onSubmit={handleAnswer} />
+            ) : (
+              <div className={`grid gap-2.5 ${question.type === "true-false" ? "grid-cols-2" : "grid-cols-1"}`}>
+                {question.options.map((option) => (
+                  <OptionButton
+                    key={option}
+                    label={option}
+                    onClick={() => handleAnswer(option)}
+                    state={getOptionState(option)}
+                  />
+                ))}
+              </div>
+            )}
 
             {/* Feedback banner */}
             <AnimatePresence>
