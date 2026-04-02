@@ -316,8 +316,8 @@ function EndScreen({
       className="flex gap-8 items-start w-full max-w-4xl"
     >
       {/* Teacher — desktop sidebar */}
-      <div className="hidden md:flex flex-col items-center shrink-0 w-44 pt-2 select-none pointer-events-none">
-        <img src={teacher} alt="Teacher reaction" className="h-56 w-auto" draggable={false} />
+      <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
+        <img src={teacher} alt="Teacher reaction" className="h-56 w-auto max-w-none" draggable={false} />
         <p className="text-sm text-center text-neutral-500 mt-3 font-semibold">{message}</p>
       </div>
 
