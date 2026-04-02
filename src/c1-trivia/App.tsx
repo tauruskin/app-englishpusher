@@ -808,7 +808,7 @@ export default function App() {
       </header>
 
       {/* Main */}
-      <main className="flex flex-1 items-start justify-center px-6 py-8">
+      <main className="flex flex-1 items-start justify-center px-6 py-14">
         <AnimatePresence mode="wait">
           {phase === "start" && (
             <motion.div key="start" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
