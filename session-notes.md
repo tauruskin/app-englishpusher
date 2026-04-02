@@ -107,3 +107,58 @@
 - [ ] Vocabulary Cards app — future project
 - [ ] Verify DNS CNAME `app.englishpusher.in.ua` → GitHub Pages
 - [ ] Add more puzzles as teacher covers new vocabulary topics
+
+---
+
+## 2026-04-02 — C1 Vocabulary Trivia app + Hub level tabs
+
+### What was done
+
+**Hub landing page (`src/Index.tsx`)**
+- Added level tabs: All / B1 / C1 above the accordion
+- `AppItem` interface now includes `level: "B1" | "C1"`
+- All existing apps tagged B1; new C1 Vocabulary Trivia card added (purple, Zap icon)
+- `filteredItems` computed from active tab; accordion and mobile cards both use it
+- Tab change resets `activeIndex` to 0
+
+**Merged into single Vite MPA**
+- Single `package.json` / `vite.config.ts` — `build.rollupOptions.input` has three entry points:
+  - `main` → `index.html`
+  - `wordConnections` → `word-connections/index.html`
+  - `c1Trivia` → `c1-trivia/index.html`
+- `tailwind.config.js` content paths updated to include all three HTML entry points
+- GitHub Actions `.github/workflows/deploy.yml` simplified to one `npm run build`
+
+**New app: C1 Vocabulary Trivia (`src/c1-trivia/`)**
+- Lives at `app.englishpusher.in.ua/c1-trivia/`
+- English-only (no Ukrainian translations) — uses definitions and example sentences
+- Data: 40 C1 words in `data.ts` (`{ word, partOfSpeech, definition, example }`)
+- 4 question types ordered easy → hard per session:
+  1. **True / False** — is this the correct definition?
+  2. **Match definition** — given a definition, pick the word (4 options)
+  3. **Fill in blank** — type the missing word in a sentence (case-insensitive)
+  4. **Match meaning** — given a word, pick the correct definition (4 options)
+- `assignOrderedTypes(count)` distributes types proportionally across difficulty tiers for any session length
+- 10 questions per standard round; practice mode uses only wrong-answer words
+- Teacher reactions: thinking → correct/sad during play → celebrate/sad at end screen
+- Purple colour scheme to distinguish from B1 apps
+
+**Game screens**
+- All three screens (Start, Game, End) use `max-w-4xl` two-column layout: teacher sidebar (`w-56`) left, content right
+- Teacher column uses `max-w-none` to prevent image squeeze
+- Start screen: teacher + speech bubble left, badge/title/question-types/button right
+- Game screen: teacher animates between thinking/correct/sad based on last answer; auto-advances after 1800 ms
+- Fill-blank questions: text input + Check button (or Enter key), case-insensitive match
+- End screen:
+  - Score box (large %, X out of Y)
+  - Word lists side-by-side: ✅ Words you know | ❌ Words to practise (no scroll limit, coloured borders)
+  - Buttons: Practice weak words (red) / Play again (purple) / Back — `py-4 text-base`
+- Practice weak words: rebuilds question set from missed words only, same difficulty ordering
+
+### Pending / known TODOs
+
+- [ ] Vocabulary Cards app — future project
+- [ ] Verify DNS CNAME `app.englishpusher.in.ua` → GitHub Pages
+- [ ] Add more puzzles as teacher covers new vocabulary topics
+- [ ] Add real C1 word list from teacher when available (currently uses default 40-word set)
+- [ ] Rename `c1-trivia/` to final name when teacher decides
