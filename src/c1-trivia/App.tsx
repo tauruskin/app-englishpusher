@@ -306,11 +306,11 @@ function EndScreen({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className="flex gap-8 items-start w-full max-w-3xl"
+      className="flex gap-8 items-start w-full max-w-4xl"
     >
       {/* Teacher — desktop sidebar */}
-      <div className="hidden md:flex flex-col items-center shrink-0 w-40 pt-2 select-none pointer-events-none">
-        <img src={teacher} alt="Teacher reaction" className="h-52 w-auto" draggable={false} />
+      <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
+        <img src={teacher} alt="Teacher reaction" className="h-56 w-auto" draggable={false} />
         <p className="text-xs text-center text-neutral-500 mt-2 font-medium">{message}</p>
       </div>
 
