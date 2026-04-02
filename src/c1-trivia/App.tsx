@@ -309,84 +309,86 @@ function EndScreen({
       className="flex gap-8 items-start w-full max-w-4xl"
     >
       {/* Teacher — desktop sidebar */}
-      <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
+      <div className="hidden md:flex flex-col items-center shrink-0 w-44 pt-2 select-none pointer-events-none">
         <img src={teacher} alt="Teacher reaction" className="h-56 w-auto" draggable={false} />
-        <p className="text-xs text-center text-neutral-500 mt-2 font-medium">{message}</p>
+        <p className="text-sm text-center text-neutral-500 mt-3 font-semibold">{message}</p>
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col gap-4">
+      <div className="flex-1 flex flex-col gap-5">
 
         {/* Mobile teacher */}
-        <div className="flex md:hidden justify-center">
-          <img src={teacher} alt="Teacher reaction" className="h-32 w-auto select-none" draggable={false} />
+        <div className="flex md:hidden justify-center flex-col items-center gap-2">
+          <img src={teacher} alt="Teacher reaction" className="h-36 w-auto select-none" draggable={false} />
+          <p className="text-sm text-neutral-500 font-semibold">{message}</p>
         </div>
 
         {/* Score box */}
-        <div className="rounded-2xl bg-white border border-neutral-200 px-6 py-5 text-center shadow-sm">
-          <div className="font-display text-5xl font-bold text-purple-600">
-            {pct}<span className="text-2xl font-normal text-neutral-400">%</span>
+        <div className="rounded-2xl bg-white border border-neutral-200 px-8 py-6 text-center shadow-sm">
+          <div className="font-display text-6xl font-bold text-purple-600">
+            {pct}<span className="text-3xl font-normal text-neutral-400">%</span>
           </div>
-          <div className="text-neutral-500 text-sm mt-1">
-            <span className="font-semibold text-neutral-700">{score}</span> out of{" "}
-            <span className="font-semibold text-neutral-700">{total}</span> correct
+          <div className="text-neutral-600 text-base mt-2">
+            <span className="font-bold text-neutral-800">{score}</span> out of{" "}
+            <span className="font-bold text-neutral-800">{total}</span> correct
           </div>
         </div>
 
-        {/* Words you know */}
-        {correct.length > 0 && (
-          <div>
-            <p className="text-sm font-semibold text-green-700 mb-2">
-              ✅ Words you know ({correct.length})
-            </p>
-            <div className="max-h-44 overflow-y-auto rounded-xl border border-neutral-200 bg-white divide-y divide-neutral-100">
-              {correct.map((r, i) => (
-                <div key={i} className="flex items-center justify-between px-4 py-2.5">
-                  <span className="font-semibold text-neutral-800 text-sm">{r.word.word}</span>
-                  <span className="text-xs text-neutral-400">{TYPE_LABEL[r.type]}</span>
-                </div>
-              ))}
+        {/* Word lists — side by side */}
+        <div className={`grid gap-4 ${correct.length > 0 && wrong.length > 0 ? "md:grid-cols-2" : "grid-cols-1"}`}>
+          {correct.length > 0 && (
+            <div>
+              <p className="text-base font-bold text-green-700 mb-3">
+                ✅ Words you know ({correct.length})
+              </p>
+              <div className="rounded-xl border border-green-100 bg-white divide-y divide-neutral-100 shadow-sm">
+                {correct.map((r, i) => (
+                  <div key={i} className="flex items-center justify-between px-5 py-3.5">
+                    <span className="font-semibold text-neutral-800">{r.word.word}</span>
+                    <span className="text-xs text-neutral-400 shrink-0 ml-3">{TYPE_LABEL[r.type]}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Words to practice */}
-        {wrong.length > 0 && (
-          <div>
-            <p className="text-sm font-semibold text-red-600 mb-2">
-              ❌ Words to practise ({wrong.length})
-            </p>
-            <div className="max-h-44 overflow-y-auto rounded-xl border border-neutral-200 bg-white divide-y divide-neutral-100">
-              {wrong.map((r, i) => (
-                <div key={i} className="flex items-center justify-between px-4 py-2.5">
-                  <span className="font-semibold text-neutral-800 text-sm">{r.word.word}</span>
-                  <span className="text-xs text-neutral-400">{TYPE_LABEL[r.type]}</span>
-                </div>
-              ))}
+          {wrong.length > 0 && (
+            <div>
+              <p className="text-base font-bold text-red-600 mb-3">
+                ❌ Words to practise ({wrong.length})
+              </p>
+              <div className="rounded-xl border border-red-100 bg-white divide-y divide-neutral-100 shadow-sm">
+                {wrong.map((r, i) => (
+                  <div key={i} className="flex items-center justify-between px-5 py-3.5">
+                    <span className="font-semibold text-neutral-800">{r.word.word}</span>
+                    <span className="text-xs text-neutral-400 shrink-0 ml-3">{TYPE_LABEL[r.type]}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Buttons */}
-        <div className="flex gap-3">
+        <div className="flex gap-3 pt-1">
           {wrong.length > 0 && (
             <button
               onClick={onPracticeWeak}
-              className="flex-1 rounded-xl bg-red-500 text-white font-display font-semibold py-3 text-sm hover:bg-red-600 transition-colors shadow-sm"
+              className="flex-1 rounded-xl bg-red-500 text-white font-display font-bold py-4 text-base hover:bg-red-600 transition-colors shadow-sm"
             >
               Practice weak words
             </button>
           )}
           <button
             onClick={onReplay}
-            className="flex-1 rounded-xl bg-purple-600 text-white font-display font-semibold py-3 text-sm hover:bg-purple-700 transition-colors"
+            className="flex-1 rounded-xl bg-purple-600 text-white font-display font-bold py-4 text-base hover:bg-purple-700 transition-colors"
           >
-            <RotateCcw size={14} className="inline mr-1.5 -mt-0.5" />
+            <RotateCcw size={16} className="inline mr-2 -mt-0.5" />
             Play again
           </button>
           <button
             onClick={onMenu}
-            className="flex-1 rounded-xl bg-white border border-neutral-200 text-neutral-700 font-display font-semibold py-3 text-sm hover:border-neutral-400 transition-colors"
+            className="flex-1 rounded-xl bg-white border-2 border-neutral-200 text-neutral-700 font-display font-bold py-4 text-base hover:border-neutral-400 transition-colors"
           >
             Back
           </button>
