@@ -10,6 +10,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, "index.html"),
         wordConnections: resolve(__dirname, "word-connections/index.html"),
+        c1Trivia: resolve(__dirname, "c1-trivia/index.html"),
       },
     },
   },

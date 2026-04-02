@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, BookOpen, Trophy, Layers, Grid2x2, Instagram, type LucideIcon } from "lucide-react";
+import { ArrowRight, BookOpen, Trophy, Layers, Grid2x2, Zap, Instagram, type LucideIcon } from "lucide-react";
 import teacherCelebrate from "./assets/teacher-celebrate.png";
 
 // ---------------------------------------------------------------------------
@@ -59,6 +59,8 @@ function ElegantShape({
 // Data
 // ---------------------------------------------------------------------------
 
+type Level = "B1" | "C1";
+
 interface AppItem {
   id: number;
   label: string;
@@ -71,6 +73,7 @@ interface AppItem {
   Icon: LucideIcon;
   disabled: boolean;
   badge?: string;
+  level: Level;
 }
 
 const ITEMS: AppItem[] = [
@@ -85,6 +88,7 @@ const ITEMS: AppItem[] = [
     borderColor: "#f07c1a",
     Icon: BookOpen,
     disabled: false,
+    level: "B1",
   },
   {
     id: 2,
@@ -97,6 +101,7 @@ const ITEMS: AppItem[] = [
     borderColor: "#3b82f6",
     Icon: Trophy,
     disabled: false,
+    level: "B1",
   },
   {
     id: 3,
@@ -109,6 +114,7 @@ const ITEMS: AppItem[] = [
     borderColor: "#10b981",
     Icon: Grid2x2,
     disabled: false,
+    level: "B1",
   },
   {
     id: 4,
@@ -122,6 +128,20 @@ const ITEMS: AppItem[] = [
     Icon: Layers,
     disabled: true,
     badge: "Coming Soon",
+    level: "B1",
+  },
+  {
+    id: 5,
+    label: "C1 Vocabulary Trivia",
+    description: "Advanced vocabulary quiz — definitions, fill-in-blank, true or false",
+    cta: "Start quiz",
+    href: "/c1-trivia/",
+    bgFrom: "#4c1d95",
+    bgTo: "#1e1b4b",
+    borderColor: "#8b5cf6",
+    Icon: Zap,
+    disabled: false,
+    level: "C1",
   },
 ];
 
@@ -300,8 +320,20 @@ function AccordionPanel({
 // Page
 // ---------------------------------------------------------------------------
 
+type Tab = "all" | Level;
+const TABS: { id: Tab; label: string }[] = [
+  { id: "all", label: "All levels" },
+  { id: "B1",  label: "B1" },
+  { id: "C1",  label: "C1" },
+];
+
 export default function Index() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState<Tab>("all");
+
+  const filteredItems = activeTab === "all"
+    ? ITEMS
+    : ITEMS.filter((item) => item.level === activeTab);
 
   return (
     <motion.div
@@ -376,11 +408,29 @@ export default function Index() {
           </div>
 
           {/* ── Right: accordion (desktop) / cards (mobile) ─────────────── */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 flex flex-col gap-4">
+
+            {/* Tabs */}
+            <div className="flex gap-2">
+              {TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => { setActiveTab(tab.id); setActiveIndex(0); }}
+                  className={[
+                    "rounded-full px-4 py-1.5 text-sm font-semibold transition-all duration-200 focus:outline-none",
+                    activeTab === tab.id
+                      ? "bg-brand text-white shadow-sm"
+                      : "bg-white text-neutral-500 border border-neutral-200 hover:border-brand/40 hover:text-brand",
+                  ].join(" ")}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
 
             {/* Desktop accordion */}
             <div className="hidden md:flex flex-row gap-3 h-[420px]">
-              {ITEMS.map((item, index) => (
+              {filteredItems.map((item, index) => (
                 <AccordionPanel
                   key={item.id}
                   item={item}
@@ -397,7 +447,7 @@ export default function Index() {
               initial="hidden"
               animate="visible"
             >
-              {ITEMS.map((item) => (
+              {filteredItems.map((item) => (
                 <MobileCard key={item.id} item={item} />
               ))}
             </motion.div>
