@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { RotateCcw, CheckCircle2, XCircle } from "lucide-react";
 import { WORDS, type C1Word } from "./data.ts";
@@ -12,7 +12,7 @@ import teacherCelebrate from "./teacher-celebrate.png";
 // ---------------------------------------------------------------------------
 
 type QuestionType = "fill-blank" | "def-to-word" | "word-to-def" | "true-false";
-type Phase = "start" | "playing" | "end" | "review";
+type Phase = "start" | "playing" | "end";
 
 interface Question {
   type: QuestionType;
@@ -295,7 +295,6 @@ function EndScreen({
   onReplay,
   onMenu,
   onPracticeWeak,
-  onReview,
 }: {
   score: number;
   total: number;
@@ -391,12 +390,6 @@ function EndScreen({
             </button>
           )}
           <button
-            onClick={onReview}
-            className="flex-1 rounded-xl bg-neutral-800 text-white font-display font-bold py-4 text-base hover:bg-neutral-700 transition-colors"
-          >
-            Review answers
-          </button>
-          <button
             onClick={onReplay}
             className="flex-1 rounded-xl bg-purple-600 text-white font-display font-bold py-4 text-base hover:bg-purple-700 transition-colors"
           >
@@ -468,55 +461,48 @@ function GameScreen({
   questions: Question[];
   onFinish: (score: number, results: QuestionResult[]) => void;
 }) {
-  const [index, setIndex] = useState(0);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [isAnswered, setIsAnswered] = useState(false);
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const [score, setScore] = useState(0);
-  const resultsRef = useRef<QuestionResult[]>([]);
+  const [viewIndex, setViewIndex] = useState(0);
+  // Indexed by question position; null = not yet answered
+  const [results, setResults] = useState<(QuestionResult | null)[]>(
+    () => Array(questions.length).fill(null)
+  );
 
-  const question = questions[index];
+  const question = questions[viewIndex];
+  const viewedResult = results[viewIndex];
+  const isAnswered = viewedResult !== null;
+  const isCorrect = viewedResult ? viewedResult.wasCorrect : null;
   const teacher = isCorrect === true ? teacherCorrect : isCorrect === false ? teacherSad : teacherThinking;
+  const score = results.filter((r) => r?.wasCorrect).length;
 
   const normalize = (s: string) => s.trim().toLowerCase();
 
   const handleAnswer = useCallback(
     (option: string) => {
-      if (isAnswered) return;
+      if (results[viewIndex] !== null) return; // already answered
       const correct = question.type === "fill-blank"
         ? normalize(option) === normalize(question.correctAnswer)
         : option === question.correctAnswer;
-      setSelected(option);
-      setIsAnswered(true);
-      setIsCorrect(correct);
-      if (correct) setScore((s) => s + 1);
-      resultsRef.current.push({ word: question.targetWord, wasCorrect: correct, type: question.type, question, selectedAnswer: option });
+      setResults((prev) => {
+        const next = [...prev];
+        next[viewIndex] = { word: question.targetWord, wasCorrect: correct, type: question.type, question, selectedAnswer: option };
+        return next;
+      });
     },
-    [isAnswered, question]
+    [results, viewIndex, question]
   );
 
-  // Auto-advance after feedback
-  useEffect(() => {
-    if (!isAnswered) return;
-    const timer = setTimeout(() => {
-      if (index + 1 >= questions.length) {
-        onFinish(score + (isCorrect ? 1 : 0), resultsRef.current);
-      } else {
-        setIndex((i) => i + 1);
-        setSelected(null);
-        setIsAnswered(false);
-        setIsCorrect(null);
-      }
-    }, 1800);
-    return () => clearTimeout(timer);
-  }, [isAnswered, index, questions.length, onFinish, score, isCorrect]);
-
-  const currentScore = score;
+  function handleNext() {
+    if (viewIndex + 1 >= questions.length) {
+      onFinish(score, results as QuestionResult[]);
+    } else {
+      setViewIndex((i) => i + 1);
+    }
+  }
 
   function getOptionState(option: string): "default" | "correct" | "wrong" | "disabled" {
     if (!isAnswered) return "default";
     if (option === question.correctAnswer) return "correct";
-    if (option === selected) return "wrong";
+    if (option === viewedResult!.selectedAnswer) return "wrong";
     return "disabled";
   }
 
@@ -534,15 +520,15 @@ function GameScreen({
         </span>
         <div className="flex items-center gap-3">
           <span className="text-sm text-neutral-500 font-medium">
-            Score: <span className="font-bold text-neutral-800">{currentScore}</span>
+            Score: <span className="font-bold text-neutral-800">{score}</span>
           </span>
           <span className="text-sm text-neutral-400">
-            {index + 1} / {questions.length}
+            {viewIndex + 1} / {questions.length}
           </span>
         </div>
       </div>
 
-      <ProgressBar current={index + 1} total={questions.length} />
+      <ProgressBar current={viewIndex + 1} total={questions.length} />
 
       {/* Main card */}
       <div className="flex gap-6 items-start">
@@ -566,7 +552,7 @@ function GameScreen({
         {/* Question + options */}
         <AnimatePresence mode="wait">
           <motion.div
-            key={index}
+            key={viewIndex}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
@@ -580,7 +566,25 @@ function GameScreen({
 
             {/* Options / Input */}
             {question.type === "fill-blank" ? (
-              <FillBlankInput isAnswered={isAnswered} onSubmit={handleAnswer} />
+              isAnswered ? (
+                <div className="flex flex-col gap-2.5">
+                  <div className={[
+                    "rounded-xl px-5 py-3.5 border text-sm",
+                    isCorrect ? "bg-green-50 border-green-300 text-green-800" : "bg-red-50 border-red-300 text-red-700",
+                  ].join(" ")}>
+                    <span className="text-xs font-semibold uppercase tracking-wide opacity-60 block mb-0.5">Your answer</span>
+                    <span className="font-semibold">{viewedResult!.selectedAnswer}</span>
+                  </div>
+                  {!isCorrect && (
+                    <div className="rounded-xl px-5 py-3.5 border bg-green-50 border-green-300 text-green-800 text-sm">
+                      <span className="text-xs font-semibold uppercase tracking-wide opacity-60 block mb-0.5">Correct answer</span>
+                      <span className="font-semibold">{question.correctAnswer}</span>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <FillBlankInput isAnswered={false} onSubmit={handleAnswer} />
+              )
             ) : (
               <div className={`grid gap-2.5 ${question.type === "true-false" ? "grid-cols-2" : "grid-cols-1"}`}>
                 {question.options.map((option) => (
@@ -610,146 +614,37 @@ function GameScreen({
                   ].join(" ")}
                 >
                   {isCorrect ? (
-                    <>
-                      <CheckCircle2 size={16} />
-                      Correct!
-                    </>
+                    <><CheckCircle2 size={16} /> Correct!</>
                   ) : (
-                    <>
-                      <XCircle size={16} />
-                      The answer was: <span className="font-bold ml-1">{question.correctAnswer}</span>
-                    </>
+                    <><XCircle size={16} /> The answer was: <span className="font-bold ml-1">{question.correctAnswer}</span></>
                   )}
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {/* Back / Next navigation */}
+            {(viewIndex > 0 || isAnswered) && (
+              <div className="flex gap-3">
+                {viewIndex > 0 && (
+                  <button
+                    onClick={() => setViewIndex((i) => i - 1)}
+                    className="flex-1 rounded-xl bg-white border-2 border-neutral-200 text-neutral-700 font-display font-bold py-3.5 text-sm hover:border-neutral-400 transition-colors"
+                  >
+                    ← Back
+                  </button>
+                )}
+                {isAnswered && (
+                  <button
+                    onClick={handleNext}
+                    className="flex-1 rounded-xl bg-purple-600 text-white font-display font-bold py-3.5 text-sm hover:bg-purple-700 transition-colors"
+                  >
+                    {viewIndex + 1 >= questions.length ? "Finish ✓" : "Next →"}
+                  </button>
+                )}
+              </div>
+            )}
           </motion.div>
         </AnimatePresence>
-      </div>
-    </motion.div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Review screen
-// ---------------------------------------------------------------------------
-
-function ReviewScreen({
-  results,
-  onBack,
-}: {
-  results: QuestionResult[];
-  onBack: () => void;
-}) {
-  const [index, setIndex] = useState(0);
-  const result = results[index];
-  const { question } = result;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="w-full max-w-4xl flex flex-col gap-5"
-    >
-      {/* Top bar */}
-      <div className="flex items-center justify-between gap-4">
-        <button
-          onClick={onBack}
-          className="text-sm text-neutral-500 hover:text-neutral-800 transition-colors flex items-center gap-1"
-        >
-          ← Back to results
-        </button>
-        <span className="text-sm text-neutral-400 font-medium">
-          {index + 1} / {results.length}
-        </span>
-      </div>
-
-      <ProgressBar current={index + 1} total={results.length} />
-
-      {/* Question + answers */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={index}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.22 }}
-          className="flex flex-col gap-4"
-        >
-          {/* Result badge */}
-          <div className={[
-            "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold w-fit",
-            result.wasCorrect
-              ? "bg-green-50 border border-green-200 text-green-800"
-              : "bg-red-50 border border-red-200 text-red-700",
-          ].join(" ")}>
-            {result.wasCorrect
-              ? <><CheckCircle2 size={15} /> Correct</>
-              : <><XCircle size={15} /> Incorrect</>}
-          </div>
-
-          {/* Question prompt */}
-          <div className="rounded-2xl bg-white border border-neutral-200 px-5 py-5 shadow-sm">
-            <QuestionPrompt question={question} />
-          </div>
-
-          {/* Answers */}
-          {question.type === "fill-blank" ? (
-            <div className="flex flex-col gap-2.5">
-              <div className={[
-                "rounded-xl px-5 py-3.5 border text-sm",
-                result.wasCorrect
-                  ? "bg-green-50 border-green-300 text-green-800"
-                  : "bg-red-50 border-red-300 text-red-700",
-              ].join(" ")}>
-                <span className="text-xs font-semibold uppercase tracking-wide opacity-60 block mb-0.5">Your answer</span>
-                <span className="font-semibold">{result.selectedAnswer}</span>
-              </div>
-              {!result.wasCorrect && (
-                <div className="rounded-xl px-5 py-3.5 border bg-green-50 border-green-300 text-green-800 text-sm">
-                  <span className="text-xs font-semibold uppercase tracking-wide opacity-60 block mb-0.5">Correct answer</span>
-                  <span className="font-semibold">{question.correctAnswer}</span>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="flex flex-col gap-2.5">
-              {question.options.map((option) => {
-                const isCorrect = option === question.correctAnswer;
-                const isSelected = option === result.selectedAnswer;
-                const style = isCorrect
-                  ? "bg-green-50 border-2 border-green-400 text-green-800"
-                  : isSelected
-                  ? "bg-red-50 border-2 border-red-400 text-red-700"
-                  : "bg-white border border-neutral-100 text-neutral-400";
-                return (
-                  <div key={option} className={`rounded-xl px-5 py-3.5 text-sm font-semibold ${style}`}>
-                    {option}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Navigation */}
-      <div className="flex gap-3">
-        <button
-          onClick={() => setIndex((i) => i - 1)}
-          disabled={index === 0}
-          className="flex-1 rounded-xl bg-white border-2 border-neutral-200 text-neutral-700 font-display font-bold py-4 text-base hover:border-neutral-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          ← Back
-        </button>
-        <button
-          onClick={() => setIndex((i) => i + 1)}
-          disabled={index === results.length - 1}
-          className="flex-1 rounded-xl bg-purple-600 text-white font-display font-bold py-4 text-base hover:bg-purple-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          Next →
-        </button>
       </div>
     </motion.div>
   );
@@ -829,13 +724,7 @@ export default function App() {
                 onReplay={startGame}
                 onMenu={() => setPhase("start")}
                 onPracticeWeak={practiceWeakWords}
-                onReview={() => setPhase("review")}
               />
-            </motion.div>
-          )}
-          {phase === "review" && (
-            <motion.div key="review" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
-              <ReviewScreen results={results} onBack={() => setPhase("end")} />
             </motion.div>
           )}
         </AnimatePresence>
