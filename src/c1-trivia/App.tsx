@@ -480,6 +480,23 @@ function GameScreen({
 
       {/* Main card */}
       <div className="flex gap-6 items-start">
+        {/* Teacher character — desktop only */}
+        <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={teacher}
+              src={teacher}
+              alt="Teacher"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.2 }}
+              className="h-56 w-auto"
+              draggable={false}
+            />
+          </AnimatePresence>
+        </div>
+
         {/* Question + options */}
         <AnimatePresence mode="wait">
           <motion.div
@@ -538,23 +555,6 @@ function GameScreen({
             </AnimatePresence>
           </motion.div>
         </AnimatePresence>
-
-        {/* Teacher character — desktop only */}
-        <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={teacher}
-              src={teacher}
-              alt="Teacher"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.2 }}
-              className="h-56 w-auto"
-              draggable={false}
-            />
-          </AnimatePresence>
-        </div>
       </div>
     </motion.div>
   );
