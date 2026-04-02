@@ -215,22 +215,11 @@ function StartScreen({ onStart }: { onStart: () => void }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="flex flex-col items-center gap-8 w-full max-w-lg text-center"
+      className="flex gap-8 items-start w-full max-w-4xl"
     >
-      <div className="flex flex-col items-center gap-1">
-        <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700 uppercase tracking-wide">
-          C1 Advanced
-        </span>
-        <h2 className="font-display text-3xl font-bold text-neutral-900 mt-2">
-          Vocabulary Trivia
-        </h2>
-        <p className="text-neutral-500 text-sm mt-1 max-w-sm">
-          10 questions · 4 types · test your advanced English vocabulary
-        </p>
-      </div>
-
-      <div className="relative flex flex-col items-center">
-        <div className="relative mb-2 rounded-2xl rounded-bl-none bg-white border border-neutral-200 px-5 py-3 shadow-sm self-start ml-16">
+      {/* Teacher — desktop sidebar */}
+      <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
+        <div className="relative mb-2 rounded-2xl rounded-bl-none bg-white border border-neutral-200 px-5 py-3 shadow-sm self-start">
           <p className="font-display font-semibold text-neutral-800 text-sm">
             Ready to test your C1 vocabulary? 🧠
           </p>
@@ -239,13 +228,31 @@ function StartScreen({ onStart }: { onStart: () => void }) {
         <img
           src={teacherThinking}
           alt="Teacher"
-          className="h-40 w-auto select-none"
+          className="h-56 w-auto"
           draggable={false}
         />
       </div>
 
-      <div className="flex flex-col gap-3 w-full max-w-xs">
-        <div className="rounded-xl bg-white border border-neutral-200 px-4 py-3 text-left">
+      {/* Content */}
+      <div className="flex-1 flex flex-col gap-5">
+        {/* Mobile teacher */}
+        <div className="flex md:hidden justify-center">
+          <img src={teacherThinking} alt="Teacher" className="h-36 w-auto select-none" draggable={false} />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700 uppercase tracking-wide w-fit">
+            C1 Advanced
+          </span>
+          <h2 className="font-display text-3xl font-bold text-neutral-900 mt-2">
+            Vocabulary Trivia
+          </h2>
+          <p className="text-neutral-500 text-sm mt-1">
+            10 questions · 4 types · test your advanced English vocabulary
+          </p>
+        </div>
+
+        <div className="rounded-xl bg-white border border-neutral-200 px-4 py-3">
           <p className="text-xs font-semibold text-neutral-400 uppercase tracking-wide mb-2">
             Question types
           </p>
@@ -533,7 +540,7 @@ function GameScreen({
         </AnimatePresence>
 
         {/* Teacher character — desktop only */}
-        <div className="hidden md:flex flex-col items-center shrink-0 w-44 pt-2 select-none pointer-events-none">
+        <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
           <AnimatePresence mode="wait">
             <motion.img
               key={teacher}
