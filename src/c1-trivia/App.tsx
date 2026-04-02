@@ -91,15 +91,22 @@ function generateQuestion(word: C1Word, all: C1Word[], type: QuestionType): Ques
   }
 }
 
-const QUESTION_TYPES: QuestionType[] = ["fill-blank", "def-to-word", "word-to-def", "true-false"];
 const QUESTIONS_PER_ROUND = 10;
+
+// Difficulty order: easiest → hardest
+const DIFFICULTY_ORDER: QuestionType[] = ["true-false", "def-to-word", "fill-blank", "word-to-def"];
+
+// Spread n questions evenly across difficulty tiers, always easy → hard
+function assignOrderedTypes(count: number): QuestionType[] {
+  return Array.from({ length: count }, (_, i) =>
+    DIFFICULTY_ORDER[Math.floor((i / count) * DIFFICULTY_ORDER.length)]
+  );
+}
 
 function buildQuestions(): Question[] {
   const selected = shuffle(WORDS).slice(0, QUESTIONS_PER_ROUND);
-  return selected.map((word) => {
-    const type = QUESTION_TYPES[Math.floor(Math.random() * QUESTION_TYPES.length)];
-    return generateQuestion(word, WORDS, type);
-  });
+  const types = assignOrderedTypes(QUESTIONS_PER_ROUND);
+  return selected.map((word, i) => generateQuestion(word, WORDS, types[i]));
 }
 
 // ---------------------------------------------------------------------------
@@ -636,10 +643,8 @@ export default function App() {
 
   function practiceWeakWords() {
     const weakWords = results.filter((r) => !r.wasCorrect).map((r) => r.word);
-    const newQuestions = weakWords.map((word) => {
-      const type = QUESTION_TYPES[Math.floor(Math.random() * QUESTION_TYPES.length)];
-      return generateQuestion(word, WORDS, type);
-    });
+    const types = assignOrderedTypes(weakWords.length);
+    const newQuestions = weakWords.map((word, i) => generateQuestion(word, WORDS, types[i]));
     setQuestions(newQuestions);
     setPhase("playing");
   }
