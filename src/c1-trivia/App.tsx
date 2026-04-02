@@ -377,7 +377,7 @@ function GameScreen({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full max-w-2xl flex flex-col gap-5"
+      className="w-full max-w-4xl flex flex-col gap-5"
     >
       {/* Top bar */}
       <div className="flex items-center justify-between gap-4">
@@ -458,7 +458,7 @@ function GameScreen({
         </AnimatePresence>
 
         {/* Teacher character — desktop only */}
-        <div className="hidden md:flex flex-col items-center shrink-0 w-28 pt-2 select-none pointer-events-none">
+        <div className="hidden md:flex flex-col items-center shrink-0 w-44 pt-2 select-none pointer-events-none">
           <AnimatePresence mode="wait">
             <motion.img
               key={teacher}
@@ -468,7 +468,7 @@ function GameScreen({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.2 }}
-              className="h-36 w-auto"
+              className="h-56 w-auto"
               draggable={false}
             />
           </AnimatePresence>
@@ -501,7 +501,7 @@ export default function App() {
     <div className="relative min-h-screen flex flex-col">
       {/* Header */}
       <header className="bg-neutral-900 border-b border-neutral-700/50 px-6 py-4">
-        <div className="mx-auto flex max-w-2xl items-center justify-between gap-3">
+        <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <img src="/logo.png" alt="Englishpusher logo" className="h-8 w-auto" />
             <div>
@@ -521,7 +521,7 @@ export default function App() {
       </header>
 
       {/* Main */}
-      <main className="flex flex-1 items-center justify-center px-6 py-10">
+      <main className="flex flex-1 items-start justify-center px-6 py-8">
         <AnimatePresence mode="wait">
           {phase === "start" && (
             <motion.div key="start" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -548,7 +548,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-4">
-        <div className="mx-auto max-w-2xl text-center text-sm text-neutral-400">
+        <div className="mx-auto max-w-4xl text-center text-sm text-neutral-400">
           Copyright &copy; 2026 &mdash;{" "}
           <a href="https://englishpusher.in.ua" target="_blank" rel="noopener noreferrer" className="text-brand hover:text-brand/80 transition-colors">
             Englishpusher
