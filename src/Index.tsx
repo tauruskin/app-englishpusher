@@ -323,8 +323,8 @@ function AccordionPanel({
 type Tab = "all" | Level;
 const TABS: { id: Tab; label: string }[] = [
   { id: "all", label: "All levels" },
-  { id: "B1",  label: "B1" },
-  { id: "C1",  label: "C1" },
+  { id: "B1",  label: "B1 General" },
+  { id: "C1",  label: "C1 Business" },
 ];
 
 export default function Index() {
