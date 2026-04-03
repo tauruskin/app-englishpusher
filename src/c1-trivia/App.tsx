@@ -251,7 +251,7 @@ function StartScreen({ onStart }: { onStart: () => void }) {
 
         <div className="flex flex-col gap-1">
           <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700 uppercase tracking-wide w-fit">
-            C1 Advanced
+            C1 Business
           </span>
           <h2 className="font-display text-3xl font-bold text-neutral-900 mt-2">
             Vocabulary Trivia
@@ -302,7 +302,6 @@ function EndScreen({
   onReplay: () => void;
   onMenu: () => void;
   onPracticeWeak: () => void;
-  onReview: () => void;
 }) {
   const pct = Math.round((score / total) * 100);
   const teacher = pct >= 90 ? teacherCelebrate : pct >= 50 ? teacherCorrect : teacherSad;
@@ -516,7 +515,7 @@ function GameScreen({
       {/* Top bar */}
       <div className="flex items-center justify-between gap-4">
         <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700">
-          C1 Advanced
+          C1 Business
         </span>
         <div className="flex items-center gap-3">
           <span className="text-sm text-neutral-500 font-medium">
@@ -690,7 +689,7 @@ export default function App() {
               <h1 className="font-display text-base font-bold leading-tight text-white">
                 Vocabulary Trivia
               </h1>
-              <p className="text-xs text-neutral-400">C1 Advanced · by Englishpusher</p>
+              <p className="text-xs text-neutral-400">C1 Business · by Englishpusher</p>
             </div>
           </div>
           <a
