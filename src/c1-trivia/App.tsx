@@ -363,7 +363,7 @@ function EndScreen({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.35 }}
-      className="flex gap-8 items-start w-full max-w-3xl h-full"
+      className="flex gap-8 items-start w-full max-w-3xl flex-1 min-h-0"
     >
       {/* Teacher — desktop sidebar, pinned to top */}
       <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
@@ -372,7 +372,7 @@ function EndScreen({
       </div>
 
       {/* Main content — fills remaining height, word lists scroll */}
-      <div className="flex-1 flex flex-col min-h-0 gap-4 h-full">
+      <div className="flex-1 flex flex-col min-h-0 gap-4">
 
         {/* Mobile teacher — compact */}
         <div className="flex md:hidden justify-center items-center gap-3 shrink-0">
@@ -793,26 +793,34 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main */}
-      <main className="flex flex-1 items-start justify-center px-6 py-8 overflow-hidden">
+      {/* Main — flex-col so each phase wrapper can use flex-1 min-h-0 */}
+      <main className="flex-1 flex flex-col overflow-hidden">
         <AnimatePresence mode="wait">
           {phase === "select" && (
-            <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
+            <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="flex-1 flex items-start justify-center px-6 py-10"
+            >
               <TopicSelectScreen onSelect={handleSelectTopic} />
             </motion.div>
           )}
           {phase === "start" && topic && (
-            <motion.div key="start" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div key="start" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="flex-1 flex items-start justify-center px-6 py-10"
+            >
               <StartScreen topic={topic} onStart={startGame} />
             </motion.div>
           )}
           {phase === "playing" && (
-            <motion.div key="playing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
+            <motion.div key="playing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="flex-1 flex items-start justify-center px-6 py-10 w-full"
+            >
               <GameScreen questions={questions} onFinish={handleFinish} />
             </motion.div>
           )}
           {phase === "end" && (
-            <motion.div key="end" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full w-full flex justify-center items-start">
+            <motion.div key="end" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="flex-1 flex flex-col min-h-0 px-6 py-6 items-center"
+            >
               <EndScreen
                 score={finalScore}
                 total={questions.length}
