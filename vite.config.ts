@@ -11,6 +11,7 @@ export default defineConfig({
         main: resolve(__dirname, "index.html"),
         wordConnections: resolve(__dirname, "word-connections/index.html"),
         c1Trivia: resolve(__dirname, "c1-trivia/index.html"),
+        c1Business: resolve(__dirname, "c1-business/index.html"),
       },
     },
   },
