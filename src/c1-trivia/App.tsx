@@ -93,8 +93,6 @@ function generateQuestion(word: C1Word, all: C1Word[], type: QuestionType): Ques
   }
 }
 
-const QUESTIONS_PER_ROUND = 10;
-
 // Difficulty order: easiest → hardest
 const DIFFICULTY_ORDER: QuestionType[] = ["true-false", "def-to-word", "fill-blank", "word-to-def"];
 
@@ -106,9 +104,9 @@ function assignOrderedTypes(count: number): QuestionType[] {
 }
 
 function buildQuestions(words: C1Word[]): Question[] {
-  const selected = shuffle(words).slice(0, QUESTIONS_PER_ROUND);
-  const types = assignOrderedTypes(QUESTIONS_PER_ROUND);
-  return selected.map((word, i) => generateQuestion(word, words, types[i]));
+  const shuffled = shuffle(words);
+  const types = assignOrderedTypes(shuffled.length);
+  return shuffled.map((word, i) => generateQuestion(word, words, types[i]));
 }
 
 // ---------------------------------------------------------------------------
@@ -307,7 +305,7 @@ function StartScreen({ topic, onStart }: { topic: Topic; onStart: () => void }) 
             Vocabulary Trivia
           </h2>
           <p className="text-neutral-500 text-sm mt-1">
-            10 questions · 4 types · {topic.words.length} words available
+            {topic.words.length} questions · 4 types · ordered easy → hard
           </p>
         </div>
 
