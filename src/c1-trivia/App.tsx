@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, type ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { RotateCcw, CheckCircle2, XCircle } from "lucide-react";
-import { WORDS, type C1Word } from "./data.ts";
+import { TOPICS, type Topic, type C1Word } from "../c1-flashcards/data.ts";
 import teacherThinking from "./teacher-thinking.png";
 import teacherCorrect from "./teacher-correct.png";
 import teacherSad from "./teacher-sad.png";
@@ -12,7 +12,7 @@ import teacherCelebrate from "./teacher-celebrate.png";
 // ---------------------------------------------------------------------------
 
 type QuestionType = "fill-blank" | "def-to-word" | "word-to-def" | "true-false";
-type Phase = "start" | "playing" | "end";
+type Phase = "select" | "start" | "playing" | "end";
 
 interface Question {
   type: QuestionType;
@@ -105,10 +105,10 @@ function assignOrderedTypes(count: number): QuestionType[] {
   );
 }
 
-function buildQuestions(): Question[] {
-  const selected = shuffle(WORDS).slice(0, QUESTIONS_PER_ROUND);
+function buildQuestions(words: C1Word[]): Question[] {
+  const selected = shuffle(words).slice(0, QUESTIONS_PER_ROUND);
   const types = assignOrderedTypes(QUESTIONS_PER_ROUND);
-  return selected.map((word, i) => generateQuestion(word, WORDS, types[i]));
+  return selected.map((word, i) => generateQuestion(word, words, types[i]));
 }
 
 // ---------------------------------------------------------------------------
@@ -215,16 +215,66 @@ function QuestionPrompt({ question }: { question: Question }) {
 }
 
 // ---------------------------------------------------------------------------
+// Topic selection screen
+// ---------------------------------------------------------------------------
+
+function TopicSelectScreen({ onSelect }: { onSelect: (topic: Topic) => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      className="w-full max-w-3xl flex flex-col gap-6"
+    >
+      <div className="flex flex-col gap-1">
+        <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700 uppercase tracking-wide w-fit">
+          C1 Business
+        </span>
+        <h2 className="font-display text-3xl font-bold text-neutral-900 mt-2">
+          Vocabulary Trivia
+        </h2>
+        <p className="text-neutral-500 text-sm mt-1">
+          Choose a topic to start the quiz
+        </p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        {TOPICS.map((topic) => (
+          <button
+            key={topic.id}
+            onClick={() => onSelect(topic)}
+            disabled={topic.words.length === 0}
+            className="rounded-2xl bg-white border-2 border-neutral-200 px-6 py-5 text-left hover:border-purple-300 hover:shadow-md transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <div className="text-3xl mb-3">{topic.icon}</div>
+            <h3 className="font-display font-bold text-lg text-neutral-900 group-hover:text-purple-700 transition-colors">
+              {topic.title}
+            </h3>
+            <p className="text-sm text-neutral-500 mt-1 leading-snug">
+              {topic.description}
+            </p>
+            <p className="text-xs text-neutral-400 mt-3 font-medium">
+              {topic.words.length > 0 ? `${topic.words.length} words` : "Coming soon"}
+            </p>
+          </button>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Start screen
 // ---------------------------------------------------------------------------
 
-function StartScreen({ onStart }: { onStart: () => void }) {
+function StartScreen({ topic, onStart }: { topic: Topic; onStart: () => void }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="flex gap-8 items-start w-full max-w-4xl"
+      className="flex gap-8 items-start w-full max-w-3xl"
     >
       {/* Teacher — desktop sidebar */}
       <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
@@ -251,13 +301,13 @@ function StartScreen({ onStart }: { onStart: () => void }) {
 
         <div className="flex flex-col gap-1">
           <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700 uppercase tracking-wide w-fit">
-            C1 Business
+            {topic.icon} {topic.title}
           </span>
           <h2 className="font-display text-3xl font-bold text-neutral-900 mt-2">
             Vocabulary Trivia
           </h2>
           <p className="text-neutral-500 text-sm mt-1">
-            10 questions · 4 types · test your advanced English vocabulary
+            10 questions · 4 types · {topic.words.length} words available
           </p>
         </div>
 
@@ -315,7 +365,7 @@ function EndScreen({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className="flex gap-8 items-start w-full max-w-4xl"
+      className="flex gap-8 items-start w-full max-w-3xl"
     >
       {/* Teacher — desktop sidebar */}
       <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
@@ -450,6 +500,31 @@ function FillBlankInput({
 }
 
 // ---------------------------------------------------------------------------
+// Animated gradient border wrapper
+// ---------------------------------------------------------------------------
+
+function GradientBorder({
+  children,
+  colors,
+}: {
+  children: ReactNode;
+  colors: [string, string, string];
+}) {
+  return (
+    <div
+      className="gradient-border-rotate rounded-2xl p-[2px] shadow-sm"
+      style={{
+        background: `conic-gradient(from var(--gradient-angle), ${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[0]})`,
+      }}
+    >
+      <div className="rounded-[14px] bg-white px-5 py-5">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Game screen
 // ---------------------------------------------------------------------------
 
@@ -510,7 +585,7 @@ function GameScreen({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full max-w-4xl flex flex-col gap-5"
+      className="w-full max-w-3xl flex flex-col gap-5"
     >
       {/* Top bar */}
       <div className="flex items-center justify-between gap-4">
@@ -559,9 +634,17 @@ function GameScreen({
             className="flex-1 flex flex-col gap-4"
           >
             {/* Question card */}
-            <div className="rounded-2xl bg-white border border-neutral-200 px-5 py-5 shadow-sm">
+            <GradientBorder
+              colors={
+                isCorrect === true
+                  ? ["#16a34a", "#86efac", "#22c55e"]
+                  : isCorrect === false
+                  ? ["#dc2626", "#fca5a5", "#ef4444"]
+                  : ["#c06010", "#fcc870", "#f07c1a"]
+              }
+            >
               <QuestionPrompt question={question} />
-            </div>
+            </GradientBorder>
 
             {/* Options / Input */}
             {question.type === "fill-blank" ? (
@@ -654,13 +737,20 @@ function GameScreen({
 // ---------------------------------------------------------------------------
 
 export default function App() {
-  const [phase, setPhase] = useState<Phase>("start");
+  const [phase, setPhase] = useState<Phase>("select");
+  const [topic, setTopic] = useState<Topic | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [finalScore, setFinalScore] = useState(0);
   const [results, setResults] = useState<QuestionResult[]>([]);
 
+  function handleSelectTopic(t: Topic) {
+    setTopic(t);
+    setPhase("start");
+  }
+
   function startGame() {
-    setQuestions(buildQuestions());
+    if (!topic) return;
+    setQuestions(buildQuestions(topic.words));
     setPhase("playing");
   }
 
@@ -671,9 +761,10 @@ export default function App() {
   }
 
   function practiceWeakWords() {
+    if (!topic) return;
     const weakWords = results.filter((r) => !r.wasCorrect).map((r) => r.word);
     const types = assignOrderedTypes(weakWords.length);
-    const newQuestions = weakWords.map((word, i) => generateQuestion(word, WORDS, types[i]));
+    const newQuestions = weakWords.map((word, i) => generateQuestion(word, topic.words, types[i]));
     setQuestions(newQuestions);
     setPhase("playing");
   }
@@ -682,7 +773,7 @@ export default function App() {
     <div className="relative min-h-screen flex flex-col">
       {/* Header */}
       <header className="bg-neutral-900 border-b border-neutral-700/50 px-6 py-4">
-        <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <img src="/logo.png" alt="Englishpusher logo" className="h-8 w-auto" />
             <div>
@@ -692,21 +783,29 @@ export default function App() {
               <p className="text-xs text-neutral-400">C1 Business · by Englishpusher</p>
             </div>
           </div>
-          <a
-            href="https://app.englishpusher.in.ua"
-            className="text-xs text-neutral-400 hover:text-brand transition-colors"
-          >
-            ← All apps
-          </a>
+          {phase === "select" ? (
+            <a href="https://app.englishpusher.in.ua" className="text-xs text-neutral-400 hover:text-brand transition-colors">
+              ← All apps
+            </a>
+          ) : (
+            <button onClick={() => setPhase("select")} className="text-xs text-neutral-400 hover:text-brand transition-colors">
+              ← Topics
+            </button>
+          )}
         </div>
       </header>
 
       {/* Main */}
       <main className="flex flex-1 items-start justify-center px-6 py-14">
         <AnimatePresence mode="wait">
-          {phase === "start" && (
+          {phase === "select" && (
+            <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
+              <TopicSelectScreen onSelect={handleSelectTopic} />
+            </motion.div>
+          )}
+          {phase === "start" && topic && (
             <motion.div key="start" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <StartScreen onStart={startGame} />
+              <StartScreen topic={topic} onStart={startGame} />
             </motion.div>
           )}
           {phase === "playing" && (
@@ -721,7 +820,7 @@ export default function App() {
                 total={questions.length}
                 results={results}
                 onReplay={startGame}
-                onMenu={() => setPhase("start")}
+                onMenu={() => setPhase("select")}
                 onPracticeWeak={practiceWeakWords}
               />
             </motion.div>
@@ -731,7 +830,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-4">
-        <div className="mx-auto max-w-4xl text-center text-sm text-neutral-400">
+        <div className="mx-auto max-w-3xl text-center text-sm text-neutral-400">
           Copyright &copy; 2026 &mdash;{" "}
           <a href="https://englishpusher.in.ua" target="_blank" rel="noopener noreferrer" className="text-brand hover:text-brand/80 transition-colors">
             Englishpusher

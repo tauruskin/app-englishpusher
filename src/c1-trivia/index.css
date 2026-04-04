@@ -24,3 +24,18 @@ body {
   100% { transform: scale(1);    opacity: 1; }
 }
 .animate-pop-in { animation: pop-in 0.3s ease-out forwards; }
+
+/* Animated rotating gradient border */
+@property --gradient-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes gradient-rotate {
+  to { --gradient-angle: 360deg; }
+}
+
+.gradient-border-rotate {
+  animation: gradient-rotate 3s linear infinite;
+}
