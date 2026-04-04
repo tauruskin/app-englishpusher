@@ -42,11 +42,10 @@ const ITEMS: ActivityItem[] = [
     cta: "Study now",
     href: "/c1-flashcards/",
     Icon: CreditCard,
-    bgFrom: "#374151",
-    bgTo: "#111827",
-    accentColor: "#9ca3af",
-    disabled: true,
-    badge: "Coming Soon",
+    bgFrom: "#1e3a5f",
+    bgTo: "#0f2027",
+    accentColor: "#60a5fa",
+    disabled: false,
   },
 ];
 
