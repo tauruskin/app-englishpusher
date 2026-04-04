@@ -398,7 +398,7 @@ function EndScreen({
               <p className="text-sm font-bold text-green-700 shrink-0">
                 ✅ Words you know ({correct.length})
               </p>
-              <div className="overflow-y-auto flex-1 scroll-thin rounded-xl border border-green-100 bg-white divide-y divide-neutral-100 shadow-sm">
+              <div className="overflow-y-auto scroll-thin rounded-xl border border-green-100 bg-white divide-y divide-neutral-100 shadow-sm" style={{ maxHeight: "calc(100vh - 440px)" }}>
                 {correct.map((r, i) => (
                   <div key={i} className="flex items-center justify-between px-4 py-3">
                     <span className="font-semibold text-neutral-800 text-sm">{r.word.word}</span>
@@ -414,7 +414,7 @@ function EndScreen({
               <p className="text-sm font-bold text-red-600 shrink-0">
                 ❌ Words to practise ({wrong.length})
               </p>
-              <div className="overflow-y-auto flex-1 scroll-thin rounded-xl border border-red-100 bg-white divide-y divide-neutral-100 shadow-sm">
+              <div className="overflow-y-auto scroll-thin rounded-xl border border-red-100 bg-white divide-y divide-neutral-100 shadow-sm" style={{ maxHeight: "calc(100vh - 440px)" }}>
                 {wrong.map((r, i) => (
                   <div key={i} className="flex items-center justify-between px-4 py-3">
                     <span className="font-semibold text-neutral-800 text-sm">{r.word.word}</span>
@@ -794,7 +794,7 @@ export default function App() {
       </header>
 
       {/* Main — flex-col so each phase wrapper can use flex-1 min-h-0 */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col">
         <AnimatePresence mode="wait">
           {phase === "select" && (
             <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
