@@ -132,8 +132,8 @@ const ITEMS: AppItem[] = [
   },
   {
     id: 5,
-    label: "C1 Vocabulary Trivia",
-    description: "Advanced vocabulary quiz — definitions, fill-in-blank, true or false",
+    label: "C1 Vocabulary",
+    description: "Advanced vocabulary activities — trivia, flashcards and more",
     cta: "Start quiz",
     href: "/c1-business/",
     bgFrom: "#4c1d95",
