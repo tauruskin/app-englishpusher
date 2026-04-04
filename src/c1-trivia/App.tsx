@@ -360,48 +360,48 @@ function EndScreen({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 0.35 }}
-      className="flex gap-8 items-start w-full max-w-3xl"
+      className="flex gap-8 items-start w-full max-w-3xl h-full"
     >
-      {/* Teacher — desktop sidebar */}
+      {/* Teacher — desktop sidebar, pinned to top */}
       <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
         <img src={teacher} alt="Teacher reaction" className="h-56 w-auto max-w-none" draggable={false} />
         <p className="text-sm text-center text-neutral-500 mt-3 font-semibold">{message}</p>
       </div>
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col gap-5">
+      {/* Main content — fills remaining height, word lists scroll */}
+      <div className="flex-1 flex flex-col min-h-0 gap-4 h-full">
 
-        {/* Mobile teacher */}
-        <div className="flex md:hidden justify-center flex-col items-center gap-2">
-          <img src={teacher} alt="Teacher reaction" className="h-36 w-auto select-none" draggable={false} />
+        {/* Mobile teacher — compact */}
+        <div className="flex md:hidden justify-center items-center gap-3 shrink-0">
+          <img src={teacher} alt="Teacher reaction" className="h-16 w-auto select-none" draggable={false} />
           <p className="text-sm text-neutral-500 font-semibold">{message}</p>
         </div>
 
         {/* Score box */}
-        <div className="rounded-2xl bg-white border border-neutral-200 px-8 py-6 text-center shadow-sm">
-          <div className="font-display text-6xl font-bold text-purple-600">
-            {pct}<span className="text-3xl font-normal text-neutral-400">%</span>
+        <div className="rounded-2xl bg-white border border-neutral-200 px-8 py-4 text-center shadow-sm shrink-0">
+          <div className="font-display text-5xl font-bold text-purple-600">
+            {pct}<span className="text-2xl font-normal text-neutral-400">%</span>
           </div>
-          <div className="text-neutral-600 text-base mt-2">
+          <div className="text-neutral-600 text-sm mt-1">
             <span className="font-bold text-neutral-800">{score}</span> out of{" "}
             <span className="font-bold text-neutral-800">{total}</span> correct
           </div>
         </div>
 
-        {/* Word lists — side by side */}
-        <div className={`grid gap-4 ${correct.length > 0 && wrong.length > 0 ? "md:grid-cols-2" : "grid-cols-1"}`}>
+        {/* Word lists — flex so min-h-0 works, fills remaining space */}
+        <div className={`flex gap-4 flex-1 min-h-0 ${correct.length > 0 && wrong.length > 0 ? "" : ""}`}>
           {correct.length > 0 && (
-            <div>
-              <p className="text-base font-bold text-green-700 mb-3">
+            <div className="flex-1 min-h-0 flex flex-col gap-2">
+              <p className="text-sm font-bold text-green-700 shrink-0">
                 ✅ Words you know ({correct.length})
               </p>
-              <div className="rounded-xl border border-green-100 bg-white divide-y divide-neutral-100 shadow-sm">
+              <div className="overflow-y-auto flex-1 scroll-thin rounded-xl border border-green-100 bg-white divide-y divide-neutral-100 shadow-sm">
                 {correct.map((r, i) => (
-                  <div key={i} className="flex items-center justify-between px-5 py-3.5">
-                    <span className="font-semibold text-neutral-800">{r.word.word}</span>
+                  <div key={i} className="flex items-center justify-between px-4 py-3">
+                    <span className="font-semibold text-neutral-800 text-sm">{r.word.word}</span>
                     <span className="text-xs text-neutral-400 shrink-0 ml-3">{TYPE_LABEL[r.type]}</span>
                   </div>
                 ))}
@@ -410,14 +410,14 @@ function EndScreen({
           )}
 
           {wrong.length > 0 && (
-            <div>
-              <p className="text-base font-bold text-red-600 mb-3">
+            <div className="flex-1 min-h-0 flex flex-col gap-2">
+              <p className="text-sm font-bold text-red-600 shrink-0">
                 ❌ Words to practise ({wrong.length})
               </p>
-              <div className="rounded-xl border border-red-100 bg-white divide-y divide-neutral-100 shadow-sm">
+              <div className="overflow-y-auto flex-1 scroll-thin rounded-xl border border-red-100 bg-white divide-y divide-neutral-100 shadow-sm">
                 {wrong.map((r, i) => (
-                  <div key={i} className="flex items-center justify-between px-5 py-3.5">
-                    <span className="font-semibold text-neutral-800">{r.word.word}</span>
+                  <div key={i} className="flex items-center justify-between px-4 py-3">
+                    <span className="font-semibold text-neutral-800 text-sm">{r.word.word}</span>
                     <span className="text-xs text-neutral-400 shrink-0 ml-3">{TYPE_LABEL[r.type]}</span>
                   </div>
                 ))}
@@ -427,25 +427,25 @@ function EndScreen({
         </div>
 
         {/* Buttons */}
-        <div className="flex flex-wrap gap-3 pt-1">
+        <div className="flex flex-wrap gap-3 shrink-0">
           {wrong.length > 0 && (
             <button
               onClick={onPracticeWeak}
-              className="flex-1 rounded-xl bg-red-500 text-white font-display font-bold py-4 text-base hover:bg-red-600 transition-colors shadow-sm"
+              className="flex-1 min-w-[140px] rounded-xl bg-red-500 text-white font-display font-bold px-4 py-3 text-sm leading-snug hover:bg-red-600 transition-colors shadow-sm"
             >
               Practice weak words
             </button>
           )}
           <button
             onClick={onReplay}
-            className="flex-1 rounded-xl bg-purple-600 text-white font-display font-bold py-4 text-base hover:bg-purple-700 transition-colors"
+            className="flex-1 min-w-[120px] rounded-xl bg-purple-600 text-white font-display font-bold px-4 py-3 text-sm hover:bg-purple-700 transition-colors"
           >
-            <RotateCcw size={16} className="inline mr-2 -mt-0.5" />
+            <RotateCcw size={14} className="inline mr-1.5 -mt-0.5" />
             Play again
           </button>
           <button
             onClick={onMenu}
-            className="flex-1 rounded-xl bg-white border-2 border-neutral-200 text-neutral-700 font-display font-bold py-4 text-base hover:border-neutral-400 transition-colors"
+            className="flex-1 min-w-[80px] rounded-xl bg-white border-2 border-neutral-200 text-neutral-700 font-display font-bold px-4 py-3 text-sm hover:border-neutral-400 transition-colors"
           >
             Back
           </button>
@@ -794,7 +794,7 @@ export default function App() {
       </header>
 
       {/* Main */}
-      <main className="flex flex-1 items-start justify-center px-6 py-14">
+      <main className="flex flex-1 items-start justify-center px-6 py-8 overflow-hidden">
         <AnimatePresence mode="wait">
           {phase === "select" && (
             <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
@@ -812,7 +812,7 @@ export default function App() {
             </motion.div>
           )}
           {phase === "end" && (
-            <motion.div key="end" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div key="end" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full w-full flex justify-center items-start">
               <EndScreen
                 score={finalScore}
                 total={questions.length}

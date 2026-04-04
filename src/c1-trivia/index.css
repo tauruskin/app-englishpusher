@@ -25,6 +25,12 @@ body {
 }
 .animate-pop-in { animation: pop-in 0.3s ease-out forwards; }
 
+/* Thin custom scrollbar for word lists */
+.scroll-thin { scrollbar-width: thin; scrollbar-color: rgb(0 0 0 / 0.15) transparent; }
+.scroll-thin::-webkit-scrollbar { width: 4px; }
+.scroll-thin::-webkit-scrollbar-track { background: transparent; }
+.scroll-thin::-webkit-scrollbar-thumb { background-color: rgb(0 0 0 / 0.15); border-radius: 2px; }
+
 /* Animated rotating gradient border */
 @property --gradient-angle {
   syntax: '<angle>';
