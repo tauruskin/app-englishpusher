@@ -33,12 +33,12 @@ function GradientBorder({
 }) {
   return (
     <div
-      className="gradient-border-rotate rounded-2xl p-[2px] shadow-md"
+      className="gradient-border-rotate rounded-2xl p-[2px] shadow-md h-full"
       style={{
         background: `conic-gradient(from var(--gradient-angle), ${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[0]})`,
       }}
     >
-      <div className="rounded-[14px] bg-white overflow-hidden">
+      <div className="rounded-[14px] bg-white overflow-hidden h-full">
         {children}
       </div>
     </div>
@@ -165,6 +165,10 @@ function FlashCard({
     ? ["#1e3a5f", "#60a5fa", "#3b82f6"]
     : ["#4c1d95", "#a78bfa", "#7c3aed"];
 
+  const wordFontSize =
+    word.word.length <= 12 ? "text-5xl" :
+    word.word.length <= 20 ? "text-4xl" : "text-3xl";
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -173,18 +177,18 @@ function FlashCard({
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -12, scale: 0.98 }}
         transition={{ duration: 0.22, ease: "easeOut" }}
-        className="w-full"
+        className="h-full"
       >
         <GradientBorder colors={borderColors}>
           {!isFlipped ? (
             /* ── Front face ── */
-            <div className="flex flex-col items-center gap-6 px-8 py-10 min-h-72 justify-between">
+            <div className="h-full flex flex-col items-center px-8 py-8 justify-between gap-4">
               <div className="self-end">
                 <SpeakerButton word={word.word} />
               </div>
 
               <div className="flex flex-col items-center gap-2 text-center">
-                <h2 className="font-display text-5xl font-bold text-neutral-900 leading-tight">
+                <h2 className={`font-display ${wordFontSize} font-bold text-neutral-900 leading-tight`}>
                   {word.word}
                 </h2>
                 <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-700">
@@ -201,7 +205,7 @@ function FlashCard({
             </div>
           ) : (
             /* ── Back face ── */
-            <div className="flex flex-col gap-5 pl-8 pr-10 py-7 min-h-72 max-h-[calc(100svh-300px)] overflow-y-auto scroll-thin [scrollbar-gutter:stable]">
+            <div className="h-full flex flex-col gap-5 pl-8 pr-10 py-7 overflow-y-auto scroll-thin [scrollbar-gutter:stable]">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="font-display font-bold text-xl text-neutral-900 truncate">
@@ -320,19 +324,24 @@ export default function App() {
       </header>
 
       {/* Main */}
-      <main className="flex flex-1 items-start justify-center px-6 py-5 overflow-y-auto">
+      <main className="flex-1 flex flex-col overflow-hidden">
         <AnimatePresence mode="wait">
           {phase === "select" && (
-            <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
+            <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="flex-1 flex items-start justify-center px-6 py-10 w-full"
+            >
               <TopicSelectScreen onSelect={handleSelectTopic} />
             </motion.div>
           )}
 
           {phase === "studying" && topic && (
-            <motion.div key="studying" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
-              <div className="w-full max-w-4xl flex flex-col gap-6">
+            <motion.div key="studying" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="flex-1 flex flex-col min-h-0 px-6 py-5"
+            >
+              <div className="flex-1 flex flex-col min-h-0 max-w-4xl w-full mx-auto gap-4">
+
                 {/* Topic label + progress */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 shrink-0">
                   <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700 shrink-0">
                     {topic.icon} {topic.title}
                   </span>
@@ -341,8 +350,8 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Two-column layout */}
-                <div className="flex gap-8 items-start">
+                {/* Two-column layout — flex-1 min-h-0 so card fills remaining height */}
+                <div className="flex gap-8 flex-1 min-h-0">
 
                   {/* Teacher — desktop only */}
                   <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
@@ -361,16 +370,19 @@ export default function App() {
                     </AnimatePresence>
                   </div>
 
-                  {/* Card + navigation */}
-                  <div className="flex-1 flex flex-col gap-4">
-                    <FlashCard
-                      word={topic.words[index]}
-                      index={index}
-                      isFlipped={isFlipped}
-                      onFlip={() => setIsFlipped((f) => !f)}
-                    />
+                  {/* Card + navigation — card fills space, buttons pinned at bottom */}
+                  <div className="flex-1 flex flex-col min-h-0 gap-4">
+                    {/* Card fills all available height */}
+                    <div className="flex-1 min-h-0">
+                      <FlashCard
+                        word={topic.words[index]}
+                        index={index}
+                        isFlipped={isFlipped}
+                        onFlip={() => setIsFlipped((f) => !f)}
+                      />
+                    </div>
 
-                    <div className="flex gap-3">
+                    <div className="flex gap-3 shrink-0">
                       <button
                         onClick={goPrev}
                         disabled={index === 0}
