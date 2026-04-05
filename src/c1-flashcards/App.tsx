@@ -201,7 +201,7 @@ function FlashCard({
             </div>
           ) : (
             /* ── Back face ── */
-            <div className="flex flex-col gap-5 px-8 py-8 min-h-72 max-h-[calc(100svh-300px)] overflow-y-auto scroll-thin">
+            <div className="flex flex-col gap-5 pl-8 pr-10 py-7 min-h-72 max-h-[calc(100svh-300px)] overflow-y-auto scroll-thin [scrollbar-gutter:stable]">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="font-display font-bold text-xl text-neutral-900 truncate">
@@ -320,7 +320,7 @@ export default function App() {
       </header>
 
       {/* Main */}
-      <main className="flex flex-1 items-start justify-center px-6 py-14">
+      <main className="flex flex-1 items-start justify-center px-6 py-5">
         <AnimatePresence mode="wait">
           {phase === "select" && (
             <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
