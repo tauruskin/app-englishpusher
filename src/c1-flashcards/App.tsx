@@ -33,7 +33,7 @@ function GradientBorder({
 }) {
   return (
     <div
-      className="gradient-border-rotate w-full rounded-2xl p-[2px] shadow-md"
+      className="gradient-border-rotate rounded-2xl p-[2px] shadow-md"
       style={{
         background: `conic-gradient(from var(--gradient-angle), ${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[0]})`,
       }}
