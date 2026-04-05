@@ -288,7 +288,7 @@ export default function App() {
   const teacher = isFlipped ? teacherCorrect : teacherThinking;
 
   return (
-    <div className="relative min-h-screen flex flex-col">
+    <div className="relative h-[100dvh] flex flex-col overflow-hidden">
       {/* Header */}
       <header className="bg-neutral-900 border-b border-neutral-700/50 px-6 py-4">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">
@@ -320,7 +320,7 @@ export default function App() {
       </header>
 
       {/* Main */}
-      <main className="flex flex-1 items-start justify-center px-6 py-5">
+      <main className="flex flex-1 items-start justify-center px-6 py-5 overflow-y-auto">
         <AnimatePresence mode="wait">
           {phase === "select" && (
             <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
