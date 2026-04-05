@@ -201,7 +201,7 @@ function FlashCard({
             </div>
           ) : (
             /* ── Back face ── */
-            <div className="flex flex-col gap-5 px-8 py-8 min-h-72">
+            <div className="flex flex-col gap-5 px-8 py-8 min-h-72 max-h-[calc(100svh-300px)] overflow-y-auto scroll-thin">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="font-display font-bold text-xl text-neutral-900 truncate">
