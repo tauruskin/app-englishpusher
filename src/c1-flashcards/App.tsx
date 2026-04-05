@@ -178,13 +178,13 @@ function FlashCard({
         <GradientBorder colors={borderColors}>
           {!isFlipped ? (
             /* ── Front face ── */
-            <div className="flex flex-col items-center gap-6 px-8 py-10 min-h-72 justify-between">
+            <div className="flex flex-col items-center gap-6 px-4 md:px-8 py-8 min-h-72 justify-between">
               <div className="self-end">
                 <SpeakerButton word={word.word} />
               </div>
 
               <div className="flex flex-col items-center gap-2 text-center">
-                <h2 className="font-display text-5xl font-bold text-neutral-900 leading-tight">
+                <h2 className="font-display text-[2.4rem] md:text-5xl font-bold text-neutral-900 leading-tight">
                   {word.word}
                 </h2>
                 <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-700">
@@ -201,10 +201,10 @@ function FlashCard({
             </div>
           ) : (
             /* ── Back face ── */
-            <div className="flex flex-col gap-5 pl-8 pr-10 py-7 min-h-72 max-h-[calc(100svh-300px)] overflow-y-auto scroll-thin [scrollbar-gutter:stable]">
+            <div className="flex flex-col gap-5 px-4 md:pl-8 md:pr-10 py-7 min-h-72 max-h-[calc(100svh-300px)] overflow-y-auto scroll-thin [scrollbar-gutter:stable]">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="font-display font-bold text-xl text-neutral-900 truncate">
+                  <span className="font-display font-bold text-xl text-neutral-900 md:truncate">
                     {word.word}
                   </span>
                   <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-semibold text-purple-700 shrink-0">
