@@ -288,7 +288,7 @@ export default function App() {
   const teacher = isFlipped ? teacherCorrect : teacherThinking;
 
   return (
-    <div className="relative h-[100dvh] flex flex-col overflow-hidden">
+    <div className="relative h-viewport flex flex-col">
       {/* Header */}
       <header className="bg-neutral-900 border-b border-neutral-700/50 px-6 py-4">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">

@@ -1,4 +1,4 @@
-import { useState, useCallback, type ReactNode } from "react";
+import { useState, useCallback, useEffect, useRef, type ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { RotateCcw, CheckCircle2, XCircle } from "lucide-react";
 import { TOPICS, type Topic, type C1Word } from "../c1-flashcards/data.ts";
@@ -539,9 +539,17 @@ function GameScreen({
     () => Array(questions.length).fill(null)
   );
 
+  const nextBtnRef = useRef<HTMLDivElement>(null);
+
   const question = questions[viewIndex];
   const viewedResult = results[viewIndex];
   const isAnswered = viewedResult !== null;
+
+  useEffect(() => {
+    if (isAnswered && window.innerWidth < 768) {
+      nextBtnRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [isAnswered, viewIndex]);
   const isCorrect = viewedResult ? viewedResult.wasCorrect : null;
   const teacher = isCorrect === true ? teacherCorrect : isCorrect === false ? teacherSad : teacherThinking;
   const score = results.filter((r) => r?.wasCorrect).length;
@@ -704,7 +712,7 @@ function GameScreen({
 
             {/* Back / Next navigation */}
             {(viewIndex > 0 || isAnswered) && (
-              <div className="flex gap-3">
+              <div ref={nextBtnRef} className="flex gap-3">
                 {viewIndex > 0 && (
                   <button
                     onClick={() => setViewIndex((i) => i - 1)}
@@ -768,7 +776,7 @@ export default function App() {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col">
+    <div className="relative h-viewport flex flex-col">
       {/* Header */}
       <header className="bg-neutral-900 border-b border-neutral-700/50 px-6 py-4">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
@@ -794,7 +802,7 @@ export default function App() {
       </header>
 
       {/* Main — flex-col so each phase wrapper can use flex-1 min-h-0 */}
-      <main className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col overflow-y-auto pb-4">
         <AnimatePresence mode="wait">
           {phase === "select" && (
             <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}

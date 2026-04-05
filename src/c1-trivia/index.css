@@ -45,3 +45,9 @@ body {
 .gradient-border-rotate {
   animation: gradient-rotate 3s linear infinite;
 }
+
+/* Cross-browser full viewport height — uses svh so footer stays visible on mobile */
+.h-viewport {
+  height: 100vh; /* fallback */
+  height: 100svh;
+}
