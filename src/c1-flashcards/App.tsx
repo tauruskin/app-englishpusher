@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Volume2, RotateCcw } from "lucide-react";
 import { TOPICS, type Topic, type C1Word } from "./data.ts";
@@ -266,6 +266,13 @@ export default function App() {
   const [topic, setTopic] = useState<Topic | null>(null);
   const [index, setIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+
+  useEffect(() => {
+    [teacherThinking, teacherCorrect].forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
   function handleSelectTopic(t: Topic) {
     setTopic(t);

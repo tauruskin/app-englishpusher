@@ -745,6 +745,14 @@ function GameScreen({
 export default function App() {
   const [phase, setPhase] = useState<Phase>("select");
   const [topic, setTopic] = useState<Topic | null>(null);
+
+  // Preload all teacher images so they're ready before they're needed
+  useEffect(() => {
+    [teacherThinking, teacherCorrect, teacherSad, teacherCelebrate].forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [finalScore, setFinalScore] = useState(0);
   const [results, setResults] = useState<QuestionResult[]>([]);
