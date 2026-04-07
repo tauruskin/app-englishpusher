@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Shuffle, RotateCcw, ArrowLeft, ChevronRight, Lightbulb } from "lucide-react";
 import { PUZZLES, DIFFICULTY_STYLES, type Puzzle, type Group } from "./data.ts";
-import teacherThinking from "./assets/teacher-thinking.png";
+import teacherThinking from "../assets/teacher-thinking.png";
 
 // ---------------------------------------------------------------------------
 // Types

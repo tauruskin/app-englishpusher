@@ -2,10 +2,10 @@ import { useState, useCallback, useEffect, useRef, type ReactNode } from "react"
 import { motion, AnimatePresence } from "motion/react";
 import { RotateCcw, CheckCircle2, XCircle } from "lucide-react";
 import { TOPICS, type Topic, type C1Word } from "../c1-flashcards/data.ts";
-import teacherThinking from "./teacher-thinking.png";
-import teacherCorrect from "./teacher-correct.png";
-import teacherSad from "./teacher-sad.png";
-import teacherCelebrate from "./teacher-celebrate.png";
+import teacherThinking from "../assets/teacher-thinking.png";
+import teacherCorrect from "../assets/teacher-correct.png";
+import teacherSad from "../assets/teacher-sad.png";
+import teacherCelebrate from "../assets/teacher-celebrate.png";
 
 // ---------------------------------------------------------------------------
 // Types

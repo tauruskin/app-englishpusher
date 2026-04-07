@@ -2,8 +2,8 @@ import { useState, useEffect, type ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Volume2, RotateCcw } from "lucide-react";
 import { TOPICS, type Topic, type C1Word } from "./data.ts";
-import teacherThinking from "../c1-trivia/teacher-thinking.png";
-import teacherCorrect from "../c1-trivia/teacher-correct.png";
+import teacherThinking from "../assets/teacher-thinking.png";
+import teacherCorrect from "../assets/teacher-correct.png";
 
 type Phase = "select" | "studying";
 

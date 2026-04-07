@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { Trophy, CreditCard, ArrowRight, type LucideIcon } from "lucide-react";
-import teacherCelebrate from "../c1-trivia/teacher-celebrate.png";
+import teacherCelebrate from "../assets/teacher-celebrate.png";
 
 // ---------------------------------------------------------------------------
 // Data

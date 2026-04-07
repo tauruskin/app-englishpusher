@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "../c1-trivia/index.css";
+import "../c1-shared.css";
 import App from "./App.tsx";
 
 createRoot(document.getElementById("root")!).render(
