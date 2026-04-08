@@ -1,4 +1,4 @@
-import{c as N,r,j as e,m as c,a as w}from"./createLucideIcon-NfJCNQEo.js";/* empty css                  */import{t as h,T as v}from"./teacher-correct-BRrtLoXz.js";import{t as m,A as p,R as k}from"./teacher-thinking-rLlc_Fh6.js";/**
+import{c as N,r,j as e,m as c,a as w}from"./createLucideIcon-NfJCNQEo.js";/* empty css                  */import{t as h,T as v}from"./teacher-correct-zM9PZaC1.js";import{t as m,A as p,R as k}from"./teacher-thinking-rLlc_Fh6.js";/**
  * @license lucide-react v0.469.0 - ISC
  *
  * This source code is licensed under the ISC license.
