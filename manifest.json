@@ -4,7 +4,7 @@
   "description": "Learn English with tutor Tetiana — grammar, vocabulary and more.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#faf8f5",
+  "background_color": "#f07c1a",
   "theme_color": "#f07c1a",
   "icons": [
     {
