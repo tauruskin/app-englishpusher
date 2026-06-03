@@ -163,7 +163,7 @@ export const TOPICS: Topic[] = [
         word: "tout",
         partOfSpeech: "verb",
         definition: "to promote or praise something enthusiastically, often to attract support or attention",
-        example: "The CEO ___ the new diversity programme as a landmark step forward, but critics questioned whether it had real impact.",
+        example: "Organisations tend to ___ their diversity programmes as evidence of progress, even when structural inequalities remain unchanged.",
       },
       {
         word: "bias",
