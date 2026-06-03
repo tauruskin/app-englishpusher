@@ -11,6 +11,7 @@ export interface Topic {
   description: string;
   icon: string;
   words: C1Word[];
+  triviaUrl?: string; // link to corresponding trivia topic
 }
 
 export const TOPICS: Topic[] = [
@@ -19,6 +20,7 @@ export const TOPICS: Topic[] = [
     title: "Innovation",
     description: "Vocabulary for discussing technology, creativity and change",
     icon: "💡",
+    triviaUrl: "/c1-trivia/?topic=innovation",
     words: [
       // ── Vocabulary ──────────────────────────────────────────────────────────
       {
@@ -69,63 +71,6 @@ export const TOPICS: Topic[] = [
         definition: "extremely modern and using the most advanced techniques or technology available",
         example: "The firm invested heavily in ___ AI tools to stay ahead of the competition.",
       },
-      {
-        word: "agility",
-        partOfSpeech: "noun",
-        definition: "the ability to adapt quickly and effectively to changing conditions",
-        example: "Organisational ___ became the company's greatest asset during the market disruption.",
-      },
-      {
-        word: "glass ceiling",
-        partOfSpeech: "noun",
-        definition: "an invisible barrier that prevents someone, especially women or minorities, from advancing beyond a certain level in their career",
-        example: "She was determined to shatter the ___ and become the company's first female director.",
-      },
-
-      // ── Business collocations ────────────────────────────────────────────────
-      {
-        word: "roll out",
-        partOfSpeech: "phrasal verb",
-        definition: "to introduce or launch something new in a planned, phased way (instead of: introduce changes)",
-        example: "The team will ___ the updated platform to all users over the next three months.",
-      },
-      {
-        word: "drive sustainable growth",
-        partOfSpeech: "phrase",
-        definition: "to create conditions that allow a business to expand steadily without compromising future potential (instead of: help us grow)",
-        example: "Our five-year strategy is designed to ___ by investing in people and technology.",
-      },
-      {
-        word: "maintain a competitive edge",
-        partOfSpeech: "phrase",
-        definition: "to keep an advantage over rivals; to stay ahead of or at the same level as competitors (instead of: stay competitive)",
-        example: "Companies must ___ by continuously improving their products and services.",
-      },
-      {
-        word: "address key challenges",
-        partOfSpeech: "phrase",
-        definition: "to deal with important problems in a focused and effective way (instead of: solve problems)",
-        example: "The report outlined several ways to ___ facing the tech industry today.",
-      },
-      {
-        word: "optimize performance",
-        partOfSpeech: "phrase",
-        definition: "to improve something so it works as efficiently and effectively as possible (instead of: make it better)",
-        example: "We regularly review our processes to ___ across all departments.",
-      },
-      {
-        word: "strategic shift",
-        partOfSpeech: "noun phrase",
-        definition: "a significant and deliberate change in direction or priorities within an organisation (instead of: big change)",
-        example: "Moving from a product-based to a service-based model represented a major ___ for the business.",
-      },
-      {
-        word: "align across teams",
-        partOfSpeech: "phrase",
-        definition: "to ensure all teams are working towards the same goals and priorities (instead of: work together)",
-        example: "Leadership must ___ to ensure consistent delivery and avoid duplication of effort.",
-      },
-
       // ── Phrasal verbs ────────────────────────────────────────────────────────
       {
         word: "get round",
@@ -180,6 +125,114 @@ export const TOPICS: Topic[] = [
         partOfSpeech: "phrasal verb",
         definition: "to think of or produce an idea, plan, or solution",
         example: "The team managed to ___ a completely new business model in just three days.",
+      },
+    ],
+  },
+  {
+    id: "leadership-equality",
+    title: "Leadership & Equality",
+    description: "Vocabulary for discussing gender, fairness and leadership in the workplace",
+    icon: "⚖️",
+    triviaUrl: "/c1-trivia/?topic=leadership-equality",
+    words: [
+      {
+        word: "glass ceiling",
+        partOfSpeech: "noun phrase",
+        definition: "an invisible barrier that prevents someone, especially a woman, from advancing beyond a certain level in their career",
+        example: "Despite her qualifications and results, she kept hitting the ___ that blocked her path to the boardroom.",
+      },
+      {
+        word: "gender parity",
+        partOfSpeech: "noun phrase",
+        definition: "equal representation and opportunity for women and men, especially in leadership roles",
+        example: "The company set a five-year target to achieve ___ across all senior management positions.",
+      },
+      {
+        word: "redress",
+        partOfSpeech: "verb",
+        definition: "to correct an unfair situation and make it more fair or equal",
+        example: "New pay transparency policies were introduced to ___ the persistent imbalance between male and female salaries.",
+      },
+      {
+        word: "motherhood penalty",
+        partOfSpeech: "noun phrase",
+        definition: "the economic disadvantages — lower pay, fewer promotions, reduced opportunities — that mothers face at work compared to childless colleagues",
+        example: "Studies show the ___ continues to affect women's earnings and career progression long after they return from maternity leave.",
+      },
+      {
+        word: "tout",
+        partOfSpeech: "verb",
+        definition: "to promote or praise something enthusiastically, often to attract support or attention",
+        example: "The CEO ___ the new diversity programme as a landmark step forward, but critics questioned whether it had real impact.",
+      },
+      {
+        word: "bias",
+        partOfSpeech: "noun",
+        definition: "an unfair judgement or preference influenced by personal opinion rather than facts",
+        example: "Unconscious ___ in the hiring process can quietly prevent talented candidates from ever being considered.",
+      },
+      {
+        word: "glass cliff",
+        partOfSpeech: "noun phrase",
+        definition: "a situation where someone, often a woman, is promoted to a senior role during a crisis — when the risk of failure is highest",
+        example: "She accepted the promotion not realising she was on a ___ — appointed to lead a struggling division with minimal resources or backing.",
+      },
+    ],
+  },
+  {
+    id: "ceo-communication",
+    title: "Writing CEO Communication",
+    description: "Professional phrases for executive-level business writing",
+    icon: "✍️",
+    triviaUrl: "/c1-trivia/?topic=ceo-communication",
+    words: [
+      {
+        word: "roll out a new approach",
+        partOfSpeech: "phrase",
+        definition: "to introduce changes in a planned, phased way (instead of: introduce changes)",
+        example: "We will ___ to performance reviews starting next quarter.",
+      },
+      {
+        word: "drive sustainable growth",
+        partOfSpeech: "phrase",
+        definition: "to create conditions that allow a business to expand steadily without compromising future potential (instead of: help us grow)",
+        example: "Our five-year strategy is designed to ___ by investing in people and technology.",
+      },
+      {
+        word: "leverage innovative solutions",
+        partOfSpeech: "phrase",
+        definition: "to use new ideas and tools to maximum advantage (instead of: use new ideas)",
+        example: "We must ___ to stay ahead in a rapidly changing market.",
+      },
+      {
+        word: "maintain a competitive edge",
+        partOfSpeech: "phrase",
+        definition: "to keep an advantage over rivals; to stay ahead of competitors (instead of: stay competitive)",
+        example: "Companies must ___ by continuously improving their products and services.",
+      },
+      {
+        word: "address key challenges",
+        partOfSpeech: "phrase",
+        definition: "to deal with important problems in a focused and effective way (instead of: solve problems)",
+        example: "The report outlined several ways to ___ facing the tech industry today.",
+      },
+      {
+        word: "optimize performance",
+        partOfSpeech: "phrase",
+        definition: "to improve something so it works as efficiently and effectively as possible (instead of: make it better)",
+        example: "We regularly review our processes to ___ across all departments.",
+      },
+      {
+        word: "strategic shift",
+        partOfSpeech: "noun phrase",
+        definition: "a significant and deliberate change in direction or priorities within an organisation (instead of: big change)",
+        example: "Moving from a product-based to a service-based model represented a major ___ for the business.",
+      },
+      {
+        word: "align across teams",
+        partOfSpeech: "phrase",
+        definition: "to ensure all teams are working towards the same goals and priorities (instead of: work together)",
+        example: "Leadership must ___ to ensure consistent delivery and avoid duplication of effort.",
       },
     ],
   },

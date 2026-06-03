@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { Trophy, CreditCard, ArrowRight, type LucideIcon } from "lucide-react";
+import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import teacherCelebrate from "../assets/teacher-celebrate.png";
 
 // ---------------------------------------------------------------------------
@@ -23,19 +24,6 @@ interface ActivityItem {
 const ITEMS: ActivityItem[] = [
   {
     id: 1,
-    label: "Vocabulary Trivia",
-    description:
-      "10 questions · 4 types ordered easy to hard · track your weak words and practise again",
-    cta: "Start quiz",
-    href: "/c1-trivia/",
-    Icon: Trophy,
-    bgFrom: "#4c1d95",
-    bgTo: "#2e1065",
-    accentColor: "#a78bfa",
-    disabled: false,
-  },
-  {
-    id: 2,
     label: "Flash Cards",
     description:
       "Study and memorise C1 Business vocabulary with interactive flashcards",
@@ -45,6 +33,19 @@ const ITEMS: ActivityItem[] = [
     bgFrom: "#1e3a5f",
     bgTo: "#0f2027",
     accentColor: "#60a5fa",
+    disabled: false,
+  },
+  {
+    id: 2,
+    label: "Vocabulary Trivia",
+    description:
+      "10 questions · 4 types ordered easy to hard · track your weak words and practise again",
+    cta: "Start quiz",
+    href: "/c1-trivia/",
+    Icon: Trophy,
+    bgFrom: "#4c1d95",
+    bgTo: "#2e1065",
+    accentColor: "#a78bfa",
     disabled: false,
   },
 ];
@@ -124,26 +125,7 @@ function ActivityCard({ item }: { item: ActivityItem }) {
 export default function App() {
   return (
     <div className="relative min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="bg-neutral-900 border-b border-neutral-700/50 px-6 py-4">
-        <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Englishpusher logo" className="h-8 w-auto" />
-            <div>
-              <h1 className="font-display text-base font-bold leading-tight text-white">
-                C1 Business
-              </h1>
-              <p className="text-xs text-neutral-400">Englishpusher Learning Apps</p>
-            </div>
-          </div>
-          <a
-            href="https://app.englishpusher.in.ua"
-            className="text-xs text-neutral-400 hover:text-[#f07c1a] transition-colors"
-          >
-            ← All apps
-          </a>
-        </div>
-      </header>
+      <AppHeader title="C1 Business" subtitle="Englishpusher Learning Apps" />
 
       {/* Main */}
       <main className="flex flex-1 items-start justify-center px-6 py-14">
@@ -194,20 +176,7 @@ export default function App() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-4">
-        <div className="mx-auto max-w-4xl text-center text-sm text-neutral-400">
-          Copyright &copy; 2026 &mdash;{" "}
-          <a
-            href="https://englishpusher.in.ua"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[#f07c1a] hover:text-[#f07c1a]/80 transition-colors"
-          >
-            Englishpusher
-          </a>
-        </div>
-      </footer>
+      <AppFooter />
     </div>
   );
 }

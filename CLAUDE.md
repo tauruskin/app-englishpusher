@@ -12,11 +12,60 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 | Main website | https://englishpusher.in.ua |
 | Hub (this project) | https://app.englishpusher.in.ua |
 | Grammar Testing | https://grammar.englishpusher.in.ua |
-| Vocabulary Trivia (B1) | https://trivia.englishpusher.in.ua/ |
+| Vocabulary Trivia (B1) | https://app.englishpusher.in.ua/b1-trivia/ |
 | Word Connections (B1) | https://app.englishpusher.in.ua/word-connections/ |
+| B1 Vocabulary Cards | https://app.englishpusher.in.ua/b1-flashcards/ |
+| C1 Flash Cards | https://app.englishpusher.in.ua/c1-flashcards/ |
 | C1 Vocabulary Trivia | https://app.englishpusher.in.ua/c1-trivia/ |
-| Vocabulary Cards | Coming Soon — not yet built |
 | Instagram | https://www.instagram.com/teti_push_english?igsh=MWMxbGxodnJrOHI2 |
+
+### Direct topic links — Flash Card apps
+
+Both flash card apps support `?topic=<id>` deep links. The teacher can copy and share these to send students directly to a specific topic.
+
+**B1 Vocabulary Cards** (`/b1-flashcards/`):
+
+| Topic | Direct link |
+|---|---|
+| Adjectives for Feelings | https://app.englishpusher.in.ua/b1-flashcards/?topic=adjectives-feelings |
+| Stative Verbs | https://app.englishpusher.in.ua/b1-flashcards/?topic=stative-verbs |
+| Personality & Relationships | https://app.englishpusher.in.ua/b1-flashcards/?topic=personality-relationships |
+| Adverbs of Frequency | https://app.englishpusher.in.ua/b1-flashcards/?topic=adverbs-frequency |
+| Lesson 6: Jobs & Work | https://app.englishpusher.in.ua/b1-flashcards/?topic=jobs |
+| Lesson 15: Story Words | https://app.englishpusher.in.ua/b1-flashcards/?topic=story-words |
+| Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-flashcards/?topic=collocations-get-make |
+
+**B1 Vocabulary Trivia** (`/b1-trivia/`):
+
+| Topic | Direct link |
+|---|---|
+| Adjectives for Feelings | https://app.englishpusher.in.ua/b1-trivia/?topic=adjectives-feelings |
+| Stative Verbs | https://app.englishpusher.in.ua/b1-trivia/?topic=stative-verbs |
+| Personality & Relationships | https://app.englishpusher.in.ua/b1-trivia/?topic=personality-relationships |
+| Adverbs of Frequency | https://app.englishpusher.in.ua/b1-trivia/?topic=adverbs-frequency |
+| Lesson 6: Jobs & Work | https://app.englishpusher.in.ua/b1-trivia/?topic=jobs |
+| Lesson 15: Story Words | https://app.englishpusher.in.ua/b1-trivia/?topic=story-words |
+| Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-trivia/?topic=collocations-get-make |
+
+**C1 Flash Cards** (`/c1-flashcards/`):
+
+| Topic | Direct link |
+|---|---|
+| Innovation | https://app.englishpusher.in.ua/c1-flashcards/?topic=innovation |
+| Writing CEO Communication | https://app.englishpusher.in.ua/c1-flashcards/?topic=ceo-communication |
+| Leadership & Equality | https://app.englishpusher.in.ua/c1-flashcards/?topic=leadership-equality |
+
+**C1 Vocabulary Trivia** (`/c1-trivia/`):
+
+| Topic | Direct link |
+|---|---|
+| Innovation | https://app.englishpusher.in.ua/c1-trivia/?topic=innovation |
+| Writing CEO Communication | https://app.englishpusher.in.ua/c1-trivia/?topic=ceo-communication |
+| Leadership & Equality | https://app.englishpusher.in.ua/c1-trivia/?topic=leadership-equality |
+
+**How it works:** `?topic=<id>` is read on mount via `URLSearchParams`. The URL updates automatically when the user selects a topic, and clears when they go back to the topic list. The `id` field in `TOPICS` in `data.ts` is the canonical key — keep it stable, never rename it after publishing.
+
+**When adding a new topic:** add the direct link to this table immediately.
 
 ## Tech stack
 
@@ -40,33 +89,86 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 public/
   logo.png                        ← site logo (used in header + favicon)
 index.html                        ← hub entry point
-word-connections/
-  index.html                      ← Word Connections entry point
-c1-trivia/
-  index.html                      ← C1 Trivia entry point
+apps/
+  b1-trivia/index.html            ← B1 Trivia entry point
+  b1-flashcards/index.html        ← B1 Flashcards entry point
+  c1-trivia/index.html            ← C1 Trivia entry point
+  c1-flashcards/index.html        ← C1 Flashcards entry point
+  c1-business/index.html          ← C1 Business entry point
+  word-connections/index.html     ← Word Connections entry point
 src/
   assets/
-    teacher-celebrate.png         ← used on hub landing page
+    teacher-celebrate.png
     teacher-correct.png
-    teacher_thinking.png
-    teacher_sad-2.png
-  index.css                       ← Tailwind imports + character-idle animation
+    teacher-thinking.png
+    teacher-sad.png
+  shared/
+    AppShell.tsx                  ← ⭐ Shared AppHeader + AppFooter components
+  index.css                       ← Tailwind imports + character animations
   main.tsx                        ← hub React entry
   Index.tsx                       ← entire hub landing page (single file)
-  word-connections/
-    main.tsx / App.tsx / data.ts  ← Word Connections game
-    assets/                       ← teacher images for game
+  b1-trivia/
+    main.tsx / App.tsx            ← B1 Vocabulary Trivia game
+  b1-flashcards/
+    main.tsx / App.tsx / data.ts  ← B1 Vocabulary Cards (data.ts = single source for B1 words)
   c1-trivia/
     main.tsx / App.tsx / data.ts  ← C1 Vocabulary Trivia game
-    *.png                         ← teacher images
+  c1-flashcards/
+    main.tsx / App.tsx / data.ts  ← C1 Flash Cards
+  c1-business/
+    main.tsx / App.tsx            ← C1 Business hub page
+  word-connections/
+    main.tsx / App.tsx / data.ts  ← Word Connections game
 ```
+
+## Shared components — `src/shared/AppShell.tsx`
+
+**All activity apps** (everything except the landing page `Index.tsx`) use two shared components:
+
+### `AppHeader`
+
+```tsx
+import { AppHeader } from "../shared/AppShell.tsx";
+
+<AppHeader
+  title="Vocabulary Trivia"           // app name shown in header
+  subtitle="B1 · by Englishpusher"    // second line (topic name when playing)
+  onTitleClick={handleBackToSelect}   // makes title clickable (optional)
+  onTopics={handleBackToSelect}        // enables "← Topics" nav button
+  showTopics={phase !== "select"}      // controls Topics button visibility
+  controls={<>…</>}                   // app-specific right-side controls (score, mute, restart…)
+/>
+```
+
+- On **desktop**: shows logo + title on left, app controls + "← Topics" + "Home" on right
+- On **mobile**: shows logo + title + app controls only (nav moves to footer)
+
+### `AppFooter`
+
+```tsx
+import { AppFooter } from "../shared/AppShell.tsx";
+
+<AppFooter
+  onTopics={handleBackToSelect}    // callback for "‹ Topics" button (optional)
+  showTopics={phase !== "select"}  // show Topics only when relevant
+/>
+```
+
+- On **mobile**: shows "‹ Topics" (if applicable) on left, "Home" icon on right, then copyright
+- On **desktop**: shows copyright only (nav is in the header)
+
+### Rules for new activities
+
+1. **Always** import and use `AppHeader` + `AppFooter` — never write a custom header/footer
+2. Pass `onTopics` + `showTopics` if the activity has a topic selection screen
+3. Pass app-specific controls (score badge, mute button, restart) via the `controls` prop
+4. The landing page (`Index.tsx`) has its own header/footer — do not use `AppShell` there
 
 ## Architecture decisions
 
-- **Vite MPA**: `vite.config.ts` uses `build.rollupOptions.input` with three entry points (main, wordConnections, c1Trivia). Each builds to its own path in `dist/`.
+- **Vite MPA**: `vite.config.ts` uses `build.rollupOptions.input` with one entry per app. Each builds to its own path in `dist/`. Source HTML lives in `apps/<name>/index.html`; a post-build plugin moves them to `dist/<name>/index.html` so deployed URLs stay as `/<name>/`.
+- **Dev rewrite plugin**: `configureServer` middleware rewrites `/<app>/*` → `/apps/<app>/*` in dev so local URLs match deployed URLs exactly.
 - Hub lives in a **single `Index.tsx`** — no routing, no sub-pages.
-- Cards link out to URLs; internal apps use relative paths (`/word-connections/`, `/c1-trivia/`).
-- Teacher character is **hidden on mobile** (`hidden md:flex`).
 - App cards data lives in the `ITEMS` array at the top of `Index.tsx` — easy to update. Each item has a `level: "B1" | "C1"` field used by the level tabs.
 - **Background colour must be set on `body` in `index.css`**, NOT on the `motion.div` wrapper — otherwise motion's transform creates a stacking context that hides any background layer behind it.
 - **WSL HMR fix**: `server: { watch: { usePolling: true } }` in `vite.config.ts` — inotify can't watch Windows filesystem from WSL.
@@ -96,10 +198,10 @@ Left: copyright + main site link. Right: Instagram icon + handle.
 | id | Level | Label | href | Status |
 |---|---|---|---|---|
 | 1 | B1 | Grammar Testing | https://grammar.englishpusher.in.ua | Live |
-| 2 | B1 | Vocabulary Trivia | https://trivia.englishpusher.in.ua/ | Live |
+| 2 | B1 | Vocabulary Trivia | /b1-trivia/ | Live — migrated from external repo |
 | 3 | B1 | Word Connections | /word-connections/ | Live |
-| 4 | B1 | Vocabulary Cards | # | Coming Soon (disabled) |
-| 5 | C1 | C1 Vocabulary Trivia | /c1-trivia/ | Live |
+| 4 | B1 | Vocabulary Cards | /b1-flashcards/ | Live — crimson `#9f1239` card |
+| 5 | C1 | C1 Vocabulary | /c1-business/ | Live |
 
 Hub has level tabs (All / B1 / C1) above the accordion — filters `filteredItems`.
 
@@ -118,6 +220,17 @@ Hub has level tabs (All / B1 / C1) above the accordion — filters `filteredItem
 - Builds with `VITE_BASE_PATH=/`, publishes `dist/` to `gh-pages` branch
 - `cname: app.englishpusher.in.ua` written automatically by the action
 - Manual deploy: `npm run deploy` (uses `cross-env` + `gh-pages`)
+
+### ⚠️ CNAME / custom domain — known gotcha
+
+The `gh-pages` package **replaces the entire `gh-pages` branch** with the contents of `dist/`. The `dist/` folder never contains a `CNAME` file, so every deploy without `--cname` silently deletes the custom domain record from GitHub Pages → immediate 404 on `app.englishpusher.in.ua`.
+
+**Fix already applied:** `package.json` deploy script always passes `--cname app.englishpusher.in.ua`:
+```
+"deploy": "gh-pages -d dist --cname app.englishpusher.in.ua"
+```
+
+**Never remove `--cname` from this command.** If you ever change the deploy script, add a new deploy script, or switch tools, make sure CNAME is handled explicitly. GitHub Actions workflow handles it via its own `cname:` option — that path is safe as-is.
 
 ## Git identity (local repo config)
 
@@ -139,7 +252,7 @@ Hub has level tabs (All / B1 / C1) above the accordion — filters `filteredItem
 
 ## Remaining TODOs
 
-- Vocabulary Cards app — future project, card already stubbed as Coming Soon
 - Verify DNS CNAME `app.englishpusher.in.ua` is pointed at GitHub Pages
-- Add real C1 word list from teacher when available
+- Add more C1 topics when teacher provides word lists
 - Rename `c1-trivia/` to final name when teacher decides
+- Update direct topic links table above whenever a new topic is added

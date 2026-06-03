@@ -2,7 +2,7 @@ import { useState, useEffect, type ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Volume2, RotateCcw, Zap } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
-import { TOPICS, type Topic, type C1Word } from "./data.ts";
+import { TOPICS, type Topic, type B1Word } from "./data.ts";
 import teacherThinking from "../assets/teacher-thinking.png";
 import teacherCorrect from "../assets/teacher-correct.png";
 
@@ -66,8 +66,8 @@ function SpeakerButton({ word }: { word: string }) {
       className={[
         "flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all duration-200",
         active
-          ? "border-purple-400 bg-purple-50 text-purple-600"
-          : "border-neutral-200 bg-white text-neutral-500 hover:border-purple-300 hover:text-purple-500",
+          ? "border-brand bg-orange-50 text-brand"
+          : "border-neutral-200 bg-white text-neutral-500 hover:border-brand/50 hover:text-brand",
       ].join(" ")}
     >
       <Volume2 size={17} />
@@ -87,7 +87,7 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
       </span>
       <div className="flex-1 bg-neutral-200 rounded-full h-1.5 overflow-hidden">
         <motion.div
-          className="h-1.5 rounded-full bg-purple-500"
+          className="h-1.5 rounded-full bg-brand"
           initial={false}
           animate={{ width: `${(current / total) * 100}%` }}
           transition={{ duration: 0.4, ease: "easeOut" }}
@@ -111,8 +111,8 @@ function TopicSelectScreen({ onSelect }: { onSelect: (topic: Topic) => void }) {
       className="w-full max-w-3xl flex flex-col gap-6"
     >
       <div className="flex flex-col gap-1">
-        <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700 uppercase tracking-wide w-fit">
-          C1 Business
+        <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-brand uppercase tracking-wide w-fit">
+          B1 Vocabulary
         </span>
         <h2 className="font-display text-3xl font-bold text-neutral-900 mt-2">
           Flash Cards
@@ -128,10 +128,10 @@ function TopicSelectScreen({ onSelect }: { onSelect: (topic: Topic) => void }) {
             key={topic.id}
             onClick={() => onSelect(topic)}
             disabled={topic.words.length === 0}
-            className="rounded-2xl bg-white border-2 border-neutral-200 px-6 py-5 text-left hover:border-purple-300 hover:shadow-md transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-2xl bg-white border-2 border-neutral-200 px-6 py-5 text-left hover:border-orange-300 hover:shadow-md transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <div className="text-3xl mb-3">{topic.icon}</div>
-            <h3 className="font-display font-bold text-lg text-neutral-900 group-hover:text-purple-700 transition-colors">
+            <h3 className="font-display font-bold text-lg text-neutral-900 group-hover:text-brand transition-colors">
               {topic.title}
             </h3>
             <p className="text-sm text-neutral-500 mt-1 leading-snug">
@@ -157,14 +157,16 @@ function FlashCard({
   isFlipped,
   onFlip,
 }: {
-  word: C1Word;
+  word: B1Word;
   index: number;
   isFlipped: boolean;
   onFlip: () => void;
 }) {
   const borderColors: [string, string, string] = isFlipped
-    ? ["#1e3a5f", "#60a5fa", "#3b82f6"]
-    : ["#4c1d95", "#a78bfa", "#7c3aed"];
+    ? ["#1e3a5f", "#0ea5e9", "#0284c7"]
+    : ["#78350f", "#f97316", "#f07c1a"];
+
+  const exampleParts = word.example.split("___");
 
   return (
     <AnimatePresence mode="wait">
@@ -188,29 +190,33 @@ function FlashCard({
                 <h2 className="font-display text-[2.4rem] md:text-5xl font-bold text-neutral-900 leading-tight">
                   {word.word}
                 </h2>
-                <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-700">
-                  {word.partOfSpeech}
-                </span>
+                {word.transcription && (
+                  <span className="font-mono text-neutral-400 tracking-wide" style={{ fontSize: "1.4rem" }}>
+                    {word.transcription}
+                  </span>
+                )}
               </div>
 
               <button
                 onClick={onFlip}
-                className="rounded-xl bg-purple-600 text-white font-display font-bold px-10 py-3.5 text-base hover:bg-purple-700 transition-colors shadow-sm"
+                className="rounded-xl bg-brand text-white font-display font-bold px-10 py-3.5 text-base hover:bg-brand/90 transition-colors shadow-sm"
               >
-                See Definition
+                See Translation
               </button>
             </div>
           ) : (
             /* ── Back face ── */
             <div className="flex flex-col gap-5 px-4 md:pl-8 md:pr-10 py-7 min-h-72 max-h-[calc(100svh-300px)] overflow-y-auto scroll-thin [scrollbar-gutter:stable]">
               <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-2 min-w-0">
+                <div className="flex flex-col min-w-0">
                   <span className="font-display font-bold text-xl text-neutral-900 md:truncate">
                     {word.word}
                   </span>
-                  <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-semibold text-purple-700 shrink-0">
-                    {word.partOfSpeech}
-                  </span>
+                  {word.transcription && (
+                    <span className="font-mono text-xs text-neutral-400 tracking-wide">
+                      {word.transcription}
+                    </span>
+                  )}
                 </div>
                 <SpeakerButton word={word.word} />
               </div>
@@ -219,10 +225,10 @@ function FlashCard({
 
               <div className="flex flex-col gap-1">
                 <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
-                  Definition
+                  Translation
                 </p>
-                <p className="text-neutral-800 text-base leading-relaxed">
-                  {word.definition}
+                <p className="font-display font-bold text-2xl text-brand leading-tight">
+                  {word.translation}
                 </p>
               </div>
 
@@ -231,15 +237,9 @@ function FlashCard({
                   Example
                 </p>
                 <p className="text-neutral-600 text-sm leading-relaxed italic">
-                  {word.example.replace("___", `<b>${word.word}</b>`).split(/(<b>.*?<\/b>)/).map((part, i) =>
-                    part.startsWith("<b>") ? (
-                      <strong key={i} className="text-neutral-800 not-italic">
-                        {word.word}
-                      </strong>
-                    ) : (
-                      part
-                    )
-                  )}
+                  {exampleParts[0]}
+                  <strong className="text-neutral-800 not-italic">{word.word}</strong>
+                  {exampleParts[1]}
                 </p>
               </div>
 
@@ -308,9 +308,10 @@ export default function App() {
 
   return (
     <div className="relative h-viewport flex flex-col">
+      {/* Header */}
       <AppHeader
-        title="Flash Cards"
-        subtitle="C1 Business · by Englishpusher"
+        title="Vocabulary Cards"
+        subtitle="B1 · by Englishpusher"
         onTopics={handleBackToSelect}
         showTopics={phase === "studying"}
       />
@@ -329,7 +330,7 @@ export default function App() {
               <div className="w-full max-w-4xl flex flex-col gap-6">
                 {/* Topic label + progress */}
                 <div className="flex items-center gap-3">
-                  <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700 shrink-0">
+                  <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-brand shrink-0">
                     {topic.icon} {topic.title}
                   </span>
                   <div className="flex-1">
@@ -377,7 +378,7 @@ export default function App() {
                       <button
                         onClick={goNext}
                         disabled={index === topic.words.length - 1}
-                        className="flex-1 rounded-xl bg-purple-600 text-white font-display font-bold py-3.5 text-sm hover:bg-purple-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                        className="flex-1 rounded-xl bg-brand text-white font-display font-bold py-3.5 text-sm hover:bg-brand/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                       >
                         Next →
                       </button>
@@ -392,17 +393,17 @@ export default function App() {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 10 }}
                           transition={{ duration: 0.35, delay: 0.15, ease: "easeOut" }}
-                          className="flex items-center justify-between gap-4 rounded-2xl border-2 border-dashed border-purple-200 bg-purple-50 px-5 py-4 hover:border-purple-400 hover:bg-purple-100 transition-all duration-200 group"
+                          className="flex items-center justify-between gap-4 rounded-2xl border-2 border-dashed border-orange-200 bg-orange-50 px-5 py-4 hover:border-orange-400 hover:bg-orange-100 transition-all duration-200 group"
                         >
                           <div className="flex flex-col gap-0.5">
-                            <span className="font-display font-bold text-sm text-purple-700">
+                            <span className="font-display font-bold text-sm text-brand">
                               Ready to test yourself?
                             </span>
-                            <span className="text-xs text-purple-500">
+                            <span className="text-xs text-orange-400">
                               Take the trivia quiz for this topic
                             </span>
                           </div>
-                          <div className="flex items-center gap-1.5 rounded-xl bg-purple-600 text-white font-display font-bold px-4 py-2.5 text-sm group-hover:bg-purple-700 transition-colors shrink-0">
+                          <div className="flex items-center gap-1.5 rounded-xl bg-brand text-white font-display font-bold px-4 py-2.5 text-sm group-hover:bg-brand/90 transition-colors shrink-0">
                             <Zap size={14} />
                             Take Quiz
                           </div>

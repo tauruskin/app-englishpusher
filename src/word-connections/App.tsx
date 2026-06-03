@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Shuffle, RotateCcw, ArrowLeft, ChevronRight, Lightbulb } from "lucide-react";
+import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import { PUZZLES, DIFFICULTY_STYLES, type Puzzle, type Group } from "./data.ts";
 import teacherThinking from "../assets/teacher-thinking.png";
 
@@ -100,7 +101,7 @@ function WordTile({
     <button
       onClick={onToggle}
       className={[
-        "relative h-16 md:h-20 rounded-xl font-display font-semibold text-[10px] sm:text-xs md:text-base uppercase tracking-wide leading-tight px-1",
+        "relative min-h-14 md:min-h-20 rounded-xl font-display font-semibold text-[10px] sm:text-xs md:text-base uppercase tracking-wide leading-tight px-1 py-2",
         "transition-all duration-150 select-none",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand",
         shaking ? "animate-shake" : "",
@@ -535,7 +536,7 @@ function GameBoard({
       </AnimatePresence>
 
       {/* Tile grid */}
-      <div className={`grid grid-cols-4 gap-3 ${shaking ? "animate-shake" : ""}`}>
+      <div className={`grid grid-cols-4 gap-1.5 md:gap-3 ${shaking ? "animate-shake" : ""}`}>
         {remainingTiles.map((tile) => (
           <WordTile
             key={tile.word}
@@ -601,25 +602,7 @@ export default function App() {
   return (
     <div className="relative min-h-screen flex flex-col">
       {/* Header */}
-      <header className="bg-neutral-900 border-b border-neutral-700/50 px-6 py-4">
-        <div className="mx-auto flex max-w-2xl items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Englishpusher logo" className="h-8 w-auto" />
-            <div>
-              <h1 className="font-display text-base font-bold leading-tight text-white">
-                Word Connections
-              </h1>
-              <p className="text-xs text-neutral-400">by Englishpusher</p>
-            </div>
-          </div>
-          <a
-            href="https://app.englishpusher.in.ua"
-            className="text-xs text-neutral-400 hover:text-brand transition-colors"
-          >
-            ← All apps
-          </a>
-        </div>
-      </header>
+      <AppHeader title="Word Connections" subtitle="B1 · by Englishpusher" />
 
       {/* Main */}
       <main className="flex flex-1 items-start justify-center px-6 py-10">
@@ -681,20 +664,7 @@ export default function App() {
         </div>{/* max-w-5xl row */}
       </main>
 
-      {/* Footer */}
-      <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-4">
-        <div className="mx-auto max-w-2xl text-center text-sm text-neutral-400">
-          Copyright &copy; 2026 &mdash;{" "}
-          <a
-            href="https://englishpusher.in.ua"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-brand hover:text-brand/80 transition-colors"
-          >
-            Englishpusher
-          </a>
-        </div>
-      </footer>
+      <AppFooter />
 
     </div>
   );

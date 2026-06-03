@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef, type ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { RotateCcw, CheckCircle2, XCircle } from "lucide-react";
+import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import { TOPICS, type Topic, type C1Word } from "../c1-flashcards/data.ts";
 import teacherThinking from "../assets/teacher-thinking.png";
 import teacherCorrect from "../assets/teacher-correct.png";
@@ -223,7 +224,7 @@ function TopicSelectScreen({ onSelect }: { onSelect: (topic: Topic) => void }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="w-full max-w-3xl flex flex-col gap-6"
+      className="w-full max-w-4xl flex flex-col gap-6"
     >
       <div className="flex flex-col gap-1">
         <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700 uppercase tracking-wide w-fit">
@@ -272,7 +273,7 @@ function StartScreen({ topic, onStart }: { topic: Topic; onStart: () => void }) 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="flex gap-8 items-start w-full max-w-3xl"
+      className="flex gap-8 items-start w-full max-w-4xl"
     >
       {/* Teacher — desktop sidebar */}
       <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
@@ -363,7 +364,7 @@ function EndScreen({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.35 }}
-      className="flex gap-8 items-start w-full max-w-3xl flex-1 min-h-0"
+      className="flex gap-8 items-start w-full max-w-4xl flex-1 min-h-0"
     >
       {/* Teacher — desktop sidebar, pinned to top */}
       <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
@@ -591,7 +592,7 @@ function GameScreen({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full max-w-3xl flex flex-col gap-5"
+      className="w-full max-w-4xl flex flex-col gap-5"
     >
       {/* Top bar */}
       <div className="flex items-center justify-between gap-4">
@@ -743,8 +744,13 @@ function GameScreen({
 // ---------------------------------------------------------------------------
 
 export default function App() {
-  const [phase, setPhase] = useState<Phase>("select");
-  const [topic, setTopic] = useState<Topic | null>(null);
+  const initialTopic = (() => {
+    const id = new URLSearchParams(window.location.search).get("topic");
+    return id ? (TOPICS.find((t) => t.id === id) ?? null) : null;
+  })();
+
+  const [phase, setPhase] = useState<Phase>(initialTopic ? "start" : "select");
+  const [topic, setTopic] = useState<Topic | null>(initialTopic);
 
   // Preload all teacher images so they're ready before they're needed
   useEffect(() => {
@@ -760,6 +766,12 @@ export default function App() {
   function handleSelectTopic(t: Topic) {
     setTopic(t);
     setPhase("start");
+    history.replaceState(null, "", `?topic=${t.id}`);
+  }
+
+  function handleBackToSelect() {
+    setPhase("select");
+    history.replaceState(null, "", window.location.pathname);
   }
 
   function startGame() {
@@ -786,28 +798,12 @@ export default function App() {
   return (
     <div className="relative h-viewport flex flex-col">
       {/* Header */}
-      <header className="bg-neutral-900 border-b border-neutral-700/50 px-6 py-4">
-        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Englishpusher logo" className="h-8 w-auto" />
-            <div>
-              <h1 className="font-display text-base font-bold leading-tight text-white">
-                Vocabulary Trivia
-              </h1>
-              <p className="text-xs text-neutral-400">C1 Business · by Englishpusher</p>
-            </div>
-          </div>
-          {phase === "select" ? (
-            <a href="https://app.englishpusher.in.ua" className="text-xs text-neutral-400 hover:text-brand transition-colors">
-              ← All apps
-            </a>
-          ) : (
-            <button onClick={() => setPhase("select")} className="text-xs text-neutral-400 hover:text-brand transition-colors">
-              ← Topics
-            </button>
-          )}
-        </div>
-      </header>
+      <AppHeader
+        title="Vocabulary Trivia"
+        subtitle="C1 Business · by Englishpusher"
+        onTopics={handleBackToSelect}
+        showTopics={phase !== "select"}
+      />
 
       {/* Main — flex-col so each phase wrapper can use flex-1 min-h-0 */}
       <main className="flex-1 flex flex-col overflow-y-auto pb-4">
@@ -842,7 +838,7 @@ export default function App() {
                 total={questions.length}
                 results={results}
                 onReplay={startGame}
-                onMenu={() => setPhase("select")}
+                onMenu={handleBackToSelect}
                 onPracticeWeak={practiceWeakWords}
               />
             </motion.div>
@@ -850,15 +846,7 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-4">
-        <div className="mx-auto max-w-3xl text-center text-sm text-neutral-400">
-          Copyright &copy; 2026 &mdash;{" "}
-          <a href="https://englishpusher.in.ua" target="_blank" rel="noopener noreferrer" className="text-brand hover:text-brand/80 transition-colors">
-            Englishpusher
-          </a>
-        </div>
-      </footer>
+      <AppFooter onTopics={handleBackToSelect} showTopics={phase !== "select"} />
     </div>
   );
 }

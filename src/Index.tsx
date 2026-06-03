@@ -74,6 +74,7 @@ interface AppItem {
   disabled: boolean;
   badge?: string;
   level: Level;
+  hidden?: boolean; // set true to hide from hub without deleting
 }
 
 const ITEMS: AppItem[] = [
@@ -95,7 +96,7 @@ const ITEMS: AppItem[] = [
     label: "Vocabulary Trivia",
     description: "Test your vocabulary with fun trivia questions",
     cta: "Start practicing",
-    href: "https://trivia.englishpusher.in.ua/",
+    href: "/b1-trivia/",
     bgFrom: "#1d4ed8",
     bgTo: "#1e3a8a",
     borderColor: "#3b82f6",
@@ -115,19 +116,19 @@ const ITEMS: AppItem[] = [
     Icon: Grid2x2,
     disabled: false,
     level: "B1",
+    hidden: true, // hidden by teacher request — re-enable by removing this line
   },
   {
     id: 4,
     label: "Vocabulary Cards",
     description: "Practise English words in an interactive way",
     cta: "",
-    href: "#",
-    bgFrom: "#404040",
-    bgTo: "#1a1a1a",
-    borderColor: "#a3a3a3",
+    href: "/b1-flashcards/",
+    bgFrom: "#9f1239",
+    bgTo: "#4c0519",
+    borderColor: "#e11d48",
     Icon: Layers,
-    disabled: true,
-    badge: "Coming Soon",
+    disabled: false,
     level: "B1",
   },
   {
@@ -331,9 +332,10 @@ export default function Index() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<Tab>("all");
 
-  const filteredItems = activeTab === "all"
+  const filteredItems = (activeTab === "all"
     ? ITEMS
-    : ITEMS.filter((item) => item.level === activeTab);
+    : ITEMS.filter((item) => item.level === activeTab)
+  ).filter((item) => !item.hidden);
 
   return (
     <motion.div
