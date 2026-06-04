@@ -34,6 +34,7 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Lesson 6: Jobs & Work | https://app.englishpusher.in.ua/b1-flashcards/?topic=jobs |
 | Lesson 15: Story Words | https://app.englishpusher.in.ua/b1-flashcards/?topic=story-words |
 | Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-flashcards/?topic=collocations-get-make |
+| Innovation & Leadership | https://app.englishpusher.in.ua/b1-flashcards/?topic=innovation-leadership |
 
 **B1 Vocabulary Trivia** (`/b1-trivia/`):
 
@@ -46,6 +47,7 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Lesson 6: Jobs & Work | https://app.englishpusher.in.ua/b1-trivia/?topic=jobs |
 | Lesson 15: Story Words | https://app.englishpusher.in.ua/b1-trivia/?topic=story-words |
 | Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-trivia/?topic=collocations-get-make |
+| Innovation & Leadership | https://app.englishpusher.in.ua/b1-trivia/?topic=innovation-leadership |
 
 **C1 Flash Cards** (`/c1-flashcards/`):
 
