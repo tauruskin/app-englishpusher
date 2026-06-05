@@ -34,7 +34,6 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Lesson 6: Jobs & Work | https://app.englishpusher.in.ua/b1-flashcards/?topic=jobs |
 | Lesson 15: Story Words | https://app.englishpusher.in.ua/b1-flashcards/?topic=story-words |
 | Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-flashcards/?topic=collocations-get-make |
-| Innovation & Leadership | https://app.englishpusher.in.ua/b1-flashcards/?topic=innovation-leadership |
 
 **B1 Vocabulary Trivia** (`/b1-trivia/`):
 
@@ -47,7 +46,6 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Lesson 6: Jobs & Work | https://app.englishpusher.in.ua/b1-trivia/?topic=jobs |
 | Lesson 15: Story Words | https://app.englishpusher.in.ua/b1-trivia/?topic=story-words |
 | Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-trivia/?topic=collocations-get-make |
-| Innovation & Leadership | https://app.englishpusher.in.ua/b1-trivia/?topic=innovation-leadership |
 
 **C1 Flash Cards** (`/c1-flashcards/`):
 
@@ -56,6 +54,7 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Innovation | https://app.englishpusher.in.ua/c1-flashcards/?topic=innovation |
 | Writing CEO Communication | https://app.englishpusher.in.ua/c1-flashcards/?topic=ceo-communication |
 | Leadership & Equality | https://app.englishpusher.in.ua/c1-flashcards/?topic=leadership-equality |
+| Innovation & Leadership | https://app.englishpusher.in.ua/c1-flashcards/?topic=innovation-leadership |
 
 **C1 Vocabulary Trivia** (`/c1-trivia/`):
 
@@ -64,6 +63,7 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Innovation | https://app.englishpusher.in.ua/c1-trivia/?topic=innovation |
 | Writing CEO Communication | https://app.englishpusher.in.ua/c1-trivia/?topic=ceo-communication |
 | Leadership & Equality | https://app.englishpusher.in.ua/c1-trivia/?topic=leadership-equality |
+| Innovation & Leadership | https://app.englishpusher.in.ua/c1-trivia/?topic=innovation-leadership |
 
 **How it works:** `?topic=<id>` is read on mount via `URLSearchParams`. The URL updates automatically when the user selects a topic, and clears when they go back to the topic list. The `id` field in `TOPICS` in `data.ts` is the canonical key — keep it stable, never rename it after publishing.
 

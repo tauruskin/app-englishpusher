@@ -217,14 +217,26 @@ function FlashCard({
 
               <div className="border-t border-neutral-100" />
 
-              <div className="flex flex-col gap-1">
-                <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
-                  Definition
-                </p>
-                <p className="text-neutral-800 text-base leading-relaxed">
-                  {word.definition}
-                </p>
-              </div>
+              {word.translation && (
+                <div className="flex flex-col gap-1">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+                    Translation
+                  </p>
+                  <p className="text-neutral-800 text-base leading-relaxed">
+                    {word.translation}
+                  </p>
+                </div>
+              )}
+              {word.definition && (
+                <div className="flex flex-col gap-1">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+                    Definition
+                  </p>
+                  <p className="text-neutral-800 text-base leading-relaxed">
+                    {word.definition}
+                  </p>
+                </div>
+              )}
 
               <div className="flex flex-col gap-1">
                 <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
