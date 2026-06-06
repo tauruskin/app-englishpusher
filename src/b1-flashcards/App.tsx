@@ -1,6 +1,6 @@
 import { useState, useEffect, type ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Volume2, RotateCcw, Zap } from "lucide-react";
+import { Volume2, RotateCcw, Zap, ArrowLeftRight } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import { TOPICS, type Topic, type B1Word } from "./data.ts";
 import teacherThinking from "../assets/teacher-thinking.png";
@@ -155,11 +155,13 @@ function FlashCard({
   word,
   index,
   isFlipped,
+  reversed,
   onFlip,
 }: {
   word: B1Word;
   index: number;
   isFlipped: boolean;
+  reversed: boolean;
   onFlip: () => void;
 }) {
   const borderColors: [string, string, string] = isFlipped
@@ -171,7 +173,7 @@ function FlashCard({
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        key={`${index}-${isFlipped ? "back" : "front"}`}
+        key={`${index}-${isFlipped ? "back" : "front"}-${reversed ? "r" : "n"}`}
         initial={{ opacity: 0, y: 12, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -12, scale: 0.98 }}
@@ -179,13 +181,12 @@ function FlashCard({
         className="w-full"
       >
         <GradientBorder colors={borderColors}>
-          {!isFlipped ? (
-            /* ── Front face ── */
-            <div className="flex flex-col items-center gap-6 px-4 md:px-8 py-8 min-h-72 justify-between">
+          {!isFlipped && !reversed && (
+            /* Normal front: word + transcription + example */
+            <div className="flex flex-col items-center gap-5 px-4 md:px-8 py-8 min-h-72 justify-between">
               <div className="self-end">
                 <SpeakerButton word={word.word} />
               </div>
-
               <div className="flex flex-col items-center gap-2 text-center">
                 <h2 className="font-display text-[2.4rem] md:text-5xl font-bold text-neutral-900 leading-tight">
                   {word.word}
@@ -195,8 +196,12 @@ function FlashCard({
                     {word.transcription}
                   </span>
                 )}
+                <p className="text-neutral-600 text-sm leading-relaxed italic mt-2">
+                  {exampleParts[0]}
+                  <strong className="text-neutral-800 not-italic">{word.word}</strong>
+                  {exampleParts[1]}
+                </p>
               </div>
-
               <button
                 onClick={onFlip}
                 className="rounded-xl bg-brand text-white font-display font-bold px-10 py-3.5 text-base hover:bg-brand/90 transition-colors shadow-sm"
@@ -204,12 +209,55 @@ function FlashCard({
                 See Translation
               </button>
             </div>
-          ) : (
-            /* ── Back face ── */
-            <div className="flex flex-col gap-5 px-4 md:pl-8 md:pr-10 py-7 min-h-72 max-h-[calc(100svh-300px)] overflow-y-auto scroll-thin [scrollbar-gutter:stable]">
+          )}
+
+          {!isFlipped && reversed && (
+            /* Reversed front: translation only, no speaker */
+            <div className="flex flex-col items-center gap-5 px-4 md:px-8 py-8 min-h-72 justify-center">
+              <div className="flex flex-col gap-1 text-center">
+                <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+                  Translation
+                </p>
+                <p className="font-display font-bold text-3xl text-neutral-900 leading-tight">
+                  {word.translation}
+                </p>
+              </div>
+              <button
+                onClick={onFlip}
+                className="rounded-xl bg-brand text-white font-display font-bold px-10 py-3.5 text-base hover:bg-brand/90 transition-colors shadow-sm"
+              >
+                See Word
+              </button>
+            </div>
+          )}
+
+          {isFlipped && !reversed && (
+            /* Normal back: translation only */
+            <div className="flex flex-col items-center gap-5 px-4 md:px-8 py-8 min-h-72 justify-center">
+              <div className="flex flex-col gap-1 text-center">
+                <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
+                  Translation
+                </p>
+                <p className="font-display font-bold text-2xl text-brand leading-tight">
+                  {word.translation}
+                </p>
+              </div>
+              <button
+                onClick={onFlip}
+                className="flex items-center gap-1.5 text-sm text-neutral-400 hover:text-neutral-600 transition-colors"
+              >
+                <RotateCcw size={13} />
+                Show word
+              </button>
+            </div>
+          )}
+
+          {isFlipped && reversed && (
+            /* Reversed back: word + transcription + example + speaker */
+            <div className="flex flex-col gap-5 px-4 md:px-8 py-7 min-h-72 justify-between">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex flex-col min-w-0">
-                  <span className="font-display font-bold text-xl text-neutral-900 md:truncate">
+                  <span className="font-display font-bold text-xl text-neutral-900">
                     {word.word}
                   </span>
                   {word.transcription && (
@@ -220,18 +268,7 @@ function FlashCard({
                 </div>
                 <SpeakerButton word={word.word} />
               </div>
-
               <div className="border-t border-neutral-100" />
-
-              <div className="flex flex-col gap-1">
-                <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
-                  Translation
-                </p>
-                <p className="font-display font-bold text-2xl text-brand leading-tight">
-                  {word.translation}
-                </p>
-              </div>
-
               <div className="flex flex-col gap-1">
                 <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
                   Example
@@ -242,13 +279,12 @@ function FlashCard({
                   {exampleParts[1]}
                 </p>
               </div>
-
               <button
                 onClick={onFlip}
-                className="mt-auto self-center flex items-center gap-1.5 text-sm text-neutral-400 hover:text-neutral-600 transition-colors"
+                className="self-center flex items-center gap-1.5 text-sm text-neutral-400 hover:text-neutral-600 transition-colors"
               >
                 <RotateCcw size={13} />
-                Show word
+                Show translation
               </button>
             </div>
           )}
@@ -272,6 +308,7 @@ export default function App() {
   const [topic, setTopic] = useState<Topic | null>(initialTopic);
   const [index, setIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [reversed, setReversed] = useState(false);
 
   useEffect(() => {
     [teacherThinking, teacherCorrect].forEach((src) => {
@@ -284,6 +321,7 @@ export default function App() {
     setTopic(t);
     setIndex(0);
     setIsFlipped(false);
+    setReversed(false);
     setPhase("studying");
     history.replaceState(null, "", `?topic=${t.id}`);
   }
@@ -328,7 +366,7 @@ export default function App() {
           {phase === "studying" && topic && (
             <motion.div key="studying" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
               <div className="w-full max-w-4xl flex flex-col gap-6">
-                {/* Topic label + progress */}
+                {/* Topic label + progress + reverse toggle */}
                 <div className="flex items-center gap-3">
                   <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-brand shrink-0">
                     {topic.icon} {topic.title}
@@ -336,6 +374,19 @@ export default function App() {
                   <div className="flex-1">
                     <ProgressBar current={index + 1} total={topic.words.length} />
                   </div>
+                  <button
+                    onClick={() => { setReversed(r => !r); setIsFlipped(false); }}
+                    title="Reverse mode"
+                    className={[
+                      "shrink-0 flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold border-2 transition-all duration-200",
+                      reversed
+                        ? "bg-brand text-white border-brand"
+                        : "bg-white text-neutral-500 border-neutral-200 hover:border-brand/50 hover:text-brand",
+                    ].join(" ")}
+                  >
+                    <ArrowLeftRight size={12} />
+                    <span className="hidden sm:inline">Reverse</span>
+                  </button>
                 </div>
 
                 {/* Two-column layout */}
@@ -364,6 +415,7 @@ export default function App() {
                       word={topic.words[index]}
                       index={index}
                       isFlipped={isFlipped}
+                      reversed={reversed}
                       onFlip={() => setIsFlipped((f) => !f)}
                     />
 
