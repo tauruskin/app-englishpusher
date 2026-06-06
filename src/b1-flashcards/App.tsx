@@ -199,7 +199,7 @@ function FlashCard({
                 <p className="text-neutral-600 text-sm leading-relaxed italic mt-2">
                   {exampleParts[0]}
                   <strong className="text-neutral-800 not-italic">{word.word}</strong>
-                  {exampleParts[1]}
+                  {exampleParts[1] ?? ""}
                 </p>
               </div>
               <button
@@ -276,7 +276,7 @@ function FlashCard({
                 <p className="text-neutral-600 text-sm leading-relaxed italic">
                   {exampleParts[0]}
                   <strong className="text-neutral-800 not-italic">{word.word}</strong>
-                  {exampleParts[1]}
+                  {exampleParts[1] ?? ""}
                 </p>
               </div>
               <button
