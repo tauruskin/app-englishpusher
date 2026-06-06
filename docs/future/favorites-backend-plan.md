@@ -166,7 +166,7 @@ This is a 2–3 day feature for one developer.
 
 ## Pre-requisites before starting
 
-1. Create a Supabase account and project at https://supabase.com
+1. ✅ Supabase account exists (free tier, unused as of 2026-06-06) — create a new project inside it for this app
 2. Enable Google OAuth in Supabase Auth settings (requires a Google Cloud project)
 3. Add Supabase JS client: `npm install @supabase/supabase-js`
 4. Store Supabase URL + anon key in a `.env` file (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) — the anon key is safe to expose in frontend code when RLS is correctly configured
