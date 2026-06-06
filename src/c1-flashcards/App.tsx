@@ -199,7 +199,7 @@ function FlashCard({
                 <p className="text-neutral-600 text-sm leading-relaxed italic mt-2">
                   {exampleParts[0]}
                   <strong className="text-neutral-800 not-italic">{word.word}</strong>
-                  {exampleParts[1]}
+                  {exampleParts[1] ?? ""}
                 </p>
               </div>
               <button
@@ -233,7 +233,7 @@ function FlashCard({
 
           {isFlipped && !reversed && (
             /* Normal back: definition or translation only */
-            <div className="flex flex-col items-center gap-5 px-4 md:px-8 py-8 min-h-72 justify-center">
+            <div className="flex flex-col items-center gap-5 px-4 md:px-8 py-8 min-h-72 max-h-[calc(100svh-300px)] overflow-y-auto scroll-thin [scrollbar-gutter:stable] justify-center">
               <div className="flex flex-col gap-1 text-center max-w-sm">
                 <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">
                   {meaningLabel}
@@ -274,7 +274,7 @@ function FlashCard({
                 <p className="text-neutral-600 text-sm leading-relaxed italic">
                   {exampleParts[0]}
                   <strong className="text-neutral-800 not-italic">{word.word}</strong>
-                  {exampleParts[1]}
+                  {exampleParts[1] ?? ""}
                 </p>
               </div>
               <button
