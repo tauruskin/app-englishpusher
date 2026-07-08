@@ -197,3 +197,22 @@
 ### Not deployed
 - c1-trivia fix is committed-ready but NOT deployed — the live site still shows blank
   meanings for Innovation & Leadership trivia until next `npm run deploy`
+
+---
+
+## 2026-07-08 (later) — Hub redesign: B1 Vocabulary chooser page + unified CTAs
+
+### What was done
+
+- NEW `/b1-vocabulary/` chooser page (`src/b1-vocabulary/`, `apps/b1-vocabulary/index.html`,
+  vite entry) — mirrors c1-business: Flash Cards (crimson, "Study now") + Vocabulary
+  Trivia (blue, "Start quiz"). Word Connections included but `hidden: true`
+  (teacher request preserved from old hub entry); app still reachable at /word-connections/
+- Hub consolidated from 5 cards to 3: **B1 Grammar Testing** (renamed from "Grammar
+  Testing"), **B1 Vocabulary** (→ /b1-vocabulary/), **C1 Vocabulary** (→ /c1-business/)
+- CTA convention unified: hub cards all "Start practicing"; chooser pages "Study now" /
+  "Start quiz" / "Start playing" (fixed: Vocabulary Cards had empty cta, C1 card
+  said "Start quiz" while leading to a chooser)
+- No student-facing links broken: all ?topic= deep links and app URLs unchanged
+- Verified via headless Edge against production build: 17 checks (hub cards, tabs,
+  accordion click-through, chooser links, word-connections URL, c1-business regression)

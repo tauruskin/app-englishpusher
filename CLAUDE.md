@@ -14,6 +14,7 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 | Grammar Testing | https://grammar.englishpusher.in.ua |
 | Vocabulary Trivia (B1) | https://app.englishpusher.in.ua/b1-trivia/ |
 | Word Connections (B1) | https://app.englishpusher.in.ua/word-connections/ |
+| B1 Vocabulary (chooser page) | https://app.englishpusher.in.ua/b1-vocabulary/ |
 | B1 Vocabulary Cards | https://app.englishpusher.in.ua/b1-flashcards/ |
 | C1 Flash Cards | https://app.englishpusher.in.ua/c1-flashcards/ |
 | C1 Vocabulary Trivia | https://app.englishpusher.in.ua/c1-trivia/ |
@@ -98,6 +99,7 @@ index.html                        ← hub entry point
 apps/
   b1-trivia/index.html            ← B1 Trivia entry point
   b1-flashcards/index.html        ← B1 Flashcards entry point
+  b1-vocabulary/index.html        ← B1 Vocabulary chooser page entry point
   c1-trivia/index.html            ← C1 Trivia entry point
   c1-flashcards/index.html        ← C1 Flashcards entry point
   c1-business/index.html          ← C1 Business entry point
@@ -117,6 +119,8 @@ src/
     main.tsx / App.tsx            ← B1 Vocabulary Trivia game
   b1-flashcards/
     main.tsx / App.tsx / data.ts  ← B1 Vocabulary Cards (data.ts = single source for B1 words)
+  b1-vocabulary/
+    main.tsx / App.tsx            ← B1 Vocabulary chooser page (mirrors c1-business)
   c1-trivia/
     main.tsx / App.tsx            ← C1 Vocabulary Trivia game (imports data from c1-flashcards/data.ts)
   c1-flashcards/
@@ -203,13 +207,15 @@ Left: copyright + main site link. Right: Instagram icon + handle.
 
 | id | Level | Label | href | Status |
 |---|---|---|---|---|
-| 1 | B1 | Grammar Testing | https://grammar.englishpusher.in.ua | Live |
-| 2 | B1 | Vocabulary Trivia | /b1-trivia/ | Live — migrated from external repo |
-| 3 | B1 | Word Connections | /word-connections/ | Live |
-| 4 | B1 | Vocabulary Cards | /b1-flashcards/ | Live — crimson `#9f1239` card |
-| 5 | C1 | C1 Vocabulary | /c1-business/ | Live |
+| 1 | B1 | B1 Grammar Testing | https://grammar.englishpusher.in.ua | Live |
+| 2 | B1 | B1 Vocabulary | /b1-vocabulary/ | Live — crimson `#9f1239` card, chooser page |
+| 3 | C1 | C1 Vocabulary | /c1-business/ | Live — chooser page |
 
 Hub has level tabs (All / B1 / C1) above the accordion — filters `filteredItems`.
+
+Both vocabulary cards open a **chooser page** (`/b1-vocabulary/`, `/c1-business/`) listing that level's activities. Word Connections lives inside the B1 chooser but is `hidden: true` (teacher request) — re-enable in `src/b1-vocabulary/App.tsx`; the app itself stays reachable at `/word-connections/`.
+
+**CTA convention:** main hub cards always say "Start practicing"; chooser-page cards say "Study now" (flash cards), "Start quiz" (trivia), "Start playing" (games).
 
 ## Animations (motion/react)
 
