@@ -1,0 +1,7 @@
+{
+  "enabledPlugins": {
+    "superpowers-developing-for-claude-code@superpowers-marketplace": true,
+    "design@benai-skills": true,
+    "obsidian@benai-skills": true
+  }
+}

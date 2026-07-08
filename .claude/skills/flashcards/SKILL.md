@@ -1,6 +1,6 @@
 ---
 name: flashcards
-description: Build an interactive flash card app for educational/vocabulary purposes using Vite + React + TypeScript + Tailwind CSS + motion/react. Use this skill whenever the user wants to create flash cards, study cards, vocabulary cards, word flip cards, or any card-based learning component — even if they don't say "flash cards" explicitly. Covers all critical UI patterns, mobile layout pitfalls, animation techniques, and image optimization learned in production.
+description: Use when building a NEW flash card app, study cards, vocabulary cards, word flip cards, or any card-based learning component from scratch — even if the user doesn't say "flash cards" explicitly. Covers viewport/mobile layout pitfalls, card flip animation, gradient borders, and image optimization for the Vite + React + Tailwind + motion/react stack. (For adding a topic to an EXISTING app, use add-b1-topic or add-c1-topic instead.)
 ---
 
 # Flash Card App — Build Guide
@@ -48,6 +48,8 @@ This skill captures every hard-won pattern from building a production flash card
 - `flex-1 overflow-y-auto` on main = scrollable content area
 - `pb-4` on main = 16px breathing room above footer when scrolled to bottom
 
+In this repo, use the shared `AppHeader` + `AppFooter` from `src/shared/AppShell.tsx` — never write a custom header/footer for an activity app.
+
 ---
 
 ## 2. Flash Card Component
@@ -59,7 +61,7 @@ TopicSelectScreen → StudyingScreen
                       ├── TeacherSidebar (desktop only)
                       └── FlashCard
                             ├── Front (word)
-                            └── Back (definition, example, collocations)
+                            └── Back (meaning, example)
 ```
 
 ### Card flip with AnimatePresence
@@ -190,46 +192,33 @@ function GradientBorder({
 
 ## 5. Data Structure
 
+The word data lives in a single `data.ts` per level. Current production interfaces (keep in sync with `src/c1-flashcards/data.ts` and `src/b1-flashcards/data.ts` — those files are the source of truth, not this skill):
+
 ```ts
-// src/<app>/data.ts
+// src/c1-flashcards/data.ts
 export interface C1Word {
   word: string;
   partOfSpeech: string;
-  definition: string;
-  example: string;
-  collocations?: string[];
-  phrasalVerbs?: string[];
+  definition?: string;   // English definition — standard mode
+  translation?: string;  // Ukrainian — used instead of definition for translation-mode topics
+  example: string;       // uses ___ as placeholder for the word
 }
 
 export interface Topic {
-  id: string;
+  id: string;            // stable — never rename after publishing (?topic= deep links)
   title: string;
-  icon: string;
   description: string;
+  icon: string;
   words: C1Word[];
+  triviaUrl?: string;    // link to corresponding trivia topic
 }
-
-export const TOPICS: Topic[] = [
-  {
-    id: "innovation",
-    title: "Innovation",
-    icon: "💡",
-    description: "Vocabulary for discussing new ideas and technology",
-    words: [
-      {
-        word: "disruptive innovation",
-        partOfSpeech: "noun phrase",
-        definition: "A new product or service that significantly changes an industry",
-        example: "Smartphones were a disruptive innovation that transformed communication.",
-        collocations: ["drive disruptive innovation", "embrace disruption"],
-      },
-      // ...
-    ],
-  },
-];
 ```
 
-**If data is shared between a Flash Cards app and a Trivia app:** put it in the flash cards data file (`src/c1-flashcards/data.ts`) and import it from there in the trivia app. Don't duplicate.
+Read the meaning as `word.definition ?? word.translation ?? ""` everywhere it's displayed — topics come in definition mode and translation mode.
+
+**If data is shared between a Flash Cards app and a Trivia app:** put it in the flash cards data file and import it from there in the trivia app. Don't duplicate.
+
+**To add a topic to an existing app, use the `add-b1-topic` or `add-c1-topic` skill — not this one.**
 
 ---
 
@@ -299,11 +288,11 @@ Put in a shared CSS file (e.g., `src/c1-shared.css`) imported by all sub-apps.
 
 ## 8. Vite MPA Entry Point
 
-HTML files at root level define public URL paths. Source in `src/`.
+Source HTML lives in `apps/<name>/index.html`; a post-build plugin moves it to `dist/<name>/index.html` so deployed URLs stay `/<name>/`. A dev middleware rewrites `/<app>/*` → `/apps/<app>/*` so local URLs match production.
 
 ```
-c1-flashcards/index.html   → URL: /c1-flashcards/
-src/c1-flashcards/main.tsx → source entry
+apps/c1-flashcards/index.html  → URL: /c1-flashcards/
+src/c1-flashcards/main.tsx     → source entry
 ```
 
 ```ts
@@ -312,12 +301,14 @@ build: {
   rollupOptions: {
     input: {
       main: resolve(__dirname, "index.html"),
-      c1Flashcards: resolve(__dirname, "c1-flashcards/index.html"),
+      c1Flashcards: resolve(__dirname, "apps/c1-flashcards/index.html"),
       // add more entry points here
     },
   },
 },
 ```
+
+Check `vite.config.ts` for the existing entries and the post-build move plugin before adding a new app.
 
 ---
 
@@ -405,3 +396,4 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
 | Duplicate images in multiple folders | Single `src/assets/` folder, import from there |
 | No `pb-4` on scrollable main | Content sticks to footer when scrolled down |
 | Missing `scrollbar-gutter: stable` on scrollable cards | Layout shifts when scrollbar appears |
+| Custom header/footer in an activity app | Use `AppHeader`/`AppFooter` from `src/shared/AppShell.tsx` |

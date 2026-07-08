@@ -7,3 +7,7 @@ dist
 .tmp/
 credentials.json
 token.json
+
+# Claude Code local settings
+.claude/settings.local.json
+.superpowers/

@@ -1,15 +1,15 @@
 ---
 name: add-b1-topic
-description: Add a new B1 vocabulary topic to the Englishpusher app — creates flashcards and trivia from a provided wordlist. Use this skill whenever the user provides a list of English words, phrases, or collocations and wants to add them as a new B1 lesson, topic, or unit. Triggers on phrases like "add new topic", "new lesson", "add words", "new wordlist", or any time the user pastes/shares a list of English vocabulary. Handles everything: Ukrainian translations, IPA transcriptions, example sentences, data.ts update, CLAUDE.md update, and deploy.
+description: Use when the user wants to add a new B1 vocabulary topic, lesson, or unit to the Englishpusher app — e.g. pastes or shares a list of English words, phrases, or collocations (as text, photo, screenshot, or CSV) and says "add new topic", "new lesson", "add words", "new wordlist", or names a B1 lesson number.
 ---
 
 # Add B1 Vocabulary Topic
 
-This skill adds a new vocabulary topic to the Englishpusher B1 apps. One data file feeds both Flashcards (`/b1-flashcards/`) and Trivia (`/b1-trivia/`) — no duplication needed.
+Adds a new vocabulary topic to the Englishpusher B1 apps. One data file feeds both Flashcards (`/b1-flashcards/`) and Trivia (`/b1-trivia/`) — no duplication needed.
 
 ## Single source of truth
 
-`src/b1-flashcards/data.ts` is the ONLY file that needs word data. The B1 Trivia imports directly from it. Never copy words elsewhere.
+`src/b1-flashcards/data.ts` is the ONLY file that needs word data. `src/b1-trivia/App.tsx` imports `TOPICS` directly from it. Never copy words elsewhere.
 
 ## B1Word interface
 
@@ -71,7 +71,7 @@ For each word, generate:
 This is the most important field. The sentence is used in the "Fill in the sentence" trivia question type.
 
 **Rules:**
-1. Use `___` as the exact placeholder for the target word/phrase
+1. Use `___` as the exact placeholder for the target word/phrase — exactly ONE `___` per sentence
 2. The sentence must be grammatically correct when `___` is replaced by the word
 3. Use modal verbs or infinitives after `to` for collocations/phrases so the base form fits naturally:
    - ✅ `"Traffic can sometimes ___ for hours on the motorway."`
@@ -82,7 +82,7 @@ This is the most important field. The sentence is used in the "Fill in the sente
 6. Look at the teacher's original example sentences for inspiration — adapt them to fit the `___` format rather than copying verbatim
 
 **Pattern for different word types:**
-- Adjective: `"She felt completely ___ after running the marathon."` 
+- Adjective: `"She felt completely ___ after running the marathon."`
 - Noun: `"A ___ practises for many hours every day to perfect their skills."`
 - Verb/stative: `"I ___ that she passed the exam without studying at all."`
 - Collocation (verb phrase): `"Always check your calendar so you do not ___."`
@@ -92,11 +92,12 @@ This is the most important field. The sentence is used in the "Fill in the sente
 
 ## Step 3 — Determine topic metadata
 
+**Before choosing an `id`, read the `TOPICS` array in `src/b1-flashcards/data.ts` and list every existing `id` — the new one must not collide.** Do not rely on a memorised list; topics are added regularly.
+
 ```
-id          → kebab-case version of the topic name (e.g., "collocations-get-make")
-              If a lesson number is given, use "lesson-N-<slug>" format is fine
-              but the existing topics don't use that — use a descriptive slug instead
-              Keep it short and stable.
+id          → kebab-case slug of the topic name (e.g., "collocations-get-make")
+              For numbered lessons the existing pattern is "lesson-N-<slug>"
+              (e.g., "lesson-19-facts-figures"). Keep it short and stable.
 
 title       → If teacher gave a lesson number: "Lesson N: Short Description"
               Otherwise: descriptive title matching the words (e.g., "Adjectives for Feelings")
@@ -114,7 +115,7 @@ description → One phrase, 5–10 words, shown under the topic title on the car
 
 ## Step 4 — Write the topic entry
 
-Append before the closing `];` of the `TOPICS` array in `src/b1-flashcards/data.ts`:
+Read the current end of `src/b1-flashcards/data.ts` first so you know exactly where to insert. Append before the closing `];` of the `TOPICS` array:
 
 ```ts
   {
@@ -129,8 +130,6 @@ Append before the closing `];` of the `TOPICS` array in `src/b1-flashcards/data.
     ],
   },
 ```
-
-Read the current end of `data.ts` first so you know exactly where to insert.
 
 ---
 
@@ -150,19 +149,30 @@ Read `CLAUDE.md` and add the new topic to **both** tables under "Direct topic li
 
 ---
 
-## Step 6 — Build and deploy
+## Step 6 — Quality checklist (BEFORE deploying)
+
+- [ ] Every `example` contains exactly one `___`
+- [ ] Replacing `___` with the word produces a grammatical sentence
+- [ ] `triviaUrl` matches the `id` exactly
+- [ ] `id` is unique — checked against the current `TOPICS` array in `data.ts`
+- [ ] TypeScript build passes: `npm run build` (exit 0)
+- [ ] CLAUDE.md updated with both flashcards + trivia links
+
+---
+
+## Step 7 — Build and deploy
 
 ```bash
 npm run deploy
 ```
 
-This runs TypeScript check → Vite build → image optimisation → publishes to GitHub Pages with CNAME.
+This runs TypeScript check → Vite build → publishes to GitHub Pages with CNAME (`predeploy` handles the build). **Never strip the `--cname` flag from the deploy script.**
 
-Confirm build succeeds (exit 0) before declaring done.
+Confirm the deploy command succeeds (exit 0) before declaring done.
 
 ---
 
-## Step 7 — Report to user
+## Step 8 — Report to user
 
 After deploy, show:
 - Topic title, ID, word count
@@ -173,23 +183,12 @@ After deploy, show:
 
 ---
 
-## Quality checklist (run before deploying)
+## Common mistakes
 
-- [ ] Every `example` contains exactly one `___`
-- [ ] Replacing `___` with the word produces a grammatical sentence
-- [ ] `triviaUrl` matches the `id` exactly
-- [ ] `id` is unique — check existing TOPICS array
-- [ ] TypeScript build passes (`npm run build`)
-- [ ] CLAUDE.md updated with both flashcards + trivia links
-
----
-
-## Reference — existing topic IDs (do not reuse)
-
-- `adjectives-feelings`
-- `stative-verbs`
-- `personality-relationships`
-- `adverbs-frequency`
-- `jobs`
-- `story-words`
-- `collocations-get-make`
+| Mistake | Consequence |
+|---|---|
+| Example without `___` | Trivia silently falls back to a translation question — the fill-blank type is lost |
+| Two `___` in one example | Only the first is replaced; the sentence renders broken |
+| Reusing an existing `id` | `?topic=` deep links open the wrong topic |
+| Renaming an `id` after publishing | Teacher's shared links break for students |
+| Forgetting CLAUDE.md tables | Teacher has no link to share |
