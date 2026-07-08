@@ -55,6 +55,11 @@ function getDistractors(all: C1Word[], exclude: C1Word, count: number): C1Word[]
   return shuffle(all.filter((w) => w.word !== exclude.word)).slice(0, count);
 }
 
+// Translation-mode topics carry `translation` instead of `definition`
+function meaningOf(word: C1Word): string {
+  return word.definition ?? word.translation ?? "";
+}
+
 function generateQuestion(word: C1Word, all: C1Word[], type: QuestionType): Question {
   const distractors = getDistractors(all, word, 3);
 
@@ -77,12 +82,12 @@ function generateQuestion(word: C1Word, all: C1Word[], type: QuestionType): Ques
       return {
         type,
         targetWord: word,
-        options: shuffle([word.definition, ...distractors.map((d) => d.definition)]),
-        correctAnswer: word.definition,
+        options: shuffle([meaningOf(word), ...distractors.map((d) => meaningOf(d))]),
+        correctAnswer: meaningOf(word),
       };
     case "true-false": {
       const isTrue = Math.random() > 0.5;
-      const shownDefinition = isTrue ? word.definition : distractors[0].definition;
+      const shownDefinition = isTrue ? meaningOf(word) : meaningOf(distractors[0]);
       return {
         type,
         targetWord: word,
@@ -180,7 +185,7 @@ function QuestionPrompt({ question }: { question: Question }) {
             Which word matches this definition?
           </p>
           <p className="text-neutral-800 text-base leading-relaxed italic">
-            "{q.targetWord.definition}"
+            "{meaningOf(q.targetWord)}"
           </p>
         </div>
       );
