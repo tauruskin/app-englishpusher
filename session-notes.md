@@ -162,3 +162,38 @@
 - [ ] Add more puzzles as teacher covers new vocabulary topics
 - [ ] Add real C1 word list from teacher when available (currently uses default 40-word set)
 - [ ] Rename `c1-trivia/` to final name when teacher decides
+
+---
+
+## 2026-07-08 — Skills overhaul + c1-trivia translation-mode fix
+
+### What was done
+
+**Skills migrated to `.claude/skills/` (auto-discovered by Claude Code)**
+- Old `SKIILS/` folder removed — files there were renamed away from `SKILL.md`, so
+  Claude Code never discovered them (skills MUST be `.claude/skills/<name>/SKILL.md`)
+- `add-b1-topic` — improved: stale hardcoded topic-ID list replaced with
+  "read TOPICS in data.ts", added common-mistakes table, quality checklist before deploy
+- `add-c1-topic` — NEW: full workflow for C1 topics (c1-flashcards/data.ts feeds both
+  apps), covers definition mode vs translation mode, `___` example rules, CLAUDE.md tables
+- `flashcards` — updated to current C1Word interface (`definition?`/`translation?`),
+  apps/ MPA entry points, AppShell rule; scoped to "NEW app" builds only
+- Deleted generic `frontend-design` + `skill-creator` copies (redundant with plugins)
+
+**Bug fix: c1-trivia showed blank meanings for translation-mode topics**
+- `innovation-leadership` (26 words, Ukrainian translations, no definitions) linked to
+  trivia, but trivia read `word.definition` directly → blank True/False + Match-meaning
+- Added `meaningOf()` = `definition ?? translation ?? ""` in `src/c1-trivia/App.tsx`
+  (same fallback c1-flashcards already used); all 3 usages routed through it
+- Verified end-to-end: headless Edge (playwright-core) drove the full 26-question
+  session — all 4 question types render Ukrainian meanings correctly; definition-mode
+  topic (innovation) regression-checked OK; `npm run build` passes
+
+**CLAUDE.md fixes**
+- File structure + C1 design notes were stale (claimed `src/c1-trivia/data.ts` exists —
+  it doesn't; data comes from c1-flashcards)
+- Documented definition/translation topic modes + added Claude Code skills section
+
+### Not deployed
+- c1-trivia fix is committed-ready but NOT deployed — the live site still shows blank
+  meanings for Innovation & Leadership trivia until next `npm run deploy`

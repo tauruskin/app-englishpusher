@@ -34,6 +34,8 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Lesson 6: Jobs & Work | https://app.englishpusher.in.ua/b1-flashcards/?topic=jobs |
 | Lesson 15: Story Words | https://app.englishpusher.in.ua/b1-flashcards/?topic=story-words |
 | Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-flashcards/?topic=collocations-get-make |
+| Lesson 18: Unit 2 Review | https://app.englishpusher.in.ua/b1-flashcards/?topic=lesson-18-review |
+| Lesson 19: Facts and Figures | https://app.englishpusher.in.ua/b1-flashcards/?topic=lesson-19-facts-figures |
 
 **B1 Vocabulary Trivia** (`/b1-trivia/`):
 
@@ -46,6 +48,8 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Lesson 6: Jobs & Work | https://app.englishpusher.in.ua/b1-trivia/?topic=jobs |
 | Lesson 15: Story Words | https://app.englishpusher.in.ua/b1-trivia/?topic=story-words |
 | Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-trivia/?topic=collocations-get-make |
+| Lesson 18: Unit 2 Review | https://app.englishpusher.in.ua/b1-trivia/?topic=lesson-18-review |
+| Lesson 19: Facts and Figures | https://app.englishpusher.in.ua/b1-trivia/?topic=lesson-19-facts-figures |
 
 **C1 Flash Cards** (`/c1-flashcards/`):
 
@@ -114,9 +118,9 @@ src/
   b1-flashcards/
     main.tsx / App.tsx / data.ts  ← B1 Vocabulary Cards (data.ts = single source for B1 words)
   c1-trivia/
-    main.tsx / App.tsx / data.ts  ← C1 Vocabulary Trivia game
+    main.tsx / App.tsx            ← C1 Vocabulary Trivia game (imports data from c1-flashcards/data.ts)
   c1-flashcards/
-    main.tsx / App.tsx / data.ts  ← C1 Flash Cards
+    main.tsx / App.tsx / data.ts  ← C1 Flash Cards (data.ts = single source for C1 words)
   c1-business/
     main.tsx / App.tsx            ← C1 Business hub page
   word-connections/
@@ -242,7 +246,8 @@ The `gh-pages` package **replaces the entire `gh-pages` branch** with the conten
 
 ## C1 Vocabulary Trivia — design notes
 
-- Data: `src/c1-trivia/data.ts` — 40 C1 words `{ word, partOfSpeech, definition, example }`
+- Data: imported from `src/c1-flashcards/data.ts` (single source for C1 words) — `{ word, partOfSpeech, definition?, translation?, example }`
+- Topics come in two modes: **definition mode** (English `definition`) and **translation mode** (Ukrainian `translation`, e.g. `innovation-leadership`). Both apps read the meaning as `definition ?? translation` — every word must have exactly one of the two.
 - 4 question types, ordered easy → hard every session via `assignOrderedTypes()`:
   1. True / False
   2. Match definition → word (4 options)
@@ -251,6 +256,18 @@ The `gh-pages` package **replaces the entire `gh-pages` branch** with the conten
 - End screen: score %, word lists side-by-side, "Practice weak words" button rebuilds session from missed words
 - All screens: `max-w-4xl`, teacher sidebar `w-56 max-w-none` (prevents squeeze)
 - Purple colour scheme (`bg-purple-600`) distinguishes C1 from B1 apps
+
+## Claude Code skills — `.claude/skills/`
+
+Project skills auto-discovered by Claude Code (each must live at `.claude/skills/<name>/SKILL.md` — the filename `SKILL.md` is mandatory, renaming it breaks discovery):
+
+| Skill | Use for |
+|---|---|
+| `add-b1-topic` | Add a new B1 vocabulary topic (feeds b1-flashcards + b1-trivia) from a teacher wordlist |
+| `add-c1-topic` | Add a new C1 vocabulary topic (feeds c1-flashcards + c1-trivia); definition or translation mode |
+| `flashcards` | Build guide for creating a NEW flash-card app from scratch |
+
+The old `SKIILS/` folder was removed (2026-07-08) — its content was migrated/superseded here.
 
 ## Remaining TODOs
 
