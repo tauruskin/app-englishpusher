@@ -7,6 +7,7 @@ import { copyFileSync, mkdirSync, rmSync, existsSync } from "fs";
 const APPS = [
   "b1-trivia",
   "b1-flashcards",
+  "b1-vocabulary",
   "c1-business",
   "c1-flashcards",
   "c1-trivia",
@@ -67,6 +68,7 @@ export default defineConfig({
         c1Flashcards:    resolve(__dirname, "apps/c1-flashcards/index.html"),
         b1Flashcards:    resolve(__dirname, "apps/b1-flashcards/index.html"),
         b1Trivia:        resolve(__dirname, "apps/b1-trivia/index.html"),
+        b1Vocabulary:    resolve(__dirname, "apps/b1-vocabulary/index.html"),
       },
     },
   },

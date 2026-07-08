@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, BookOpen, Trophy, Layers, Grid2x2, Zap, Instagram, type LucideIcon } from "lucide-react";
+import { ArrowRight, BookOpen, Layers, Zap, Instagram, type LucideIcon } from "lucide-react";
 import teacherCelebrate from "./assets/teacher-celebrate.png";
 
 // ---------------------------------------------------------------------------
@@ -80,7 +80,7 @@ interface AppItem {
 const ITEMS: AppItem[] = [
   {
     id: 1,
-    label: "Grammar Testing",
+    label: "B1 Grammar Testing",
     description: "Gap-fill, error-spot, reordering and more",
     cta: "Start practicing",
     href: "https://grammar.englishpusher.in.ua",
@@ -93,37 +93,12 @@ const ITEMS: AppItem[] = [
   },
   {
     id: 2,
-    label: "Vocabulary Trivia",
-    description: "Test your vocabulary with fun trivia questions",
+    label: "B1 Vocabulary",
+    // Word Connections also lives inside this page (currently hidden by
+    // teacher request — see src/b1-vocabulary/App.tsx to re-enable)
+    description: "Vocabulary practice — interactive flashcards and trivia",
     cta: "Start practicing",
-    href: "/b1-trivia/",
-    bgFrom: "#1d4ed8",
-    bgTo: "#1e3a8a",
-    borderColor: "#3b82f6",
-    Icon: Trophy,
-    disabled: false,
-    level: "B1",
-  },
-  {
-    id: 3,
-    label: "Word Connections",
-    description: "Group 16 words into 4 categories — can you find them all?",
-    cta: "Start playing",
-    href: "/word-connections/",
-    bgFrom: "#065f46",
-    bgTo: "#022c22",
-    borderColor: "#10b981",
-    Icon: Grid2x2,
-    disabled: false,
-    level: "B1",
-    hidden: true, // hidden by teacher request — re-enable by removing this line
-  },
-  {
-    id: 4,
-    label: "Vocabulary Cards",
-    description: "Practise English words in an interactive way",
-    cta: "",
-    href: "/b1-flashcards/",
+    href: "/b1-vocabulary/",
     bgFrom: "#9f1239",
     bgTo: "#4c0519",
     borderColor: "#e11d48",
@@ -132,10 +107,10 @@ const ITEMS: AppItem[] = [
     level: "B1",
   },
   {
-    id: 5,
+    id: 3,
     label: "C1 Vocabulary",
     description: "Advanced vocabulary activities — trivia, flashcards and more",
-    cta: "Start quiz",
+    cta: "Start practicing",
     href: "/c1-business/",
     bgFrom: "#4c1d95",
     bgTo: "#1e1b4b",
