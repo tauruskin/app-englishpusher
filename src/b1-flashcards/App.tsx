@@ -5,6 +5,7 @@ import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import {
   useSavedWords, resolveSavedWords, findOriginTopicId, StarButton, MY_WORDS_TOPIC_ID,
 } from "../shared/savedWords.tsx";
+import { logStudyEvent } from "../shared/progress.ts";
 import { TOPICS, type Topic, type B1Word } from "./data.ts";
 import teacherThinking from "../assets/teacher-thinking.png";
 import teacherCorrect from "../assets/teacher-correct.png";
@@ -339,6 +340,16 @@ export default function App() {
       handleSelectTopic(myWordsTopic);
     }
   }, [myWordsTopic, phase]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Study log: one event per topic open (list selection or deep link);
+  // no-ops for guests. My Words opens count too — it's real study.
+  const loggedTopicRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (phase !== "studying" || !topic) return;
+    if (loggedTopicRef.current === topic.id) return;
+    loggedTopicRef.current = topic.id;
+    logStudyEvent("b1-flashcards", topic.id);
+  }, [phase, topic]);
 
   useEffect(() => {
     [teacherThinking, teacherCorrect].forEach((src) => {

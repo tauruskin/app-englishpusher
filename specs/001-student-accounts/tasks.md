@@ -113,9 +113,9 @@
 
 **Independent Test**: quickstart — US4 scenarios (open 2 topics → both on personal page)
 
-- [ ] T028 [P] [US4] Call `logStudyEvent` once per topic selection in `src/b1-flashcards/App.tsx` and `src/c1-flashcards/App.tsx` — on the topic-open transition, not per card; `my-words` opens are logged too (real study); guests are skipped
-- [ ] T029 [US4] Personal page Recent Activity section in `src/account/App.tsx`: reverse-chronological list from `fetchProgress().recentStudy` with topic titles + relative dates ("Tuesday", "2 days ago")
-- [ ] T030 [US4] Validate US4 scenarios locally, push `beta`
+- [X] T028 [P] [US4] Call `logStudyEvent` once per topic selection in `src/b1-flashcards/App.tsx` and `src/c1-flashcards/App.tsx` — on the topic-open transition, not per card; `my-words` opens are logged too (real study); guests are skipped
+- [X] T029 [US4] Personal page Recent Activity section in `src/account/App.tsx`: reverse-chronological list from `fetchProgress().recentStudy` with topic titles + relative dates ("Tuesday", "2 days ago")
+- [X] T030 [US4] Validate US4 scenarios locally, push `beta`
 
 **Checkpoint**: All five stories functional
 

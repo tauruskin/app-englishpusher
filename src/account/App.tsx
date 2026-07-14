@@ -4,7 +4,10 @@ import { LogOut, BarChart3, Star, Clock } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import { useAuth } from "../shared/auth.tsx";
 import { supabase, isSupabaseConfigured } from "../shared/supabase.ts";
-import { fetchProgress, type AppId, type Level, type TriviaResultRow, type WeakWord } from "../shared/progress.ts";
+import {
+  fetchProgress,
+  type AppId, type Level, type TriviaResultRow, type WeakWord, type StudyEventRow,
+} from "../shared/progress.ts";
 import { useSavedWords } from "../shared/savedWords.tsx";
 import { TOPICS as B1_TOPICS } from "../b1-flashcards/data.ts";
 import { TOPICS as C1_TOPICS } from "../c1-flashcards/data.ts";
@@ -378,6 +381,41 @@ function MyWordsSection() {
   );
 }
 
+function relativeDay(iso: string): string {
+  const then = new Date(iso);
+  const days = Math.floor((Date.now() - then.getTime()) / 86_400_000);
+  if (days === 0) return "today";
+  if (days === 1) return "yesterday";
+  if (days < 7) return then.toLocaleDateString("en-GB", { weekday: "long" });
+  return then.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+}
+
+function RecentActivity({ events }: { events: StudyEventRow[] }) {
+  const rows = events
+    .map((e) => ({
+      ...e,
+      title: e.topicId === "my-words" ? "My Words" : topicTitle(e.app, e.topicId),
+    }))
+    .filter((e) => e.title !== null);
+
+  if (rows.length === 0) {
+    return <EmptyState>No activity yet — open a flashcard topic to start studying.</EmptyState>;
+  }
+  return (
+    <div className="divide-y divide-neutral-100">
+      {rows.map((e, i) => (
+        <div key={i} className="flex items-center justify-between gap-3 py-2">
+          <p className="truncate font-body text-sm text-neutral-700">
+            Studied <span className="font-semibold">{e.title}</span>
+            <span className="ml-2 text-xs text-neutral-400">{APP_LABEL[e.app]}</span>
+          </p>
+          <p className="shrink-0 font-body text-xs text-neutral-400">{relativeDay(e.createdAt)}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function PersonalPage() {
   const { user, signOut } = useAuth();
   const [displayName, setDisplayName] = useState<string>("");
@@ -431,7 +469,7 @@ function PersonalPage() {
       </Section>
 
       <Section icon={<Clock size={16} className="text-brand" />} title="Recent activity">
-        <EmptyState>No activity yet — open a flashcard topic to start studying.</EmptyState>
+        <RecentActivity events={progress?.recentStudy ?? []} />
       </Section>
     </motion.div>
   );
