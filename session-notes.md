@@ -216,3 +216,25 @@
 - No student-facing links broken: all ?topic= deep links and app URLs unchanged
 - Verified via headless Edge against production build: 17 checks (hub cards, tabs,
   accordion click-through, chooser links, word-connections URL, c1-business regression)
+
+## 2026-07-14 — Spec-kit + Supabase student accounts (beta branch)
+
+### What was done
+
+- Installed **github/spec-kit** (`.specify/` + `speckit-*` skills); wrote project constitution; documented workflow: brainstorming skill → `/speckit-specify` → plan → tasks → implement (CLAUDE.md has the details)
+- Full **student accounts feature** on the new long-lived `beta` branch (spec/plan/tasks in `specs/001-student-accounts/`):
+  - Supabase backend (project `cwtidnvbazepqkfweaed`): `profiles`, `trivia_results`, `saved_words`, `study_events`, all RLS-protected, profile auto-created by trigger, email confirmation off
+  - Shared modules: `supabase.ts`, `auth.tsx` (useAuth + useSessionUser), `progress.ts`, `savedWords.tsx`, `TriviaSave.tsx`
+  - New `/account/` MPA entry: login/signup/reset form + personal page (progress, weak words, My Words, recent activity)
+  - Account icon in AppHeader (all apps) + hub header
+  - Trivia (b1+c1): auto-save results, stars on end-screen lists, guest sign-in hint
+  - Flashcards (b1+c1): star on card, study-event log per topic open
+  - "My Words" virtual topic (reserved id `my-words`) in all four apps, deep-linkable when signed in
+- All phases validated via scripted Edge (playwright-core): signup/session/guest parity, saves incl. offline non-blocking, weak-word rule both directions, stars/dedup/ghost filtering, study events
+- Test account: `claude.test.001@englishpusher.in.ua` (delete in Supabase dashboard when done)
+
+### Pending
+
+- User: create Cloudflare Pages project for `beta` (T009/T010 in tasks.md), then T033 full beta validation + T034 send link to teacher
+- Password-reset email flow (V11) needs a real inbox — verify during T033
+- Production release = merge `beta`→`main` + add VITE_ vars to deploy.yml (checklist in CLAUDE.md)

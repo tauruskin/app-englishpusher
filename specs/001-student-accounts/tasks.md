@@ -123,8 +123,8 @@
 
 ## Phase 8: Polish & Cross-Cutting
 
-- [ ] T031 [P] Update `CLAUDE.md`: add `/account/` to URLs table + file structure, document `src/shared/supabase.ts` / `auth.tsx` / `progress.ts` modules, the beta branch + Cloudflare Pages deployment, and the release-merge checklist (env vars into GH Actions)
-- [ ] T032 [P] Update `session-notes.md` with the feature state and beta URL
+- [X] T031 [P] Update `CLAUDE.md`: add `/account/` to URLs table + file structure, document `src/shared/supabase.ts` / `auth.tsx` / `progress.ts` modules, the beta branch + Cloudflare Pages deployment, and the release-merge checklist (env vars into GH Actions)
+- [X] T032 [P] Update `session-notes.md` with the feature state and beta URL
 - [ ] T033 Full quickstart validation pass V1–V17 against the beta URL (scripted browser where practical), including V13 RLS isolation with two real accounts; record results in `specs/001-student-accounts/quickstart.md` as a dated checklist
 - [ ] T034 ⚑ USER Send the beta URL + a 3-line "how to test" note to the teacher
 

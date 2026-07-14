@@ -18,6 +18,7 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 | B1 Vocabulary Cards | https://app.englishpusher.in.ua/b1-flashcards/ |
 | C1 Flash Cards | https://app.englishpusher.in.ua/c1-flashcards/ |
 | C1 Vocabulary Trivia | https://app.englishpusher.in.ua/c1-trivia/ |
+| My Account (login + personal page) | https://app.englishpusher.in.ua/account/ |
 | Instagram | https://www.instagram.com/teti_push_english?igsh=MWMxbGxodnJrOHI2 |
 
 ### Direct topic links — Flash Card apps
@@ -97,6 +98,7 @@ public/
   logo.png                        ← site logo (used in header + favicon)
 index.html                        ← hub entry point
 apps/
+  account/index.html              ← My Account entry point (login + personal page)
   b1-trivia/index.html            ← B1 Trivia entry point
   b1-flashcards/index.html        ← B1 Flashcards entry point
   b1-vocabulary/index.html        ← B1 Vocabulary chooser page entry point
@@ -111,10 +113,17 @@ src/
     teacher-thinking.png
     teacher-sad.png
   shared/
-    AppShell.tsx                  ← ⭐ Shared AppHeader + AppFooter components
+    AppShell.tsx                  ← ⭐ Shared AppHeader + AppFooter components (incl. account icon)
+    supabase.ts                   ← Supabase client singleton + isSupabaseConfigured
+    auth.tsx                      ← AuthProvider/useAuth + provider-free useSessionUser
+    progress.ts                   ← trivia results / saved words / study events data access
+    savedWords.tsx                ← useSavedWords, StarButton, My Words topic resolution
+    TriviaSave.tsx                ← end-screen auto-save + guest hint + failure notice
   index.css                       ← Tailwind imports + character animations
   main.tsx                        ← hub React entry
   Index.tsx                       ← entire hub landing page (single file)
+  account/
+    main.tsx / App.tsx            ← My Account: login/signup form + personal page
   b1-trivia/
     main.tsx / App.tsx            ← B1 Vocabulary Trivia game
   b1-flashcards/
@@ -274,6 +283,18 @@ Project skills auto-discovered by Claude Code (each must live at `.claude/skills
 | `flashcards` | Build guide for creating a NEW flash-card app from scratch |
 
 The old `SKIILS/` folder was removed (2026-07-08) — its content was migrated/superseded here.
+
+## Student accounts — Supabase (on `beta` branch)
+
+Full spec/plan/tasks: `specs/001-student-accounts/`. Feature summary:
+
+- **Optional login** (email + password, no email confirmation): guests keep exactly the old behavior everywhere. Backend = Supabase project `cwtidnvbazepqkfweaed` (owner's account); anon key is public by design, **RLS is the security boundary** (4 tables: `profiles`, `trivia_results`, `saved_words`, `study_events` — schema in `specs/001-student-accounts/contracts/database.md`).
+- **Env vars**: `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` — `.env.local` for dev (see `.env.example`), Cloudflare Pages dashboard for beta. When missing, `isSupabaseConfigured` is false and everything silently degrades to guest mode.
+- **Session** persists in localStorage and carries across all MPA pages; apps render guest UI first and upgrade when the session resolves (`useSessionUser()` — no provider needed; `AuthProvider`/`useAuth` only in the account app).
+- **Signed-in extras**: trivia results auto-save on the end screen (fire-and-forget, dismissible notice on failure); star-to-save words on flashcards + trivia end screens; "My Words" virtual topic (reserved id `my-words` — **never use it in any data.ts**) in all four activity apps; personal page at `/account/` (progress per topic, weak words, saved words, recent activity).
+- **Weak words** are derived client-side from `trivia_results`: a word is weak iff its most recent occurrence across sessions is in `missed_words`.
+- **Beta deployment**: long-lived `beta` branch → Cloudflare Pages (production branch = `beta`, build `npm run build`, output `dist`, env vars in CF dashboard). Production GitHub Pages CI is untouched. Sync content with `git merge main` on `beta`.
+- **Release checklist** (after teacher approval): merge `beta` → `main`; add the two `VITE_` vars to `.github/workflows/deploy.yml` (repo variables + `env:` on the build step); verify signup/login on production. CNAME safeguard unaffected.
 
 ## Spec-driven development — spec-kit
 
