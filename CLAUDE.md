@@ -275,6 +275,24 @@ Project skills auto-discovered by Claude Code (each must live at `.claude/skills
 
 The old `SKIILS/` folder was removed (2026-07-08) — its content was migrated/superseded here.
 
+## Spec-driven development — spec-kit
+
+[github/spec-kit](https://github.com/github/spec-kit) is installed for this project (`.specify/`, plus `speckit-*` skills under `.claude/skills/`). It provides a formal spec → plan → tasks → implement pipeline for complex, multi-step feature work. Governing principles for this project live in `.specify/memory/constitution.md` (shared shell usage, single source of truth for vocab data, MPA boundaries, the CNAME deploy gotcha, known motion/react rendering pitfalls, topic-skill usage).
+
+**Workflow for a complex, multi-step feature:**
+
+1. **Brainstorm** — use the `superpowers:brainstorming` skill first to explore intent, requirements, and design interactively. Do this before anything is written down.
+2. **Specify** — once direction is agreed, run `/speckit-specify` to turn it into a formal spec.
+3. *(optional)* `/speckit-clarify` to de-risk ambiguous areas before planning.
+4. **Plan** — `/speckit-plan` for the technical implementation plan.
+5. **Tasks** — `/speckit-tasks` to generate an ordered, dependency-aware task list.
+6. *(optional)* `/speckit-analyze` for a cross-artifact consistency check before building.
+7. **Implement** — `/speckit-implement` to execute the tasks.
+
+Small, well-scoped changes (a copy tweak, a single new topic, a style fix) skip this pipeline entirely — go straight to editing.
+
+Spec-kit's own specs and plans live under `specs/<feature>/` at the repo root (created automatically by `/speckit-specify`). The pre-existing `docs/superpowers/specs/` and `docs/superpowers/plans/` folders (used by the `superpowers:writing-plans` skill before spec-kit was adopted) are left as historical reference — new complex-feature work uses `specs/` going forward, not those folders.
+
 ## Remaining TODOs
 
 - Verify DNS CNAME `app.englishpusher.in.ua` is pointed at GitHub Pages
