@@ -11,6 +11,7 @@
     "deploy": "gh-pages -d dist --cname app.englishpusher.in.ua"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.110.5",
     "@types/canvas-confetti": "^1.9.0",
     "canvas-confetti": "^1.9.4",
     "lucide-react": "^0.469.0",

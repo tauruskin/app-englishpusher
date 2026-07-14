@@ -5,6 +5,7 @@ import { resolve } from "path";
 import { copyFileSync, mkdirSync, rmSync, existsSync } from "fs";
 
 const APPS = [
+  "account",
   "b1-trivia",
   "b1-flashcards",
   "b1-vocabulary",
@@ -62,6 +63,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main:            resolve(__dirname, "index.html"),
+        account:         resolve(__dirname, "apps/account/index.html"),
         wordConnections: resolve(__dirname, "apps/word-connections/index.html"),
         c1Trivia:        resolve(__dirname, "apps/c1-trivia/index.html"),
         c1Business:      resolve(__dirname, "apps/c1-business/index.html"),

@@ -18,9 +18,9 @@
 
 **Purpose**: Dependency, env plumbing, backend project
 
-- [ ] T001 Install `@supabase/supabase-js` v2 (`npm install @supabase/supabase-js`) and create `.env.example` at repo root with `VITE_SUPABASE_URL=` / `VITE_SUPABASE_ANON_KEY=` placeholders
-- [ ] T002 ⚑ USER Create Supabase project per quickstart §1: run full DDL from [contracts/database.md](./contracts/database.md) in SQL editor, disable "Confirm email", set Site URL + redirect allowlist, then put Project URL + anon key into `.env.local`
-- [ ] T003 Verify schema: confirm all 4 tables exist with RLS enabled and the `on_auth_user_created` trigger present (Supabase SQL: `select * from pg_policies`), fix any DDL errors
+- [X] T001 Install `@supabase/supabase-js` v2 (`npm install @supabase/supabase-js`) and create `.env.example` at repo root with `VITE_SUPABASE_URL=` / `VITE_SUPABASE_ANON_KEY=` placeholders
+- [X] T002 ⚑ USER Create Supabase project per quickstart §1: run full DDL from [contracts/database.md](./contracts/database.md) in SQL editor, disable "Confirm email", set Site URL + redirect allowlist, then put Project URL + anon key into `.env.local`
+- [X] T003 Verify schema: confirm all 4 tables exist with RLS enabled and the `on_auth_user_created` trigger present (Supabase SQL: `select * from pg_policies`), fix any DDL errors
 
 ---
 
@@ -30,10 +30,10 @@
 
 **⚠️ CRITICAL**: No user story work until this phase completes
 
-- [ ] T004 [P] Create `src/shared/supabase.ts` — singleton client from `import.meta.env`, export `isSupabaseConfigured`; missing env vars ⇒ configured=false and a null-safe client stub (contract: [client-api.md](./contracts/client-api.md))
-- [ ] T005 [P] Register the `/account/` MPA entry: create `apps/account/index.html` (mirror `apps/b1-flashcards/index.html` head/fonts), `src/account/main.tsx`, placeholder `src/account/App.tsx` ("coming soon" shell with AppHeader/AppFooter); add `"account"` to `APPS` array and `account:` input in `vite.config.ts`; verify `npm run dev` serves `/account/` and `npm run build` emits `dist/account/index.html`
-- [ ] T006 Create `src/shared/auth.tsx` — `AuthProvider` + `useAuth()` per contract: `getSession()` on mount, `onAuthStateChange` subscription, `loading` flag, `signUp`/`signIn`/`signOut`/`resetPassword` returning `{ error: string | null }` with user-readable messages (depends on T004)
-- [ ] T007 Create `src/shared/progress.ts` — all data-access functions per contract: `saveTriviaResult`, `logStudyEvent`, `saveWord` (upsert on unique), `unsaveWord`, `listSavedWords`, `fetchProgress` (incl. weak-words newest-occurrence derivation and recentStudy limit 20); every function no-ops/returns empty without session or config (depends on T004)
+- [X] T004 [P] Create `src/shared/supabase.ts` — singleton client from `import.meta.env`, export `isSupabaseConfigured`; missing env vars ⇒ configured=false and a null-safe client stub (contract: [client-api.md](./contracts/client-api.md))
+- [X] T005 [P] Register the `/account/` MPA entry: create `apps/account/index.html` (mirror `apps/b1-flashcards/index.html` head/fonts), `src/account/main.tsx`, placeholder `src/account/App.tsx` ("coming soon" shell with AppHeader/AppFooter); add `"account"` to `APPS` array and `account:` input in `vite.config.ts`; verify `npm run dev` serves `/account/` and `npm run build` emits `dist/account/index.html`
+- [X] T006 Create `src/shared/auth.tsx` — `AuthProvider` + `useAuth()` per contract: `getSession()` on mount, `onAuthStateChange` subscription, `loading` flag, `signUp`/`signIn`/`signOut`/`resetPassword` returning `{ error: string | null }` with user-readable messages (depends on T004)
+- [X] T007 Create `src/shared/progress.ts` — all data-access functions per contract: `saveTriviaResult`, `logStudyEvent`, `saveWord` (upsert on unique), `unsaveWord`, `listSavedWords`, `fetchProgress` (incl. weak-words newest-occurrence derivation and recentStudy limit 20); every function no-ops/returns empty without session or config (depends on T004)
 
 **Checkpoint**: `npm run build` passes; `/account/` renders placeholder; shared modules typecheck
 
