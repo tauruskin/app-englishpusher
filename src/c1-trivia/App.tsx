@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef, type ReactNode } from "react"
 import { motion, AnimatePresence } from "motion/react";
 import { RotateCcw, CheckCircle2, XCircle } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
+import { TriviaSaveStatus } from "../shared/TriviaSave.tsx";
 import { TOPICS, type Topic, type C1Word } from "../c1-flashcards/data.ts";
 import teacherThinking from "../assets/teacher-thinking.png";
 import teacherCorrect from "../assets/teacher-correct.png";
@@ -346,6 +347,7 @@ function EndScreen({
   score,
   total,
   results,
+  topicId,
   onReplay,
   onMenu,
   onPracticeWeak,
@@ -353,6 +355,7 @@ function EndScreen({
   score: number;
   total: number;
   results: QuestionResult[];
+  topicId: string;
   onReplay: () => void;
   onMenu: () => void;
   onPracticeWeak: () => void;
@@ -396,6 +399,17 @@ function EndScreen({
             <span className="font-bold text-neutral-800">{total}</span> correct
           </div>
         </div>
+
+        {/* Progress save (signed-in) / sign-in hint (guest) */}
+        <TriviaSaveStatus
+          input={{
+            app: "c1-trivia",
+            topicId,
+            scorePct: pct,
+            correctWords: correct.map((r) => r.word.word),
+            missedWords: wrong.map((r) => r.word.word),
+          }}
+        />
 
         {/* Word lists — flex so min-h-0 works, fills remaining space */}
         <div className={`flex gap-4 flex-1 min-h-0 ${correct.length > 0 && wrong.length > 0 ? "" : ""}`}>
@@ -842,6 +856,7 @@ export default function App() {
                 score={finalScore}
                 total={questions.length}
                 results={results}
+                topicId={topic?.id ?? ""}
                 onReplay={startGame}
                 onMenu={handleBackToSelect}
                 onPracticeWeak={practiceWeakWords}

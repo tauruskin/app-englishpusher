@@ -5,6 +5,7 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { Volume2, VolumeX, RotateCcw } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
+import { TriviaSaveStatus } from "../shared/TriviaSave.tsx";
 import confetti from "canvas-confetti";
 import { TOPICS, type Topic, type B1Word } from "../b1-flashcards/data.ts";
 import teacherThinking from "../assets/teacher-thinking.png";
@@ -572,9 +573,9 @@ function TopicSelectScreen({ onSelect }: { onSelect: (topic: Topic) => void }) {
 // ---------------------------------------------------------------------------
 
 function EndScreen({
-  score, total, results, onReplay, onPracticeWeak,
+  score, total, results, topicId, onReplay, onPracticeWeak,
 }: {
-  score: number; total: number; results: AnswerResult[]; onReplay: () => void; onPracticeWeak: (words: B1Word[]) => void;
+  score: number; total: number; results: AnswerResult[]; topicId: string; onReplay: () => void; onPracticeWeak: (words: B1Word[]) => void;
 }) {
   const pct = Math.round((score / total) * 100);
   const isPerfect = score === total;
@@ -634,6 +635,17 @@ function EndScreen({
             <span className="font-bold text-neutral-800">{total}</span> correct
           </p>
         </div>
+
+        {/* Progress save (signed-in) / sign-in hint (guest) */}
+        <TriviaSaveStatus
+          input={{
+            app: "b1-trivia",
+            topicId,
+            scorePct: pct,
+            correctWords: correct.map(r => r.word.word),
+            missedWords: wrong.map(r => r.word.word),
+          }}
+        />
 
         {/* Word lists */}
         <div className="flex gap-4 flex-1 min-h-0">
@@ -1063,6 +1075,7 @@ export default function App() {
                 score={score}
                 total={endResults.length > 0 ? endResults.length : questions.reduce((a, q) => a + q.words.length, 0)}
                 results={endResults}
+                topicId={selectedTopic?.id ?? ""}
                 onReplay={handleRestart}
                 onPracticeWeak={handlePracticeWeak}
               />

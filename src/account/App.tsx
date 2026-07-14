@@ -4,6 +4,23 @@ import { LogOut, BarChart3, Star, Clock } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import { useAuth } from "../shared/auth.tsx";
 import { supabase, isSupabaseConfigured } from "../shared/supabase.ts";
+import { fetchProgress, type AppId, type TriviaResultRow, type WeakWord } from "../shared/progress.ts";
+import { TOPICS as B1_TOPICS } from "../b1-flashcards/data.ts";
+import { TOPICS as C1_TOPICS } from "../c1-flashcards/data.ts";
+
+// Resolve a stored topic reference against app content; null when the topic
+// no longer exists (renamed/removed) — callers drop those rows silently.
+function topicTitle(app: AppId, topicId: string): string | null {
+  const topics = app.startsWith("b1") ? B1_TOPICS : C1_TOPICS;
+  return topics.find((t) => t.id === topicId)?.title ?? null;
+}
+
+const APP_LABEL: Record<AppId, string> = {
+  "b1-trivia": "B1 Trivia",
+  "c1-trivia": "C1 Trivia",
+  "b1-flashcards": "B1 Flash Cards",
+  "c1-flashcards": "C1 Flash Cards",
+};
 
 // ---------------------------------------------------------------------------
 // /account/ — login & signup when signed out, personal page when signed in.
@@ -200,9 +217,95 @@ function EmptyState({ children }: { children: ReactNode }) {
   return <p className="font-body text-sm text-neutral-400">{children}</p>;
 }
 
+interface TopicSummary {
+  app: AppId;
+  topicId: string;
+  title: string;
+  best: number;
+  latest: number;
+  latestDate: string;
+  attempts: number;
+}
+
+function summarizeResults(results: TriviaResultRow[]): TopicSummary[] {
+  const byTopic = new Map<string, TopicSummary>();
+  // results arrive newest-first; the first row seen per topic is the latest
+  for (const r of results) {
+    const title = topicTitle(r.app, r.topicId);
+    if (!title) continue; // topic removed from content — drop silently
+    const key = `${r.app}::${r.topicId}`;
+    const existing = byTopic.get(key);
+    if (existing) {
+      existing.best = Math.max(existing.best, r.scorePct);
+      existing.attempts += 1;
+    } else {
+      byTopic.set(key, {
+        app: r.app, topicId: r.topicId, title,
+        best: r.scorePct, latest: r.scorePct,
+        latestDate: r.createdAt, attempts: 1,
+      });
+    }
+  }
+  return [...byTopic.values()];
+}
+
+function ProgressSection({ summaries }: { summaries: TopicSummary[] }) {
+  if (summaries.length === 0) {
+    return <EmptyState>Nothing here yet — finish a trivia round and your scores will appear.</EmptyState>;
+  }
+  return (
+    <div className="divide-y divide-neutral-100">
+      {summaries.map((s) => (
+        <div key={`${s.app}::${s.topicId}`} className="flex items-center justify-between gap-3 py-2.5">
+          <div className="min-w-0">
+            <p className="truncate font-body text-sm font-semibold text-neutral-800">{s.title}</p>
+            <p className="font-body text-xs text-neutral-400">
+              {APP_LABEL[s.app]} · {s.attempts} {s.attempts === 1 ? "round" : "rounds"}
+            </p>
+          </div>
+          <div className="flex shrink-0 items-center gap-4 text-right">
+            <div>
+              <p className="font-display text-sm font-bold text-neutral-900">{s.best}%</p>
+              <p className="font-body text-[11px] text-neutral-400">best</p>
+            </div>
+            <div>
+              <p className="font-display text-sm font-bold text-brand">{s.latest}%</p>
+              <p className="font-body text-[11px] text-neutral-400">latest</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function WeakWordsList({ weakWords }: { weakWords: WeakWord[] }) {
+  const resolved = weakWords.filter((w) => topicTitle(w.app, w.topicId) !== null);
+  if (resolved.length === 0) return null;
+  return (
+    <div className="mt-4 border-t border-neutral-100 pt-3">
+      <p className="mb-2 font-body text-xs font-semibold uppercase tracking-wide text-neutral-400">
+        Words to practice ({resolved.length})
+      </p>
+      <div className="flex flex-wrap gap-1.5">
+        {resolved.map((w) => (
+          <span
+            key={`${w.app}::${w.word}`}
+            title={topicTitle(w.app, w.topicId) ?? undefined}
+            className="rounded-full bg-red-50 border border-red-100 px-2.5 py-1 font-body text-xs text-red-700"
+          >
+            {w.word}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function PersonalPage() {
   const { user, signOut } = useAuth();
   const [displayName, setDisplayName] = useState<string>("");
+  const [progress, setProgress] = useState<Awaited<ReturnType<typeof fetchProgress>> | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -214,7 +317,10 @@ function PersonalPage() {
       .then(({ data }) => {
         if (data?.display_name) setDisplayName(data.display_name);
       });
+    fetchProgress().then(setProgress);
   }, [user]);
+
+  const summaries = progress ? summarizeResults(progress.results) : [];
 
   return (
     <motion.div
@@ -240,7 +346,8 @@ function PersonalPage() {
       </div>
 
       <Section icon={<BarChart3 size={16} className="text-brand" />} title="My progress">
-        <EmptyState>Nothing here yet — finish a trivia round and your scores will appear.</EmptyState>
+        <ProgressSection summaries={summaries} />
+        {progress && <WeakWordsList weakWords={progress.weakWords} />}
       </Section>
 
       <Section icon={<Star size={16} className="text-brand" />} title="My words">

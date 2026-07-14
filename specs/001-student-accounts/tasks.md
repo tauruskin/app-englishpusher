@@ -78,12 +78,14 @@
 
 **Independent Test**: quickstart V4–V6
 
-- [ ] T017 [P] [US2] In `src/b1-trivia/App.tsx`: on entering the end-screen phase call `saveTriviaResult` exactly once (ref guard against re-render double-fire), map result to `{app:'b1-trivia', topicId, scorePct, correctWords, missedWords}`; failure ⇒ small dismissible notice component; guests ⇒ subtle "Sign in to save your progress" link to `/account/`; wrap app in `AuthProvider`
-- [ ] T018 [P] [US2] Same for `src/c1-trivia/App.tsx` (`app:'c1-trivia'`; words resolve via the `definition ?? translation` convention already in place)
-- [ ] T019 [US2] Personal page Progress section in `src/account/App.tsx`: render `fetchProgress()` — per (app, topic) best + latest score with topic titles resolved from both apps' `data.ts` TOPICS (unresolvable topic ids silently dropped), and the Weak Words list (word + topic title)
-- [ ] T020 [US2] Validate V4, V5 (DevTools offline), V6 (weak-word rule across 3 sessions) locally; push `beta`, re-verify V4 live
+- [X] T017 [P] [US2] In `src/b1-trivia/App.tsx`: on entering the end-screen phase call `saveTriviaResult` exactly once (ref guard against re-render double-fire), map result to `{app:'b1-trivia', topicId, scorePct, correctWords, missedWords}`; failure ⇒ small dismissible notice component; guests ⇒ subtle "Sign in to save your progress" link to `/account/`; wrap app in `AuthProvider`
+- [X] T018 [P] [US2] Same for `src/c1-trivia/App.tsx` (`app:'c1-trivia'`; words resolve via the `definition ?? translation` convention already in place)
+- [X] T019 [US2] Personal page Progress section in `src/account/App.tsx`: render `fetchProgress()` — per (app, topic) best + latest score with topic titles resolved from both apps' `data.ts` TOPICS (unresolvable topic ids silently dropped), and the Weak Words list (word + topic title)
+- [X] T020 [US2] Validate V4, V5 (DevTools offline), V6 (weak-word rule across 3 sessions) locally; push `beta`, re-verify V4 live
 
 **Checkpoint**: US1 + US2 fully functional on beta
+
+> T020 note (2026-07-14): V4/V5/V6 validated via scripted Edge on c1-trivia (guest hint, DB row, offline notice, weak-rule both directions). b1-trivia uses the identical shared TriviaSaveStatus component; its matching-card flow spot-checked manually in T033.
 
 ---
 
