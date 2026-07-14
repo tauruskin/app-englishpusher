@@ -4,7 +4,8 @@ import { LogOut, BarChart3, Star, Clock } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import { useAuth } from "../shared/auth.tsx";
 import { supabase, isSupabaseConfigured } from "../shared/supabase.ts";
-import { fetchProgress, type AppId, type TriviaResultRow, type WeakWord } from "../shared/progress.ts";
+import { fetchProgress, type AppId, type Level, type TriviaResultRow, type WeakWord } from "../shared/progress.ts";
+import { useSavedWords } from "../shared/savedWords.tsx";
 import { TOPICS as B1_TOPICS } from "../b1-flashcards/data.ts";
 import { TOPICS as C1_TOPICS } from "../c1-flashcards/data.ts";
 
@@ -302,6 +303,81 @@ function WeakWordsList({ weakWords }: { weakWords: WeakWord[] }) {
   );
 }
 
+// Meaning shown next to a saved word: B1 words carry a Ukrainian
+// translation; C1 words follow the definition-or-translation convention.
+function wordMeaning(level: Level, topicId: string, word: string): string | null {
+  if (level === "B1") {
+    return B1_TOPICS.find((t) => t.id === topicId)?.words.find((w) => w.word === word)?.translation ?? null;
+  }
+  const w = C1_TOPICS.find((t) => t.id === topicId)?.words.find((x) => x.word === word);
+  return w ? (w.definition ?? w.translation ?? null) : null;
+}
+
+function MyWordsSection() {
+  const b1 = useSavedWords("B1");
+  const c1 = useSavedWords("C1");
+
+  const rows = [
+    ...b1.savedWords.map((s) => ({ ...s, meaning: wordMeaning("B1", s.topicId, s.word) })),
+    ...c1.savedWords.map((s) => ({ ...s, meaning: wordMeaning("C1", s.topicId, s.word) })),
+  ].filter((r) => r.meaning !== null); // unresolvable references dropped silently
+
+  if (rows.length === 0) {
+    return <EmptyState>No saved words yet — tap the star on any flashcard to save a word.</EmptyState>;
+  }
+
+  const hasB1 = rows.some((r) => r.level === "B1");
+  const hasC1 = rows.some((r) => r.level === "C1");
+
+  return (
+    <div>
+      <div className="divide-y divide-neutral-100">
+        {rows.map((r) => (
+          <div key={`${r.level}::${r.word}`} className="flex items-center justify-between gap-3 py-2.5">
+            <div className="min-w-0">
+              <p className="font-body text-sm font-semibold text-neutral-800">
+                {r.word}
+                <span className="ml-2 rounded bg-neutral-100 px-1.5 py-0.5 text-[10px] font-bold text-neutral-500">
+                  {r.level}
+                </span>
+              </p>
+              <p className="truncate font-body text-xs text-neutral-400">{r.meaning}</p>
+            </div>
+            <button
+              onClick={() => (r.level === "B1" ? b1 : c1).toggle(r.word, r.topicId, r.source)}
+              className="shrink-0 font-body text-xs text-neutral-400 hover:text-red-500 transition-colors"
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2 border-t border-neutral-100 pt-3">
+        {hasB1 && (
+          <>
+            <a href="/b1-flashcards/?topic=my-words" className="rounded-lg bg-brand/10 px-3 py-1.5 font-body text-xs font-semibold text-brand hover:bg-brand/20 transition-colors">
+              Study B1 deck
+            </a>
+            <a href="/b1-trivia/?topic=my-words" className="rounded-lg bg-brand/10 px-3 py-1.5 font-body text-xs font-semibold text-brand hover:bg-brand/20 transition-colors">
+              Quiz B1 deck
+            </a>
+          </>
+        )}
+        {hasC1 && (
+          <>
+            <a href="/c1-flashcards/?topic=my-words" className="rounded-lg bg-purple-100 px-3 py-1.5 font-body text-xs font-semibold text-purple-700 hover:bg-purple-200 transition-colors">
+              Study C1 deck
+            </a>
+            <a href="/c1-trivia/?topic=my-words" className="rounded-lg bg-purple-100 px-3 py-1.5 font-body text-xs font-semibold text-purple-700 hover:bg-purple-200 transition-colors">
+              Quiz C1 deck
+            </a>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function PersonalPage() {
   const { user, signOut } = useAuth();
   const [displayName, setDisplayName] = useState<string>("");
@@ -351,7 +427,7 @@ function PersonalPage() {
       </Section>
 
       <Section icon={<Star size={16} className="text-brand" />} title="My words">
-        <EmptyState>No saved words yet — tap the star on any flashcard to save a word.</EmptyState>
+        <MyWordsSection />
       </Section>
 
       <Section icon={<Clock size={16} className="text-brand" />} title="Recent activity">

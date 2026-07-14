@@ -95,13 +95,13 @@
 
 **Independent Test**: quickstart V7–V10, V15
 
-- [ ] T021 [P] [US3] Star toggle on flashcards in `src/b1-flashcards/App.tsx`: `Star` icon (lucide) in the card's control row, filled when saved, optimistic toggle via `saveWord`/`unsaveWord` (`level:'B1'`, `source:'flashcards'`, current `topicId`), hidden for guests/unconfigured; load saved set once per session via `listSavedWords('B1')`
-- [ ] T022 [P] [US3] Same star toggle in `src/c1-flashcards/App.tsx` (`level:'C1'`)
-- [ ] T023 [P] [US3] Star toggles on trivia end-screen word lists in `src/b1-trivia/App.tsx` and `src/c1-trivia/App.tsx` (`source:'trivia'`, optimistic, deduped by contract upsert)
-- [ ] T024 [US3] "My Words" virtual topic in both flashcard apps (`src/b1-flashcards/App.tsx`, `src/c1-flashcards/App.tsx`): assemble from `listSavedWords(level)` resolved against local `TOPICS` (exact topic_id + word match, misses dropped), reserved id `my-words`, star icon, listed first, visible only when ≥1 word resolves; `?topic=my-words` deep link resolves only under that condition, else falls back to topic list (depends on T021/T022)
-- [ ] T025 [US3] "My Words" quiz topic in both trivia apps (`src/b1-trivia/App.tsx`, `src/c1-trivia/App.tsx`): same assembly, feeds the existing question generator; same deep-link guard (depends on T023)
-- [ ] T026 [US3] Personal page My Words section in `src/account/App.tsx`: list saved words with meaning resolved from `data.ts` (`definition ?? translation`), unsave button per word, links to the level's My Words deck
-- [ ] T027 [US3] Validate V7, V8, V9, V10, V15 locally; push `beta`, spot-check V9 live
+- [X] T021 [P] [US3] Star toggle on flashcards in `src/b1-flashcards/App.tsx`: `Star` icon (lucide) in the card's control row, filled when saved, optimistic toggle via `saveWord`/`unsaveWord` (`level:'B1'`, `source:'flashcards'`, current `topicId`), hidden for guests/unconfigured; load saved set once per session via `listSavedWords('B1')`
+- [X] T022 [P] [US3] Same star toggle in `src/c1-flashcards/App.tsx` (`level:'C1'`)
+- [X] T023 [P] [US3] Star toggles on trivia end-screen word lists in `src/b1-trivia/App.tsx` and `src/c1-trivia/App.tsx` (`source:'trivia'`, optimistic, deduped by contract upsert)
+- [X] T024 [US3] "My Words" virtual topic in both flashcard apps (`src/b1-flashcards/App.tsx`, `src/c1-flashcards/App.tsx`): assemble from `listSavedWords(level)` resolved against local `TOPICS` (exact topic_id + word match, misses dropped), reserved id `my-words`, star icon, listed first, visible only when ≥1 word resolves; `?topic=my-words` deep link resolves only under that condition, else falls back to topic list (depends on T021/T022)
+- [X] T025 [US3] "My Words" quiz topic in both trivia apps (`src/b1-trivia/App.tsx`, `src/c1-trivia/App.tsx`): same assembly, feeds the existing question generator; same deep-link guard (depends on T023)
+- [X] T026 [US3] Personal page My Words section in `src/account/App.tsx`: list saved words with meaning resolved from `data.ts` (`definition ?? translation`), unsave button per word, links to the level's My Words deck
+- [X] T027 [US3] Validate V7, V8, V9, V10, V15 locally; push `beta`, spot-check V9 live
 
 **Checkpoint**: US1–US3 all independently functional
 

@@ -1,7 +1,10 @@
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, useEffect, useMemo, useRef, type ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Volume2, RotateCcw, Zap, ArrowLeftRight } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
+import {
+  useSavedWords, resolveSavedWords, findOriginTopicId, StarButton, MY_WORDS_TOPIC_ID,
+} from "../shared/savedWords.tsx";
 import { TOPICS, type Topic, type C1Word } from "./data.ts";
 import teacherThinking from "../assets/teacher-thinking.png";
 import teacherCorrect from "../assets/teacher-correct.png";
@@ -101,7 +104,7 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
 // Topic selection screen
 // ---------------------------------------------------------------------------
 
-function TopicSelectScreen({ onSelect }: { onSelect: (topic: Topic) => void }) {
+function TopicSelectScreen({ topics, onSelect }: { topics: Topic[]; onSelect: (topic: Topic) => void }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -123,7 +126,7 @@ function TopicSelectScreen({ onSelect }: { onSelect: (topic: Topic) => void }) {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        {TOPICS.map((topic) => (
+        {topics.map((topic) => (
           <button
             key={topic.id}
             onClick={() => onSelect(topic)}
@@ -308,6 +311,33 @@ export default function App() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [reversed, setReversed] = useState(false);
 
+  // Saved words / My Words virtual topic
+  const { enabled: starsEnabled, savedWords, savedSet, toggle } = useSavedWords("C1");
+  const myWordsTopic = useMemo<Topic | null>(() => {
+    const words = resolveSavedWords(savedWords, TOPICS);
+    if (words.length === 0) return null;
+    return {
+      id: MY_WORDS_TOPIC_ID,
+      title: "My Words",
+      icon: "⭐",
+      description: "Words you saved for later practice",
+      triviaUrl: "/c1-trivia/?topic=my-words",
+      words,
+    };
+  }, [savedWords]);
+
+  // ?topic=my-words deep link: enter once saved words resolve (signed-in
+  // with ≥1 word); guests simply stay on the topic list.
+  const wantMyWords = useRef(
+    new URLSearchParams(window.location.search).get("topic") === MY_WORDS_TOPIC_ID,
+  );
+  useEffect(() => {
+    if (wantMyWords.current && phase === "select" && myWordsTopic) {
+      wantMyWords.current = false;
+      handleSelectTopic(myWordsTopic);
+    }
+  }, [myWordsTopic, phase]); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     [teacherThinking, teacherCorrect].forEach((src) => {
       const img = new Image();
@@ -356,7 +386,10 @@ export default function App() {
         <AnimatePresence mode="wait">
           {phase === "select" && (
             <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
-              <TopicSelectScreen onSelect={handleSelectTopic} />
+              <TopicSelectScreen
+                topics={myWordsTopic ? [myWordsTopic, ...TOPICS] : TOPICS}
+                onSelect={handleSelectTopic}
+              />
             </motion.div>
           )}
 
@@ -408,13 +441,31 @@ export default function App() {
 
                   {/* Card + navigation */}
                   <div className="flex-1 flex flex-col gap-4">
-                    <FlashCard
-                      word={topic.words[index]}
-                      index={index}
-                      isFlipped={isFlipped}
-                      reversed={reversed}
-                      onFlip={() => setIsFlipped((f) => !f)}
-                    />
+                    <div className="relative">
+                      {starsEnabled && (
+                        <div className="absolute top-3 left-3 z-10">
+                          <StarButton
+                            active={savedSet.has(topic.words[index].word)}
+                            onToggle={() =>
+                              toggle(
+                                topic.words[index].word,
+                                topic.id === MY_WORDS_TOPIC_ID
+                                  ? findOriginTopicId(topic.words[index].word, TOPICS)
+                                  : topic.id,
+                                "flashcards",
+                              )
+                            }
+                          />
+                        </div>
+                      )}
+                      <FlashCard
+                        word={topic.words[index]}
+                        index={index}
+                        isFlipped={isFlipped}
+                        reversed={reversed}
+                        onFlip={() => setIsFlipped((f) => !f)}
+                      />
+                    </div>
 
                     <div className="flex gap-3">
                       <button

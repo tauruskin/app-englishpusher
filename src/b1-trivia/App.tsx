@@ -6,6 +6,9 @@ import { motion, AnimatePresence } from "motion/react";
 import { Volume2, VolumeX, RotateCcw } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import { TriviaSaveStatus } from "../shared/TriviaSave.tsx";
+import {
+  useSavedWords, resolveSavedWords, findOriginTopicId, StarButton, MY_WORDS_TOPIC_ID,
+} from "../shared/savedWords.tsx";
 import confetti from "canvas-confetti";
 import { TOPICS, type Topic, type B1Word } from "../b1-flashcards/data.ts";
 import teacherThinking from "../assets/teacher-thinking.png";
@@ -525,7 +528,7 @@ const itemVariants = {
   visible: { opacity: 1, x: 0, transition: { type: "spring" as const, stiffness: 300, damping: 30 } },
 };
 
-function TopicSelectScreen({ onSelect }: { onSelect: (topic: Topic) => void }) {
+function TopicSelectScreen({ topics, onSelect }: { topics: Topic[]; onSelect: (topic: Topic) => void }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
@@ -548,7 +551,7 @@ function TopicSelectScreen({ onSelect }: { onSelect: (topic: Topic) => void }) {
 
       {/* Topic cards */}
       <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid gap-4 sm:grid-cols-2">
-        {TOPICS.map(topic => (
+        {topics.map(topic => (
           <motion.button
             key={topic.id} variants={itemVariants} whileHover={{ scale: 1.02 }}
             onClick={() => onSelect(topic)}
@@ -577,6 +580,18 @@ function EndScreen({
 }: {
   score: number; total: number; results: AnswerResult[]; topicId: string; onReplay: () => void; onPracticeWeak: (words: B1Word[]) => void;
 }) {
+  const { enabled: starsEnabled, savedSet, toggle } = useSavedWords("B1");
+  const starFor = (word: string) => starsEnabled && (
+    <StarButton
+      size={15}
+      active={savedSet.has(word)}
+      onToggle={() => toggle(
+        word,
+        topicId === MY_WORDS_TOPIC_ID ? findOriginTopicId(word, TOPICS) : topicId,
+        "trivia",
+      )}
+    />
+  );
   const pct = Math.round((score / total) * 100);
   const isPerfect = score === total;
   const isGreat = pct >= 70;
@@ -656,7 +671,10 @@ function EndScreen({
                 {correct.map((r, i) => (
                   <div key={i} className="flex items-center justify-between px-4 py-2.5">
                     <span className="font-semibold text-neutral-800 text-sm">{r.word.word}</span>
-                    <span className="text-xs text-neutral-400 shrink-0 ml-2">{r.word.translation}</span>
+                    <span className="flex items-center gap-1 shrink-0 ml-2">
+                      <span className="text-xs text-neutral-400">{r.word.translation}</span>
+                      {starFor(r.word.word)}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -672,7 +690,10 @@ function EndScreen({
                       <span className="font-semibold text-neutral-800 text-sm">{r.word.word}</span>
                       <span className="text-xs text-neutral-500 ml-2">— {r.word.translation}</span>
                     </div>
-                    <span className="text-xs text-neutral-400 shrink-0 ml-2">{TYPE_LABEL[r.questionType]}</span>
+                    <span className="flex items-center gap-1 shrink-0 ml-2">
+                      <span className="text-xs text-neutral-400">{TYPE_LABEL[r.questionType]}</span>
+                      {starFor(r.word.word)}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -711,6 +732,26 @@ export default function App() {
 
   const [phase, setPhase] = useState<Phase>(initialTopic ? "playing" : "select");
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(initialTopic);
+
+  // My Words virtual quiz topic (signed-in students with saved B1 words)
+  const { savedWords } = useSavedWords("B1");
+  const myWordsTopic = useMemo<Topic | null>(() => {
+    const words = resolveSavedWords(savedWords, TOPICS);
+    if (words.length === 0) return null;
+    return {
+      id: MY_WORDS_TOPIC_ID,
+      title: "My Words",
+      icon: "⭐",
+      description: "Quiz yourself on the words you saved",
+      words,
+    };
+  }, [savedWords]);
+
+  // ?topic=my-words deep link: start once saved words resolve; guests stay
+  // on the topic list.
+  const wantMyWords = useRef(
+    new URLSearchParams(window.location.search).get("topic") === MY_WORDS_TOPIC_ID,
+  );
 
   // ── Game state ─────────────────────────────────────────────────────────────
   const [questions, setQuestions] = useState<Question[]>(() =>
@@ -836,6 +877,14 @@ export default function App() {
     if (gameOver) setPhase("end");
   }, [gameOver]);
 
+  // Enter My Words via deep link once it becomes available
+  useEffect(() => {
+    if (wantMyWords.current && phase === "select" && myWordsTopic) {
+      wantMyWords.current = false;
+      startGame(myWordsTopic);
+    }
+  }, [myWordsTopic, phase]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // ── Game control ───────────────────────────────────────────────────────────
   function startGame(topic: Topic, wordPool?: B1Word[]) {
     const pool = wordPool ?? topic.words;
@@ -934,7 +983,10 @@ export default function App() {
           {phase === "select" && (
             <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="flex-1 flex items-start justify-center px-6 py-10">
-              <TopicSelectScreen onSelect={handleSelectTopic} />
+              <TopicSelectScreen
+                topics={myWordsTopic ? [myWordsTopic, ...TOPICS] : TOPICS}
+                onSelect={handleSelectTopic}
+              />
             </motion.div>
           )}
 
