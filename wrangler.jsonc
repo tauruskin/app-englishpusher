@@ -1,0 +1,12 @@
+// Cloudflare Workers config — beta deployment only.
+// Serves the Vite build output as a static-assets Worker (no server code).
+// Production (GitHub Pages via Actions) is not affected by this file.
+{
+  "name": "englishpusher-beta",
+  "compatibility_date": "2026-07-14",
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}
