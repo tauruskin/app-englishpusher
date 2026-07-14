@@ -45,7 +45,7 @@
 
 **Independent Test**: quickstart V16 — push to `beta` updates pages.dev URL, production URL unaffected
 
-- [ ] T008 [US5] Push `beta` branch to origin (`git push -u origin beta`) so Cloudflare can build it
+- [X] T008 [US5] Push `beta` branch to origin (`git push -u origin beta`) so Cloudflare can build it
 - [ ] T009 ⚑ USER [US5] Create Cloudflare Pages project per quickstart §3: connect repo, production branch `beta`, build `npm run build`, output `dist`, env vars `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` / `VITE_BASE_PATH=/` / `NODE_VERSION=20`; note the `*.pages.dev` URL
 - [ ] T010 ⚑ USER [US5] Add the pages.dev URL to Supabase Auth redirect allowlist (`https://<project>.pages.dev/**`)
 - [ ] T011 [US5] Validate V16: confirm beta URL serves the current `beta` build (placeholder `/account/` visible) and production `app.englishpusher.in.ua` is unchanged
@@ -60,13 +60,15 @@
 
 **Independent Test**: quickstart V1–V3, V11, V12, V14 (guest parity)
 
-- [ ] T012 [US1] Build the logged-out view in `src/account/App.tsx`: login/signup tab form (email, password, submit, inline error from `useAuth()`, "Forgot password?" → `resetPassword`), brand styling (`bg-brand`, `font-display`), wrapped in `AuthProvider` in `src/account/main.tsx`
-- [ ] T013 [US1] Build the signed-in personal page shell in `src/account/App.tsx`: greeting with `display_name`, sign-out button, empty sections scaffolded for Progress / My Words / Recent activity ("nothing yet" states); handle `?type=recovery` password-reset landing (new-password form)
-- [ ] T014 [US1] Add the auth-aware account element to `AppHeader` and mobile `AppFooter` in `src/shared/AppShell.tsx`: outline `User` icon (lucide) linking to `/account/` for guests, brand-filled when signed in; requires wiring `useAuth()` inside AppShell with graceful guest fallback when `isSupabaseConfigured` is false; existing prop signatures unchanged
-- [ ] T015 [P] [US1] Add the same account link to the hub header in `src/Index.tsx` (manual, hub doesn't use AppShell)
-- [ ] T016 [US1] Validate V1, V2, V3, V11, V12 + full guest-parity pass V14 on local dev, then push `beta` and re-verify V1/V2 on the live beta URL
+- [X] T012 [US1] Build the logged-out view in `src/account/App.tsx`: login/signup tab form (email, password, submit, inline error from `useAuth()`, "Forgot password?" → `resetPassword`), brand styling (`bg-brand`, `font-display`), wrapped in `AuthProvider` in `src/account/main.tsx`
+- [X] T013 [US1] Build the signed-in personal page shell in `src/account/App.tsx`: greeting with `display_name`, sign-out button, empty sections scaffolded for Progress / My Words / Recent activity ("nothing yet" states); handle `?type=recovery` password-reset landing (new-password form)
+- [X] T014 [US1] Add the auth-aware account element to `AppHeader` and mobile `AppFooter` in `src/shared/AppShell.tsx`: outline `User` icon (lucide) linking to `/account/` for guests, brand-filled when signed in; requires wiring `useAuth()` inside AppShell with graceful guest fallback when `isSupabaseConfigured` is false; existing prop signatures unchanged
+- [X] T015 [P] [US1] Add the same account link to the hub header in `src/Index.tsx` (manual, hub doesn't use AppShell)
+- [X] T016 [US1] Validate V1, V2, V3, V11, V12 + full guest-parity pass V14 on local dev, then push `beta` and re-verify V1/V2 on the live beta URL
 
 **Checkpoint**: MVP — accounts work end-to-end on beta; teacher can sign up
+
+> T016 note (2026-07-14): V1-V3, V12, V14 validated locally via scripted Edge — all pass. V11 (reset email) needs a real inbox → folded into T033. Live-beta re-verification folded into T011/T033 (Cloudflare setup pending).
 
 ---
 

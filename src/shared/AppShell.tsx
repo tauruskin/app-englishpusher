@@ -1,5 +1,26 @@
 import { type ReactNode } from "react";
-import { Home } from "lucide-react";
+import { Home, User } from "lucide-react";
+import { useSessionUser } from "./auth.tsx";
+
+// Account entry point — outline icon for guests, brand-filled when signed
+// in. Rendered in the desktop header nav and the mobile footer nav.
+function AccountLink({ size = 16 }: { size?: number }) {
+  const { user } = useSessionUser();
+  return (
+    <a
+      href="/account/"
+      aria-label={user ? "My account" : "Sign in"}
+      title={user ? "My account" : "Sign in"}
+      className="flex items-center rounded-md px-2 py-1.5 text-neutral-300 hover:bg-neutral-800 hover:text-white transition-colors"
+    >
+      <User
+        size={size}
+        className={user ? "text-brand" : undefined}
+        fill={user ? "currentColor" : "none"}
+      />
+    </a>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // AppHeader — shared dark header for all activity apps (not the landing page)
@@ -67,6 +88,12 @@ export function AppHeader({
               <Home size={14} />
               Home
             </a>
+            <AccountLink />
+          </div>
+
+          {/* Mobile: account icon stays in the header (footer handles the rest) */}
+          <div className="md:hidden">
+            <AccountLink />
           </div>
         </div>
       </div>

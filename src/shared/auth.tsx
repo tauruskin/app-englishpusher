@@ -88,3 +88,29 @@ export function useAuth(): AuthState {
   if (!ctx) throw new Error("useAuth must be used inside <AuthProvider>");
   return ctx;
 }
+
+// ---------------------------------------------------------------------------
+// useSessionUser() — lightweight session subscription for components that
+// only need to know WHO is signed in (AppShell icon, star buttons, saves).
+// Works without <AuthProvider>, so activity apps need no wrapping.
+// ---------------------------------------------------------------------------
+
+export function useSessionUser(): { user: User | null; loading: boolean } {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(isSupabaseConfigured);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
+      setLoading(false);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  return { user, loading };
+}

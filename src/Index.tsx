@@ -1,7 +1,27 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, BookOpen, Layers, Zap, Instagram, type LucideIcon } from "lucide-react";
+import { ArrowRight, BookOpen, Layers, Zap, Instagram, User, type LucideIcon } from "lucide-react";
 import teacherCelebrate from "./assets/teacher-celebrate.png";
+import { useSessionUser } from "./shared/auth.tsx";
+
+// ---------------------------------------------------------------------------
+// HeaderAccountLink — account entry point in the hub header (the hub has its
+// own header, not AppShell). Outline icon for guests, brand-filled signed in.
+// ---------------------------------------------------------------------------
+
+function HeaderAccountLink() {
+  const { user } = useSessionUser();
+  return (
+    <a
+      href="/account/"
+      aria-label={user ? "My account" : "Sign in"}
+      title={user ? "My account" : "Sign in"}
+      className="ml-auto flex items-center rounded-md px-2 py-1.5 text-neutral-300 hover:bg-neutral-800 hover:text-white transition-colors"
+    >
+      <User size={18} className={user ? "text-brand" : undefined} fill={user ? "currentColor" : "none"} />
+    </a>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // ElegantShape — floating pill decoration for the background
@@ -326,6 +346,7 @@ export default function Index() {
           <h1 className="font-display text-xl font-bold leading-tight text-white">
             Englishpusher <span className="text-brand">Learning Apps</span>
           </h1>
+          <HeaderAccountLink />
         </div>
       </header>
 
