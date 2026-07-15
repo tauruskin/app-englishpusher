@@ -240,3 +240,14 @@
 - All 33/34 tasks complete. Remaining: T034 — send beta link to teacher for review
 - Password-reset email flow (V11) needs a real inbox — verify during T033
 - Production release = merge `beta`→`main` + add VITE_ vars to deploy.yml (checklist in CLAUDE.md)
+
+## 2026-07-16 — Student accounts released to production
+
+Teacher approved the beta after trying it live. Released:
+
+- Merged `beta` → `main` (clean fast-forward, no divergence — `main` had no commits `beta` lacked)
+- Added `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` as GitHub Actions repo variables; wired into `.github/workflows/deploy.yml`'s build step
+- Production deploy succeeded; verified live on `app.englishpusher.in.ua`: all 9 routes, signup with the optional name field, `profiles` row has correct `display_name`+`email`, star-to-save, session persists across apps — 6/6 checks pass
+- `beta` branch + Cloudflare Worker deployment kept alive for testing future changes to this feature; one Supabase project still serves both
+- Test account `claude.prod.verify@englishpusher.in.ua` left in Supabase Auth — delete via dashboard if not wanted
+- Saved a memory (`project_reminder_feature_idea.md`) for the teacher's next ask: interval/spaced-repetition reminders to revisit old topics, building on `trivia_results`/`study_events`. Not started — run through brainstorming first when picked up.

@@ -284,17 +284,17 @@ Project skills auto-discovered by Claude Code (each must live at `.claude/skills
 
 The old `SKIILS/` folder was removed (2026-07-08) — its content was migrated/superseded here.
 
-## Student accounts — Supabase (on `beta` branch)
+## Student accounts — Supabase (live in production)
 
-Full spec/plan/tasks: `specs/001-student-accounts/`. Feature summary:
+Full spec/plan/tasks: `specs/001-student-accounts/`. Shipped to production 2026-07-16 (approved by the teacher after a beta trial). Feature summary:
 
-- **Optional login** (email + password, no email confirmation): guests keep exactly the old behavior everywhere. Backend = Supabase project `cwtidnvbazepqkfweaed` (owner's account); anon key is public by design, **RLS is the security boundary** (4 tables: `profiles`, `trivia_results`, `saved_words`, `study_events` — schema in `specs/001-student-accounts/contracts/database.md`).
-- **Env vars**: `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` — `.env.local` for dev (see `.env.example`), Cloudflare Pages dashboard for beta. When missing, `isSupabaseConfigured` is false and everything silently degrades to guest mode.
+- **Optional login** (email + password, no email confirmation, optional name field at signup): guests keep exactly the old behavior everywhere. Backend = Supabase project `cwtidnvbazepqkfweaed` (owner's account); anon key is public by design, **RLS is the security boundary** (4 tables: `profiles` incl. `display_name`/`email`, `trivia_results`, `saved_words`, `study_events` — schema in `specs/001-student-accounts/contracts/database.md`).
+- **Env vars**: `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` — `.env.local` for dev (see `.env.example`), GitHub Actions repo variables for production, Cloudflare Worker Build settings for beta. When missing, `isSupabaseConfigured` is false and everything silently degrades to guest mode.
 - **Session** persists in localStorage and carries across all MPA pages; apps render guest UI first and upgrade when the session resolves (`useSessionUser()` — no provider needed; `AuthProvider`/`useAuth` only in the account app).
 - **Signed-in extras**: trivia results auto-save on the end screen (fire-and-forget, dismissible notice on failure); star-to-save words on flashcards + trivia end screens; "My Words" virtual topic (reserved id `my-words` — **never use it in any data.ts**) in all four activity apps; personal page at `/account/` (progress per topic, weak words, saved words, recent activity).
 - **Weak words** are derived client-side from `trivia_results`: a word is weak iff its most recent occurrence across sessions is in `missed_words`.
-- **Beta deployment**: long-lived `beta` branch → Cloudflare Workers static-assets deploy at **https://englishpusher-beta.pushkar-xander.workers.dev** (CF retired the Pages flow; `wrangler.jsonc` at repo root serves `dist/`; worker `englishpusher-beta`, production branch = `beta`, build `npm run build`, deploy `npx wrangler deploy`, env vars in the worker's Build settings). Production GitHub Pages CI is untouched. Sync content with `git merge main` on `beta`.
-- **Release checklist** (after teacher approval): merge `beta` → `main`; add the two `VITE_` vars to `.github/workflows/deploy.yml` (repo variables + `env:` on the build step); verify signup/login on production. CNAME safeguard unaffected.
+- **Beta stays live** for testing future changes to this feature: long-lived `beta` branch → Cloudflare Workers static-assets deploy at **https://englishpusher-beta.pushkar-xander.workers.dev** (CF retired the Pages flow; `wrangler.jsonc` at repo root serves `dist/`; worker `englishpusher-beta`, production branch = `beta`, build `npm run build`, deploy `npx wrangler deploy`, env vars in the worker's Build settings). One Supabase project serves both beta and production — there is no separate database. Keep beta current with `git merge main` on `beta` after future lessons land.
+- **Release checklist** (already done for this feature; repeat for future beta→main merges): merge `beta` → `main`; the two `VITE_` repo variables are already wired into `.github/workflows/deploy.yml`'s build step; verify signup/login on production after deploy. CNAME safeguard unaffected.
 
 ## Spec-driven development — spec-kit
 
