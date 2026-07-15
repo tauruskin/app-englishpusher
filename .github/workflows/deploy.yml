@@ -26,6 +26,9 @@ jobs:
       - run: echo "VITE_BASE_PATH=/" >> $GITHUB_ENV
 
       - run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
 
       - uses: peaceiris/actions-gh-pages@v4
         with:
