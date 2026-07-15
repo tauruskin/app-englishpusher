@@ -17,7 +17,9 @@ create policy "own profile select" on public.profiles
 create policy "own profile update" on public.profiles
   for update using (auth.uid() = id);
 
--- Auto-create profile on signup (display_name = email local part)
+-- Auto-create profile on signup. display_name = the name the student typed
+-- at signup (options.data.display_name), falling back to the email's local
+-- part when they left it blank.
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
@@ -25,7 +27,14 @@ security definer set search_path = public
 as $$
 begin
   insert into public.profiles (id, display_name)
-  values (new.id, coalesce(split_part(new.email, '@', 1), ''));
+  values (
+    new.id,
+    coalesce(
+      nullif(trim(new.raw_user_meta_data->>'display_name'), ''),
+      split_part(new.email, '@', 1),
+      ''
+    )
+  );
   return new;
 end;
 $$;

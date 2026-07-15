@@ -20,7 +20,7 @@ import { supabase, isSupabaseConfigured } from "./supabase.ts";
 interface AuthState {
   user: User | null;
   loading: boolean;
-  signUp: (email: string, password: string) => Promise<{ error: string | null }>;
+  signUp: (email: string, password: string, name?: string) => Promise<{ error: string | null }>;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: string | null }>;
@@ -57,9 +57,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value: AuthState = {
     user,
     loading,
-    signUp: async (email, password) => {
+    signUp: async (email, password, name) => {
       if (!isSupabaseConfigured) return { error: "Accounts are not available right now." };
-      const { error } = await supabase.auth.signUp({ email, password });
+      const trimmed = name?.trim();
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        // Read by the on_auth_user_created trigger; falls back to the
+        // email's local part there when omitted or blank.
+        options: trimmed ? { data: { display_name: trimmed } } : undefined,
+      });
       return { error: toMessage(error) };
     },
     signIn: async (email, password) => {

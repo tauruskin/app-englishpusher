@@ -19,7 +19,7 @@ export function AuthProvider(props: { children: ReactNode }): JSX.Element;
 export function useAuth(): {
   user: User | null;        // null = guest (or still loading)
   loading: boolean;         // true until getSession() resolves
-  signUp(email: string, password: string): Promise<{ error: string | null }>;
+  signUp(email: string, password: string, name?: string): Promise<{ error: string | null }>; // name -> auth metadata, read by the profile-creation trigger
   signIn(email: string, password: string): Promise<{ error: string | null }>;
   signOut(): Promise<void>;
   resetPassword(email: string): Promise<{ error: string | null }>;

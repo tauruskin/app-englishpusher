@@ -85,6 +85,7 @@ type FormMode = "login" | "signup" | "reset";
 function AuthForm() {
   const { signIn, signUp, resetPassword } = useAuth();
   const [mode, setMode] = useState<FormMode>("login");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -112,7 +113,7 @@ function AuthForm() {
     }
 
     const { error } =
-      mode === "login" ? await signIn(email, password) : await signUp(email, password);
+      mode === "login" ? await signIn(email, password) : await signUp(email, password, name);
     setBusy(false);
     if (error) setError(error);
     // success: onAuthStateChange flips the page to the personal view
@@ -151,6 +152,16 @@ function AuthForm() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-3">
+        {mode === "signup" && (
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name (optional)"
+            autoComplete="name"
+            className={inputCls}
+          />
+        )}
         <input
           type="email"
           required
