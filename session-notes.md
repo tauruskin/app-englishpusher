@@ -235,6 +235,7 @@
 
 ### Pending
 
-- User: create Cloudflare Pages project for `beta` (T009/T010 in tasks.md), then T033 full beta validation + T034 send link to teacher
+- Beta LIVE: https://englishpusher-beta.pushkar-xander.workers.dev (Cloudflare Workers static-assets deploy, wrangler.jsonc; CF retired the Pages flow). Live validation passed 2026-07-15: all routes, signup/login/session, guest parity, stars, My Words, personal page; prod untouched
+- User: add https://englishpusher-beta.pushkar-xander.workers.dev/** to Supabase Auth redirect allowlist (T010) + verify password-reset email (V11), then T034 send link to teacher
 - Password-reset email flow (V11) needs a real inbox — verify during T033
 - Production release = merge `beta`→`main` + add VITE_ vars to deploy.yml (checklist in CLAUDE.md)
