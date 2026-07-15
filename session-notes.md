@@ -236,6 +236,7 @@
 ### Pending
 
 - Beta LIVE: https://englishpusher-beta.pushkar-xander.workers.dev (Cloudflare Workers static-assets deploy, wrangler.jsonc; CF retired the Pages flow). Live validation passed 2026-07-15: all routes, signup/login/session, guest parity, stars, My Words, personal page; prod untouched
-- User: add https://englishpusher-beta.pushkar-xander.workers.dev/** to Supabase Auth redirect allowlist (T010) + verify password-reset email (V11), then T034 send link to teacher
+- T010/V11 confirmed by user (2026-07-15): password-reset email received, link redirected correctly, password changed successfully
+- All 33/34 tasks complete. Remaining: T034 — send beta link to teacher for review
 - Password-reset email flow (V11) needs a real inbox — verify during T033
 - Production release = merge `beta`→`main` + add VITE_ vars to deploy.yml (checklist in CLAUDE.md)

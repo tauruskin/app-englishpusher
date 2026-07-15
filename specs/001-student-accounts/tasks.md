@@ -47,12 +47,12 @@
 
 - [X] T008 [US5] Push `beta` branch to origin (`git push -u origin beta`) so Cloudflare can build it
 - [X] T009 ⚑ USER [US5] Create Cloudflare Pages project per quickstart §3: connect repo, production branch `beta`, build `npm run build`, output `dist`, env vars `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` / `VITE_BASE_PATH=/` / `NODE_VERSION=20`; note the `*.pages.dev` URL
-- [ ] T010 ⚑ USER [US5] Add the pages.dev URL to Supabase Auth redirect allowlist (`https://<project>.pages.dev/**`)
+- [X] T010 ⚑ USER [US5] Add the pages.dev URL to Supabase Auth redirect allowlist (`https://<project>.pages.dev/**`)
 - [X] T011 [US5] Validate V16: confirm beta URL serves the current `beta` build (placeholder `/account/` visible) and production `app.englishpusher.in.ua` is unchanged
 
 **Checkpoint**: Teacher-visitable beta URL exists; every later phase is instantly testable live
 
-> Beta live (2026-07-15): https://englishpusher-beta.pushkar-xander.workers.dev — Cloudflare Workers (Pages was retired from the CF dashboard; static-assets Worker via wrangler.jsonc instead). Production branch = beta, vars in CF dashboard. V16 verified: all 9 routes 200 on beta, production untouched (/account/ 404 on prod). T010 (Supabase redirect allowlist) still pending — needed only for password-reset emails from beta.
+> Beta live (2026-07-15): https://englishpusher-beta.pushkar-xander.workers.dev — Cloudflare Workers (Pages was retired from the CF dashboard; static-assets Worker via wrangler.jsonc instead). Production branch = beta, vars in CF dashboard. V16 verified: all 9 routes 200 on beta, production untouched (/account/ 404 on prod). T010 done: redirect allowlist updated, V11 password-reset email confirmed working end-to-end by the user (2026-07-15).
 
 ---
 
