@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { motion } from "motion/react";
-import { LogOut, BarChart3, Star, Clock } from "lucide-react";
+import { LogOut, BarChart3, Star, Clock, Eye, EyeOff } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import { useAuth } from "../shared/auth.tsx";
 import { supabase, isSupabaseConfigured } from "../shared/supabase.ts";
@@ -38,6 +38,45 @@ const inputCls =
 const primaryBtnCls =
   "w-full rounded-lg bg-brand px-4 py-2.5 font-display text-sm font-bold text-white " +
   "hover:bg-brand/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+
+// Password field with a show/hide toggle — shared by login/signup and the
+// password-reset form.
+function PasswordInput({
+  value,
+  onChange,
+  placeholder,
+  autoComplete,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  autoComplete: string;
+}) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <div className="relative">
+      <input
+        type={visible ? "text" : "password"}
+        required
+        minLength={6}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        className={`${inputCls} pr-10`}
+      />
+      <button
+        type="button"
+        onClick={() => setVisible((v) => !v)}
+        aria-label={visible ? "Hide password" : "Show password"}
+        tabIndex={-1}
+        className="absolute right-0 top-0 flex h-full w-10 items-center justify-center text-neutral-400 hover:text-neutral-600 transition-colors"
+      >
+        {visible ? <EyeOff size={16} /> : <Eye size={16} />}
+      </button>
+    </div>
+  );
+}
 
 // ------------------------------- auth form --------------------------------
 
@@ -122,15 +161,11 @@ function AuthForm() {
           className={inputCls}
         />
         {mode !== "reset" && (
-          <input
-            type="password"
-            required
-            minLength={6}
+          <PasswordInput
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={setPassword}
             placeholder={mode === "signup" ? "Password (min. 6 characters)" : "Password"}
             autoComplete={mode === "signup" ? "new-password" : "current-password"}
-            className={inputCls}
           />
         )}
 
@@ -182,15 +217,11 @@ function NewPasswordForm({ onDone }: { onDone: () => void }) {
     <div className="w-full max-w-sm">
       <h1 className="font-display text-2xl font-bold text-neutral-900 text-center">Set a new password</h1>
       <form onSubmit={handleSubmit} className="mt-6 space-y-3">
-        <input
-          type="password"
-          required
-          minLength={6}
+        <PasswordInput
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={setPassword}
           placeholder="New password (min. 6 characters)"
           autoComplete="new-password"
-          className={inputCls}
         />
         {error && (
           <p className="rounded-lg bg-red-50 px-3 py-2 font-body text-sm text-red-600">{error}</p>
