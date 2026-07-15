@@ -7,6 +7,7 @@ Authoritative DDL — run once in the Supabase SQL editor (idempotent where prac
 create table public.profiles (
   id          uuid primary key references auth.users (id) on delete cascade,
   display_name text not null default '',
+  email       text, -- copied from auth.users.email at signup; not kept in sync afterward
   created_at  timestamptz not null default now()
 );
 
@@ -26,14 +27,15 @@ language plpgsql
 security definer set search_path = public
 as $$
 begin
-  insert into public.profiles (id, display_name)
+  insert into public.profiles (id, display_name, email)
   values (
     new.id,
     coalesce(
       nullif(trim(new.raw_user_meta_data->>'display_name'), ''),
       split_part(new.email, '@', 1),
       ''
-    )
+    ),
+    new.email
   );
   return new;
 end;

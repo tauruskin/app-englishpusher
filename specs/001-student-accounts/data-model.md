@@ -11,10 +11,11 @@ One row per account, auto-created by trigger when the auth user is created.
 | Field | Type | Rules |
 |---|---|---|
 | `id` | uuid, PK | = `auth.users.id` (FK, cascade delete) |
-| `display_name` | text | defaults to the part of email before `@`; student-editable later |
+| `display_name` | text | student-provided name at signup, else the part of email before `@` |
+| `email` | text | copied from `auth.users.email` at signup by the trigger; disambiguates same-named students for a future teacher view. Not the source of truth (`auth.users` is) and not kept in sync if the student later changes their email — acceptable since it only feeds a not-yet-built read view |
 | `created_at` | timestamptz | default `now()` |
 
-Forward-compatibility: a `role text default 'student'` column is **not** added now but the phase-2 teacher dashboard adds it plus teacher-read policies without touching other tables (FR-015).
+Forward-compatibility: a `role text default 'student'` column is **not** added now but the phase-2 teacher dashboard adds it plus teacher-read policies without touching other tables (FR-015). `email` is added ahead of that work so the dashboard needs no migration when it ships.
 
 ### trivia_results
 
