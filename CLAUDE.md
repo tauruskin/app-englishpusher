@@ -38,7 +38,6 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-flashcards/?topic=collocations-get-make |
 | Lesson 18: Unit 2 Review | https://app.englishpusher.in.ua/b1-flashcards/?topic=lesson-18-review |
 | Lesson 19: Facts and Figures | https://app.englishpusher.in.ua/b1-flashcards/?topic=lesson-19-facts-figures |
-| Technology Collocations | https://app.englishpusher.in.ua/b1-flashcards/?topic=technology-collocations |
 
 **B1 Vocabulary Trivia** (`/b1-trivia/`):
 
@@ -53,7 +52,6 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-trivia/?topic=collocations-get-make |
 | Lesson 18: Unit 2 Review | https://app.englishpusher.in.ua/b1-trivia/?topic=lesson-18-review |
 | Lesson 19: Facts and Figures | https://app.englishpusher.in.ua/b1-trivia/?topic=lesson-19-facts-figures |
-| Technology Collocations | https://app.englishpusher.in.ua/b1-trivia/?topic=technology-collocations |
 
 **C1 Flash Cards** (`/c1-flashcards/`):
 
