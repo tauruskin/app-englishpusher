@@ -1124,7 +1124,7 @@ export default function App() {
             <motion.div key="end" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="flex-1 flex flex-col min-h-0 px-6 py-6 items-center">
               <EndScreen
-                score={score}
+                score={endResults.filter(r => r.correct).length}
                 total={endResults.length > 0 ? endResults.length : questions.reduce((a, q) => a + q.words.length, 0)}
                 results={endResults}
                 topicId={selectedTopic?.id ?? ""}
