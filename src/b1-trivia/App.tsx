@@ -132,8 +132,15 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
+// Two words are interchangeable if they share a translation or either lists the other in `similar` —
+// such a word must never be offered as a "wrong" option, or the question has two right answers.
+function isInterchangeable(a: B1Word, b: B1Word): boolean {
+  return a.word === b.word || a.translation === b.translation
+    || !!a.similar?.includes(b.word) || !!b.similar?.includes(a.word);
+}
+
 function getDistractors(pool: B1Word[], exclude: B1Word[], count: number): B1Word[] {
-  return shuffle(pool.filter(w => !exclude.some(e => e.word === w.word))).slice(0, count);
+  return shuffle(pool.filter(w => !exclude.some(e => isInterchangeable(e, w)))).slice(0, count);
 }
 
 function makeQuestion(word: B1Word, pool: B1Word[], type: QuestionType): Question {
@@ -146,7 +153,7 @@ function makeQuestion(word: B1Word, pool: B1Word[], type: QuestionType): Questio
     case "type-word":
       return { type, words: [word], options: [], correctAnswer: word.word };
     case "true-false": {
-      const isTrue = Math.random() > 0.5;
+      const isTrue = dist.length === 0 || Math.random() > 0.5;
       return { type, words: [word], options: ["true", "false"], correctAnswer: isTrue ? "true" : "false", shownTranslation: isTrue ? word.translation : dist[0].translation };
     }
     case "sentence-completion":

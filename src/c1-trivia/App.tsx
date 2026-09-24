@@ -55,13 +55,20 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-function getDistractors(all: C1Word[], exclude: C1Word, count: number): C1Word[] {
-  return shuffle(all.filter((w) => w.word !== exclude.word)).slice(0, count);
-}
-
 // Translation-mode topics carry `translation` instead of `definition`
 function meaningOf(word: C1Word): string {
   return word.definition ?? word.translation ?? "";
+}
+
+// Two words are interchangeable if they share a meaning or either lists the other in `similar` —
+// such a word must never be offered as a "wrong" option, or the question has two right answers.
+function isInterchangeable(a: C1Word, b: C1Word): boolean {
+  return a.word === b.word || meaningOf(a) === meaningOf(b)
+    || !!a.similar?.includes(b.word) || !!b.similar?.includes(a.word);
+}
+
+function getDistractors(all: C1Word[], exclude: C1Word, count: number): C1Word[] {
+  return shuffle(all.filter((w) => !isInterchangeable(exclude, w))).slice(0, count);
 }
 
 function generateQuestion(word: C1Word, all: C1Word[], type: QuestionType): Question {
@@ -90,7 +97,7 @@ function generateQuestion(word: C1Word, all: C1Word[], type: QuestionType): Ques
         correctAnswer: meaningOf(word),
       };
     case "true-false": {
-      const isTrue = Math.random() > 0.5;
+      const isTrue = distractors.length === 0 || Math.random() > 0.5;
       const shownDefinition = isTrue ? meaningOf(word) : meaningOf(distractors[0]);
       return {
         type,

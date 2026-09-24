@@ -270,6 +270,7 @@ The `gh-pages` package **replaces the entire `gh-pages` branch** with the conten
   4. Match word → definition (4 options)
 - End screen: score %, word lists side-by-side, "Practice weak words" button rebuilds session from missed words
 - All screens: `max-w-4xl`, teacher sidebar `w-56 max-w-none` (prevents squeeze)
+- **Unambiguous examples (both trivia apps):** fill-in-the-blank options are 3 random words from the same topic, so every `example` must fit ONLY its own word. For true synonyms, add `similar: ["other word"]` to the word in `data.ts` (B1 and C1). `getDistractors` then never offers them as wrong options. It already skips words with an identical translation/definition.
 - Purple colour scheme (`bg-purple-600`) distinguishes C1 from B1 apps
 
 ## Claude Code skills — `.claude/skills/`

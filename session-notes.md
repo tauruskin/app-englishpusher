@@ -251,3 +251,14 @@ Teacher approved the beta after trying it live. Released:
 - `beta` branch + Cloudflare Worker deployment kept alive for testing future changes to this feature; one Supabase project still serves both
 - Test account `claude.prod.verify@englishpusher.in.ua` left in Supabase Auth — delete via dashboard if not wanted
 - Saved a memory (`project_reminder_feature_idea.md`) for the teacher's next ask: interval/spaced-repetition reminders to revisit old topics, building on `trivia_results`/`study_events`. Not started — run through brainstorming first when picked up.
+
+## 2026-09-24 — Trivia: ambiguous example sentences fixed
+
+Teacher report: B1 Adverbs of Frequency sentence "She meets her tutor ___ to practise..." marked 'frequently' wrong although it fit better than 'two times a fortnight'. Root cause: trivia distractors are 3 random words from the same topic, and many examples fit several topic words.
+
+- Audited all 13 topics (B1 + C1); rewrote ~100 example sentences so each fits only its own word (numeric/schedule clues, fixed phrases, a/an, absolutely + extreme adjective, etc.). Also fixed grammar-broken examples (C1 'iterate', 'read up on', 'get into' were in past tense / -ing with a base-form blank)
+- New optional `similar?: string[]` field on `B1Word` / `C1Word`: true synonyms never shown as wrong options for each other
+- `getDistractors` in both trivia apps now skips interchangeable words: same translation/definition or listed in `similar`. This also fixes true/false and translation questions for identical-translation pairs (own/possess, seem/appear, involve/include, mind/deny, astonish/surprise)
+- add-b1-topic / add-c1-topic skills: new checklist item, "each example fits ONLY its own word"
+- Open: type-word questions (B1) still accept only one answer for identical translations such as "володіти" (own vs possess); translations need the teacher's input
+

@@ -140,6 +140,7 @@ Read `CLAUDE.md` and add the new topic to **both** tables under "Direct topic li
 - [ ] Every word has `definition` or `translation` (one mode per topic, never neither)
 - [ ] Every `example` contains exactly one `___`
 - [ ] Replacing `___` with the word produces a grammatical sentence
+- [ ] **Each example fits ONLY its own word.** Trivia shows the sentence with 3 random other words from the same topic as options, so try every other word of the topic in the blank. If another word also fits, rewrite the sentence with a clear clue (a number or schedule, a fixed phrase, a collocation, grammar like `a`/`an` or `absolutely` + strong adjective). If two words are true synonyms that no sentence can separate, add `similar: ["other word"]` to one of them; trivia then never offers it as a wrong option
 - [ ] Definitions are distinct enough to work as multiple-choice options
 - [ ] `triviaUrl` matches the `id` exactly
 - [ ] `id` is unique — checked against the current `TOPICS` array in `data.ts`
