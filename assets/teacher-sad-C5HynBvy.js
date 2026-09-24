@@ -1,0 +1,6 @@
+import{c as l,u as d,r as s,i as f,j as e}from"./auth-DTAmbpYG.js";import{s as x}from"./savedWords-CIpvbcWW.js";/**
+ * @license lucide-react v0.469.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const m=l("X",[["path",{d:"M18 6 6 18",key:"1bl5f8"}],["path",{d:"m6 6 12 12",key:"d8bk6v"}]]);function b({input:a}){const{user:r,loading:t}=d(),[n,o]=s.useState(null),[c,u]=s.useState(!1),i=s.useRef(!1);return s.useEffect(()=>{t||i.current||(i.current=!0,!(!r||a.topicId==="my-words")&&x(a).then(o))},[t,r]),!f||t?null:r?n&&!c?e.jsxs("div",{className:"flex items-center justify-center gap-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-700 shrink-0",children:[e.jsx("span",{children:n}),e.jsx("button",{onClick:()=>u(!0),"aria-label":"Dismiss",className:"hover:text-amber-900",children:e.jsx(m,{size:12})})]}):null:e.jsxs("p",{className:"text-center text-xs text-neutral-400 shrink-0",children:[e.jsx("a",{href:"/account/",className:"underline hover:text-brand transition-colors",children:"Sign in"})," ","to save your progress"]})}const j="/assets/teacher-sad-D5f1TA8d.png";export{b as T,j as t};
