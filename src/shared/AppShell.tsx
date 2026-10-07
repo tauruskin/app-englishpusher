@@ -2,22 +2,39 @@ import { type ReactNode } from "react";
 import { Home, User } from "lucide-react";
 import { useSessionUser } from "./auth.tsx";
 
-// Account entry point — outline icon for guests, brand-filled when signed
-// in. Rendered in the desktop header nav and the mobile footer nav.
-function AccountLink({ size = 16 }: { size?: number }) {
+// Account entry point, shared by the hub header and AppShell. Guests get an
+// explicit "Sign in" pill. Signed-in users get an initial avatar plus their
+// first name. The name is hidden on narrow screens, so only the avatar shows.
+export function AccountLink({ className = "" }: { className?: string }) {
   const { user } = useSessionUser();
+  if (!user) {
+    return (
+      <a
+        href="/account/"
+        className={`flex items-center gap-1.5 rounded-full border border-neutral-600 px-3 py-1 text-sm font-medium text-neutral-200 hover:border-brand hover:text-white transition-colors ${className}`}
+      >
+        <User size={14} />
+        Sign in
+      </a>
+    );
+  }
+  // A "name" that looks like an email is treated as no name. In that case only
+  // the avatar shows, which stops a long address from stretching the header.
+  const rawName = (user.user_metadata?.display_name as string | undefined)?.trim();
+  const fullName = rawName && !rawName.includes("@") ? rawName : undefined;
+  const label = fullName?.split(/\s+/)[0];
+  const initial = (label ?? user.email ?? "?").charAt(0).toUpperCase();
   return (
     <a
       href="/account/"
-      aria-label={user ? "My account" : "Sign in"}
-      title={user ? "My account" : "Sign in"}
-      className="flex items-center rounded-md px-2 py-1.5 text-neutral-300 hover:bg-neutral-800 hover:text-white transition-colors"
+      aria-label={`My account (${fullName || user.email})`}
+      title={`Signed in as ${fullName || user.email}`}
+      className={`flex items-center gap-2 rounded-full py-1 pl-1 pr-1 ${label ? "sm:pr-3" : ""} text-sm font-medium text-neutral-200 hover:bg-neutral-800 hover:text-white transition-colors ${className}`}
     >
-      <User
-        size={size}
-        className={user ? "text-brand" : undefined}
-        fill={user ? "currentColor" : "none"}
-      />
+      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">
+        {initial}
+      </span>
+      {label && <span className="hidden sm:inline max-w-[7rem] truncate">{label}</span>}
     </a>
   );
 }
