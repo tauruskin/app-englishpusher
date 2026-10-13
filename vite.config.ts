@@ -56,8 +56,32 @@ function remapAppPaths() {
   };
 }
 
+// Inject the Google Tag Manager container (GA4 + Clarity live inside it) into
+// every HTML entry point. Build-only, so local dev visits are not tracked.
+const GTM_ID = "GTM-KJVX8GRG";
+function injectGtm() {
+  return {
+    name: "inject-gtm",
+    apply: "build" as const,
+    transformIndexHtml() {
+      return [
+        {
+          tag: "script",
+          injectTo: "head-prepend" as const,
+          children: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`,
+        },
+        {
+          tag: "noscript",
+          injectTo: "body-prepend" as const,
+          children: `<iframe src="https://www.googletagmanager.com/ns.html?id=${GTM_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`,
+        },
+      ];
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), ViteImageOptimizer({ png: { quality: 80 } }), devRewritePlugin(), remapAppPaths()],
+  plugins: [react(), ViteImageOptimizer({ png: { quality: 80 } }), devRewritePlugin(), remapAppPaths(), injectGtm()],
   base: process.env.VITE_BASE_PATH || "/",
   build: {
     rollupOptions: {
