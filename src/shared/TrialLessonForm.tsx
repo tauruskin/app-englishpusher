@@ -26,6 +26,21 @@ export default function TrialLessonForm({ className = "" }: { className?: string
     (window as unknown as { dataLayer?: unknown[] }).dataLayer?.push({ event: "trial_form_open" });
   };
 
+  // Successful HubSpot submission -> GTM `generate_lead` (GA4 key event).
+  // The form lives in an iframe, so GTM cannot see the submit itself.
+  useEffect(() => {
+    const onSuccess = (e: Event) => {
+      const detail = (e as CustomEvent<{ formId?: string }>).detail;
+      if (detail?.formId && detail.formId !== HUBSPOT_FORM_ID) return;
+      (window as unknown as { dataLayer?: unknown[] }).dataLayer?.push({
+        event: "generate_lead",
+        form_name: "trial_lesson",
+      });
+    };
+    window.addEventListener("hs-form-event:on-submission:success", onSuccess);
+    return () => window.removeEventListener("hs-form-event:on-submission:success", onSuccess);
+  }, []);
+
   // Deep link: app.englishpusher.in.ua/#trial-lesson opens the form
   useEffect(() => {
     if (window.location.hash === HASH) openModal();
