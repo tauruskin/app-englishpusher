@@ -376,6 +376,9 @@ export default function Index() {
               guidance — and gain the fluency and confidence you've always wanted.
             </p>
 
+            {/* Trial lesson button → HubSpot form in a modal */}
+            <TrialLessonForm />
+
             {/* Teacher character — desktop only */}
             <div className="hidden md:block mt-1">
               <img
@@ -434,9 +437,6 @@ export default function Index() {
           </div>
         </div>
       </main>
-
-      {/* ── Trial lesson lead form (HubSpot) ─────────────────────────── */}
-      <TrialLessonForm />
 
       {/* ── Footer ─────────────────────────────────────────────────────── */}
       <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-4">
