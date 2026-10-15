@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { ArrowRight, BookOpen, Layers, Zap, Instagram, type LucideIcon } from "lucide-react";
 import teacherCelebrate from "./assets/teacher-celebrate.png";
 import { AccountLink } from "./shared/AppShell.tsx";
+import TrialLessonForm from "./shared/TrialLessonForm.tsx";
 
 // ---------------------------------------------------------------------------
 // ElegantShape — floating pill decoration for the background
@@ -433,6 +434,9 @@ export default function Index() {
           </div>
         </div>
       </main>
+
+      {/* ── Trial lesson lead form (HubSpot) ─────────────────────────── */}
+      <TrialLessonForm />
 
       {/* ── Footer ─────────────────────────────────────────────────────── */}
       <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-4">
