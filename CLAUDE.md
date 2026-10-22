@@ -195,7 +195,7 @@ import { AppFooter } from "../shared/AppShell.tsx";
 ## Page layout
 
 ### Header
-Dark (`bg-neutral-900`), logo + "Englishpusher Learning Apps" title.
+Dark (`bg-neutral-900`), logo + "Englishpusher App" title.
 
 ### Main section
 Two-column on desktop, single-column on mobile:
