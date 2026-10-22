@@ -6,6 +6,7 @@ import {
   useSavedWords, resolveSavedWords, findOriginTopicId, StarButton, MY_WORDS_TOPIC_ID,
 } from "../shared/savedWords.tsx";
 import { logStudyEvent } from "../shared/progress.ts";
+import { WordList } from "../shared/WordList.tsx";
 import { TOPICS, type Topic, type B1Word } from "./data.ts";
 import teacherThinking from "../assets/teacher-thinking.png";
 import teacherCorrect from "../assets/teacher-correct.png";
@@ -531,6 +532,15 @@ export default function App() {
           )}
         </AnimatePresence>
       </main>
+
+      {phase === "studying" && topic && (
+        <WordList
+          items={topic.words.map((w) => ({ word: w.word, hint: w.translation }))}
+          current={index}
+          saved={starsEnabled ? savedSet : undefined}
+          onJump={(i) => { setIsFlipped(false); setIndex(i); }}
+        />
+      )}
 
       <AppFooter onTopics={handleBackToSelect} showTopics={phase === "studying"} />
     </div>
