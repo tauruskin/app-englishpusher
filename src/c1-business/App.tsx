@@ -125,7 +125,7 @@ function ActivityCard({ item }: { item: ActivityItem }) {
 export default function App() {
   return (
     <div className="relative min-h-screen flex flex-col">
-      <AppHeader title="C1 Business" subtitle="Englishpusher Learning Apps" />
+      <AppHeader title="C1 Business" subtitle="Englishpusher App" />
 
       {/* Main */}
       <main className="flex flex-1 items-start justify-center px-6 py-14">

@@ -326,7 +326,7 @@ export default function Index() {
         <div className="mx-auto flex max-w-5xl items-center gap-3">
           <img src="/logo.png" alt="Englishpusher logo" className="h-9 w-auto" />
           <h1 className="font-display text-xl font-bold leading-tight text-white">
-            Englishpusher <span className="text-brand">Learning Apps</span>
+            Englishpusher <span className="text-brand">App</span>
           </h1>
           <AccountLink className="ml-auto" />
         </div>
