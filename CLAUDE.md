@@ -183,6 +183,10 @@ import { AppFooter } from "../shared/AppShell.tsx";
 3. Pass app-specific controls (score badge, mute button, restart) via the `controls` prop
 4. The landing page (`Index.tsx`) has its own header/footer — do not use `AppShell` there
 
+## Shared component — `src/shared/WordList.tsx` (flashcards word list)
+
+Floating teacher-with-magnifier button (`src/assets/teacher-search.png`, same picture as the Moodle lesson-search button) shown on B1 and C1 flashcard topics, My Words included. Opens a searchable list of the topic's words (word + translation, or C1 definition clamped to 2 lines; current card highlighted, starred words marked). Tap / Enter jumps to the card (`onJump` sets `index`, unflips). Bottom sheet on phones, panel above the button on desktop. Props: `items` ({word, hint}), `current`, `saved?`, `onJump`. Added 2026-10-22 at the teacher's request.
+
 ## Architecture decisions
 
 - **Vite MPA**: `vite.config.ts` uses `build.rollupOptions.input` with one entry per app. Each builds to its own path in `dist/`. Source HTML lives in `apps/<name>/index.html`; a post-build plugin moves them to `dist/<name>/index.html` so deployed URLs stay as `/<name>/`.

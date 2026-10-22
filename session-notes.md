@@ -262,3 +262,8 @@ Teacher report: B1 Adverbs of Frequency sentence "She meets her tutor ___ to pra
 - add-b1-topic / add-c1-topic skills: new checklist item, "each example fits ONLY its own word"
 - Open: type-word questions (B1) still accept only one answer for identical translations such as "володіти" (own vs possess); translations need the teacher's input
 
+## 2026-10-22 — Rename to "Englishpusher App" + flashcards word list
+
+- Site title "Englishpusher Learning Apps" → "Englishpusher App" (header, tab/og title, manifest, B1/C1 subtitles); merged and live
+- Teacher asked for a list of words in Flash Cards so students needn't click through every card. New `src/shared/WordList.tsx`: teacher-with-magnifier floating button → searchable word list, tap to jump; wired into b1-flashcards and c1-flashcards. Verified locally at desktop and 390px (search 'ann' → Enter → card 7/27). Branch `flashcards-word-list`, PR for the user to merge
+- Same avatar is used for the Moodle lesson-search button (moodle-task-builder `moodle-snippets/lesson-search.html`)
