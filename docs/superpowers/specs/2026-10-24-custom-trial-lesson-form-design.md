@@ -37,7 +37,7 @@ The `#trial-lesson` deep link still opens the form, and opening it still pushes
 
    First name and Email sit side by side on desktop and stack on phones.
 
-   Goal chips: `🗣 Speaking confidence` · `💼 Work / Business` · `🎓 Exams (IELTS, NMT…)` ·
+   Goal chips: `🗣 Speaking confidence` · `💼 Work / Business` · `💻 IT English` ·
    `✈️ Travel` · `🏠 Everyday life` · `✨ Other`.
 3. **Submit button:** full width, orange, label **"Book a trial lesson"**, spinner while sending.
    The copy never says "free".
@@ -102,7 +102,7 @@ Body:
 - `english_level` sends the existing HubSpot option text exactly (en dash): `A1 – Beginner`,
   `A2 – Elementary`, `B1 – Intermediate`, `B2 – Upper-Intermediate`, `C1 – Advanced`, `Not sure`.
   The pills show only `A1`…`C1` / `Not sure`.
-- `learning_goals` sends internal values joined with `;`: `speaking`, `work_business`, `exams`,
+- `learning_goals` sends internal values joined with `;`: `speaking`, `work_business`, `it_english`,
   `travel`, `everyday_life`, `other`.
 - The `hubspotutk` cookie is set by the HubSpot tracking code that GTM (`GTM-KJVX8GRG`) loads; it
   links the submission to the visitor's history (UTM, referrer).
@@ -126,7 +126,7 @@ Done in portal 149535757 by Oleksandr; the service key cannot create properties.
 1. Settings → Data Management → Properties → Contact properties → Create property:
    - `learning_goals` — label "Learning goals", type **Multiple checkboxes**, options with the
      internal values above and labels `Speaking confidence`, `Work / Business`,
-     `Exams (IELTS, NMT…)`, `Travel`, `Everyday life`, `Other`.
+     `IT English`, `Travel`, `Everyday life`, `Other`.
    - `messenger_contact` — label "Telegram, Viber or phone", type **Single-line text**.
 2. Marketing → Forms → "Trial lesson request" → add both properties to the form → Publish.
    The HubSpot form stays the source of truth for the form ID; its own layout no longer matters.

@@ -17,7 +17,7 @@ export const LEVELS = [
 export const GOALS = [
   { emoji: "🗣", label: "Speaking confidence", value: "speaking" },
   { emoji: "💼", label: "Work / Business", value: "work_business" },
-  { emoji: "🎓", label: "Exams (IELTS, NMT…)", value: "exams" },
+  { emoji: "💻", label: "IT English", value: "it_english" },
   { emoji: "✈️", label: "Travel", value: "travel" },
   { emoji: "🏠", label: "Everyday life", value: "everyday_life" },
   { emoji: "✨", label: "Other", value: "other" },
