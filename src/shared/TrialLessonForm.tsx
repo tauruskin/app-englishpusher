@@ -1,71 +1,68 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CalendarCheck, X } from "lucide-react";
+import TrialForm from "./trialForm/TrialForm.tsx";
 
 // ---------------------------------------------------------------------------
-// TrialLessonForm — button that opens the HubSpot "Trial lesson request" form
-// in a modal. Leads land in HubSpot CRM with their original source (UTM /
-// referrer), captured by the HubSpot tracking code loaded via GTM.
+// TrialLessonForm — button that opens our own "Book a trial lesson" form in a
+// modal. Submissions go to the HubSpot "Trial lesson request" form through
+// HubSpot's public submission API (trialForm/hubspot.ts), so leads keep their
+// original source (UTM / referrer) and the Leads Bot and n8n alert see them.
 // A link ending in #trial-lesson opens the modal directly (for posts / bios).
 // ---------------------------------------------------------------------------
 
-const HUBSPOT_PORTAL_ID = "149535757";
-const HUBSPOT_FORM_ID = "2226dfee-47d4-406f-ae1a-2e8c0952dec2";
-const HUBSPOT_REGION = "eu1";
-const EMBED_SCRIPT_SRC = `https://js-${HUBSPOT_REGION}.hsforms.net/forms/embed/${HUBSPOT_PORTAL_ID}.js`;
 const HASH = "#trial-lesson";
 
 export default function TrialLessonForm({ className = "" }: { className?: string }) {
   const [open, setOpen] = useState(false);
-  // The form frame is mounted on first open and then kept (only hidden), so the
-  // HubSpot script renders it once and a half-filled form survives closing.
+  // The form is mounted on first open and then kept (only hidden), so a
+  // half-filled form survives closing. After a successful send, the next
+  // open remounts it empty (new key) — also when it was closed mid-send.
   const [mounted, setMounted] = useState(false);
+  const [formKey, setFormKey] = useState(0);
+  const [sent, setSent] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  // A click only closes the modal when it both started and ended on the
+  // backdrop (a text-selection drag out of an input must not close it).
+  const pressedOnBackdrop = useRef(false);
 
   const openModal = () => {
+    if (sent) {
+      setSent(false);
+      setFormKey((k) => k + 1);
+    }
     setMounted(true);
     setOpen(true);
     (window as unknown as { dataLayer?: unknown[] }).dataLayer?.push({ event: "trial_form_open" });
   };
 
-  // Successful HubSpot submission -> GTM `generate_lead` (GA4 key event).
-  // The form lives in an iframe, so GTM cannot see the submit itself.
-  useEffect(() => {
-    const onSuccess = (e: Event) => {
-      const detail = (e as CustomEvent<{ formId?: string }>).detail;
-      if (detail?.formId && detail.formId !== HUBSPOT_FORM_ID) return;
-      (window as unknown as { dataLayer?: unknown[] }).dataLayer?.push({
-        event: "generate_lead",
-        form_name: "trial_lesson",
-      });
-    };
-    window.addEventListener("hs-form-event:on-submission:success", onSuccess);
-    return () => window.removeEventListener("hs-form-event:on-submission:success", onSuccess);
-  }, []);
+  const closeModal = () => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  };
 
   // Deep link: app.englishpusher.in.ua/#trial-lesson opens the form
   useEffect(() => {
     if (window.location.hash === HASH) openModal();
   }, []);
 
-  // Load the HubSpot embed script after the frame exists
-  useEffect(() => {
-    if (!mounted || document.querySelector(`script[src="${EMBED_SCRIPT_SRC}"]`)) return;
-    const script = document.createElement("script");
-    script.src = EMBED_SCRIPT_SRC;
-    script.defer = true;
-    document.body.appendChild(script);
-  }, [mounted]);
-
-  // Close on Esc
+  // While open: Esc closes, the page behind does not scroll, focus goes to the first field
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeModal();
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.getElementById("tf-firstname")?.focus();
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open, formKey]);
 
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         onClick={openModal}
         className={[
@@ -81,30 +78,33 @@ export default function TrialLessonForm({ className = "" }: { className?: string
 
       {mounted && (
         <div
-          className={`fixed inset-0 z-50 items-center justify-center bg-black/50 p-4 ${open ? "flex" : "hidden"}`}
-          onClick={() => setOpen(false)}
+          className={`fixed inset-0 z-50 overflow-y-auto bg-black/50 ${open ? "block" : "hidden"}`}
+          onMouseDown={(e) => (pressedOnBackdrop.current = e.target === e.currentTarget)}
+          onClick={(e) => {
+            if (pressedOnBackdrop.current && e.target === e.currentTarget) closeModal();
+          }}
           role="dialog"
           aria-modal="true"
           aria-label="Book a trial lesson"
         >
           <div
-            className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-4 shadow-xl"
-            onClick={(e) => e.stopPropagation()}
+            className="flex min-h-full items-center justify-center px-4 pb-6 pt-20"
+            onMouseDown={(e) => (pressedOnBackdrop.current = e.target === e.currentTarget)}
+            onClick={(e) => {
+              if (pressedOnBackdrop.current && e.target === e.currentTarget) closeModal();
+            }}
           >
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="Close"
-              className="absolute right-3 top-3 rounded-full p-1.5 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800"
-            >
-              <X size={20} />
-            </button>
-            <div
-              className="hs-form-frame"
-              data-region={HUBSPOT_REGION}
-              data-form-id={HUBSPOT_FORM_ID}
-              data-portal-id={HUBSPOT_PORTAL_ID}
-            />
+            <div className="relative w-full max-w-[520px] rounded-3xl bg-white px-5 pb-6 pt-4 shadow-xl sm:px-8">
+              <button
+                type="button"
+                onClick={closeModal}
+                aria-label="Close"
+                className="absolute right-3 top-3 z-10 rounded-full p-1.5 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800"
+              >
+                <X size={20} />
+              </button>
+              <TrialForm key={formKey} onClose={closeModal} onSuccess={() => setSent(true)} />
+            </div>
           </div>
         </div>
       )}

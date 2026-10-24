@@ -53,6 +53,7 @@ export async function submitTrialForm(values: TrialFormValues): Promise<void> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+    signal: AbortSignal.timeout(15000),
   });
   if (!res.ok) {
     const detail = await res.text().catch(() => "");
