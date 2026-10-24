@@ -1,0 +1,275 @@
+import { useState, type FormEvent, type ReactNode } from "react";
+import confetti from "canvas-confetti";
+import { Loader2 } from "lucide-react";
+import teacherTrial from "../../assets/teacher-trial.png";
+import teacherCelebrate from "../../assets/teacher-celebrate.png";
+import { EMPTY_VALUES, GOALS, INSTAGRAM_URL, LEVELS, type TrialFormValues } from "./options.ts";
+import { validateTrialForm, type TrialFormErrors } from "./validate.ts";
+import { submitTrialForm } from "./hubspot.ts";
+
+// ---------------------------------------------------------------------------
+// TrialForm — the "Book a trial lesson" form inside the TrialLessonForm modal.
+// Name and email are required; level, goals, messenger and message are
+// optional. On success it fires the GA4 `generate_lead` event via GTM.
+// ---------------------------------------------------------------------------
+
+type Status = "idle" | "sending" | "error" | "done";
+
+const labelClass = "text-sm font-semibold text-neutral-800";
+
+const inputClass = [
+  "w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-[15px] text-neutral-900",
+  "placeholder:text-neutral-400 transition-colors",
+  "focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20",
+].join(" ");
+
+const pillClass = (active: boolean) =>
+  [
+    "rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors",
+    "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40",
+    active
+      ? "border-brand bg-brand text-white shadow-sm"
+      : "border-neutral-200 bg-white text-neutral-600 hover:border-brand/50 hover:text-brand",
+  ].join(" ");
+
+function pushEvent(data: Record<string, unknown>) {
+  (window as unknown as { dataLayer?: unknown[] }).dataLayer?.push(data);
+}
+
+function Field({
+  label,
+  htmlFor,
+  required = false,
+  hint,
+  error,
+  children,
+}: {
+  label: string;
+  htmlFor: string;
+  required?: boolean;
+  hint?: string;
+  error?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={htmlFor} className={labelClass}>
+        {label}
+        {required && <span className="text-brand"> *</span>}
+        {hint && <span className="font-normal text-neutral-400"> {hint}</span>}
+      </label>
+      {children}
+      {error && <p className="text-xs font-medium text-red-600">{error}</p>}
+    </div>
+  );
+}
+
+export default function TrialForm({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
+  const [values, setValues] = useState<TrialFormValues>(EMPTY_VALUES);
+  const [errors, setErrors] = useState<TrialFormErrors>({});
+  const [status, setStatus] = useState<Status>("idle");
+  const [honeypot, setHoneypot] = useState("");
+
+  const set = <K extends keyof TrialFormValues>(key: K, value: TrialFormValues[K]) => {
+    setValues((v) => ({ ...v, [key]: value }));
+    if (key in errors) setErrors((e) => ({ ...e, [key]: undefined }));
+  };
+
+  const toggleGoal = (goal: string) =>
+    set("goals", values.goals.includes(goal) ? values.goals.filter((g) => g !== goal) : [...values.goals, goal]);
+
+  const finish = () => {
+    setStatus("done");
+    onSuccess();
+    confetti({ particleCount: 90, spread: 75, origin: { y: 0.6 }, colors: ["#f07c1a", "#fbbf24", "#60a5fa"] });
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (status === "sending") return;
+    const found = validateTrialForm(values);
+    setErrors(found);
+    if (Object.keys(found).length > 0) return;
+    if (honeypot) {
+      finish(); // a bot filled the hidden field: pretend it worked, send nothing
+      return;
+    }
+    setStatus("sending");
+    try {
+      await submitTrialForm(values);
+      pushEvent({ event: "generate_lead", form_name: "trial_lesson" });
+      finish();
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  if (status === "done") {
+    return (
+      <div className="flex flex-col items-center gap-3 py-6 text-center">
+        <img src={teacherCelebrate} alt="" className="h-40 w-auto select-none" draggable={false} />
+        <h2 className="font-display text-2xl font-bold text-neutral-900">
+          Thank you, {values.firstname.trim()}! 🎉
+        </h2>
+        <p className="text-[15px] text-neutral-600">I'll contact you soon.</p>
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-2 rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand/90"
+        >
+          Close
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5 font-body">
+      {/* Header: avatar sticks out above the card's top edge */}
+      <div className="flex flex-col items-center pt-12 text-center">
+        <img
+          src={teacherTrial}
+          alt="Tutor Tetiana waving"
+          className="pointer-events-none absolute -top-14 left-1/2 h-28 w-auto -translate-x-1/2 select-none drop-shadow-md"
+          draggable={false}
+        />
+        <h2 className="font-display text-2xl font-bold leading-tight text-neutral-900">
+          Book a trial lesson with Tetiana
+        </h2>
+        <p className="mt-1.5 text-[15px] text-neutral-600">
+          Tell me a little about yourself and I'll get back to you soon.
+        </p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="First name" htmlFor="tf-firstname" required error={errors.firstname}>
+          <input
+            id="tf-firstname"
+            name="firstname"
+            autoComplete="given-name"
+            value={values.firstname}
+            onChange={(e) => set("firstname", e.target.value)}
+            aria-invalid={!!errors.firstname}
+            className={inputClass}
+          />
+        </Field>
+        <Field label="Email" htmlFor="tf-email" required error={errors.email}>
+          <input
+            id="tf-email"
+            name="email"
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            value={values.email}
+            onChange={(e) => set("email", e.target.value)}
+            aria-invalid={!!errors.email}
+            className={inputClass}
+          />
+        </Field>
+      </div>
+
+      <fieldset className="flex flex-col gap-2">
+        <legend className={labelClass}>Your English level</legend>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {LEVELS.map((level) => {
+            const active = values.level === level.value;
+            return (
+              <button
+                key={level.value}
+                type="button"
+                aria-pressed={active}
+                onClick={() => set("level", active ? "" : level.value)}
+                className={pillClass(active)}
+              >
+                {level.short}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      <fieldset className="flex flex-col gap-2">
+        <legend className={labelClass}>
+          What's your goal? <span className="font-normal text-neutral-400">(choose any)</span>
+        </legend>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {GOALS.map((goal) => {
+            const active = values.goals.includes(goal.value);
+            return (
+              <button
+                key={goal.value}
+                type="button"
+                aria-pressed={active}
+                onClick={() => toggleGoal(goal.value)}
+                className={pillClass(active)}
+              >
+                <span aria-hidden="true">{goal.emoji}</span> {goal.label}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      <Field label="Telegram, Viber or phone" htmlFor="tf-messenger" hint="(optional)">
+        <input
+          id="tf-messenger"
+          name="messenger"
+          autoComplete="tel"
+          placeholder="@username or +380…"
+          value={values.messenger}
+          onChange={(e) => set("messenger", e.target.value)}
+          className={inputClass}
+        />
+      </Field>
+
+      <Field label="Message" htmlFor="tf-message" hint="(optional)">
+        <textarea
+          id="tf-message"
+          name="message"
+          rows={3}
+          placeholder="Anything I should know? Preferred time, topics…"
+          value={values.message}
+          onChange={(e) => set("message", e.target.value)}
+          className={`${inputClass} resize-none`}
+        />
+      </Field>
+
+      {/* Honeypot: hidden from people, bots fill it in */}
+      <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+        <label>
+          Website
+          <input
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+          />
+        </label>
+      </div>
+
+      {status === "error" && (
+        <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
+          Something went wrong. Please try again or write to me on{" "}
+          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="font-semibold underline">
+            Instagram
+          </a>
+          .
+        </p>
+      )}
+
+      <button
+        type="submit"
+        disabled={status === "sending"}
+        className={[
+          "flex w-full items-center justify-center gap-2 rounded-full bg-brand px-6 py-3",
+          "text-[15px] font-semibold text-white shadow-sm transition-colors hover:bg-brand/90 disabled:opacity-70",
+          "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2",
+        ].join(" ")}
+      >
+        {status === "sending" && <Loader2 size={18} className="animate-spin" />}
+        Book a trial lesson
+      </button>
+    </form>
+  );
+}
