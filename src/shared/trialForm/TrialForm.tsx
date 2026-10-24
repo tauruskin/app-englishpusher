@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import confetti from "canvas-confetti";
 import { Loader2 } from "lucide-react";
 import teacherTrial from "../../assets/teacher-trial.png";
@@ -18,14 +18,14 @@ type Status = "idle" | "sending" | "error" | "done";
 const labelClass = "text-sm font-semibold text-neutral-800";
 
 const inputClass = [
-  "w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-[15px] text-neutral-900",
+  "w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-base text-neutral-900 sm:text-[15px]",
   "placeholder:text-neutral-400 transition-colors",
   "focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20",
 ].join(" ");
 
 const pillClass = (active: boolean) =>
   [
-    "rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors",
+    "rounded-full border px-3.5 py-2 text-sm font-medium transition-colors",
     "focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40",
     active
       ? "border-brand bg-brand text-white shadow-sm"
@@ -55,11 +55,20 @@ function Field({
     <div className="flex flex-col gap-1.5">
       <label htmlFor={htmlFor} className={labelClass}>
         {label}
-        {required && <span className="text-brand"> *</span>}
+        {required && (
+          <span aria-hidden="true" className="text-brand">
+            {" "}
+            *
+          </span>
+        )}
         {hint && <span className="font-normal text-neutral-400"> {hint}</span>}
       </label>
       {children}
-      {error && <p className="text-xs font-medium text-red-600">{error}</p>}
+      {error && (
+        <p id={`${htmlFor}-error`} className="text-xs font-medium text-red-600">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
@@ -69,6 +78,11 @@ export default function TrialForm({ onClose, onSuccess }: { onClose: () => void;
   const [errors, setErrors] = useState<TrialFormErrors>({});
   const [status, setStatus] = useState<Status>("idle");
   const [honeypot, setHoneypot] = useState("");
+  const doneHeading = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (status === "done") doneHeading.current?.focus();
+  }, [status]);
 
   const set = <K extends keyof TrialFormValues>(key: K, value: TrialFormValues[K]) => {
     setValues((v) => ({ ...v, [key]: value }));
@@ -81,7 +95,17 @@ export default function TrialForm({ onClose, onSuccess }: { onClose: () => void;
   const finish = () => {
     setStatus("done");
     onSuccess();
-    confetti({ particleCount: 90, spread: 75, origin: { y: 0.6 }, colors: ["#f07c1a", "#fbbf24", "#60a5fa"] });
+    try {
+      confetti({
+        particleCount: 90,
+        spread: 75,
+        origin: { y: 0.6 },
+        colors: ["#f07c1a", "#fbbf24", "#60a5fa"],
+        disableForReducedMotion: true,
+      });
+    } catch {
+      /* decoration only */
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -89,7 +113,11 @@ export default function TrialForm({ onClose, onSuccess }: { onClose: () => void;
     if (status === "sending") return;
     const found = validateTrialForm(values);
     setErrors(found);
-    if (Object.keys(found).length > 0) return;
+    if (Object.keys(found).length > 0) {
+      setStatus("idle"); // clears a stale error banner
+      document.getElementById(found.firstname ? "tf-firstname" : "tf-email")?.focus();
+      return;
+    }
     if (honeypot) {
       finish(); // a bot filled the hidden field: pretend it worked, send nothing
       return;
@@ -97,18 +125,23 @@ export default function TrialForm({ onClose, onSuccess }: { onClose: () => void;
     setStatus("sending");
     try {
       await submitTrialForm(values);
-      pushEvent({ event: "generate_lead", form_name: "trial_lesson" });
-      finish();
     } catch {
       setStatus("error");
+      return;
     }
+    pushEvent({ event: "generate_lead", form_name: "trial_lesson" });
+    finish();
   };
 
   if (status === "done") {
     return (
-      <div className="flex flex-col items-center gap-3 py-6 text-center">
+      <div role="status" className="flex flex-col items-center gap-3 py-6 text-center">
         <img src={teacherCelebrate} alt="" className="h-40 w-auto select-none" draggable={false} />
-        <h2 className="font-display text-2xl font-bold text-neutral-900">
+        <h2
+          ref={doneHeading}
+          tabIndex={-1}
+          className="break-words font-display text-2xl font-bold text-neutral-900 outline-none"
+        >
           Thank you, {values.firstname.trim()}! 🎉
         </h2>
         <p className="text-[15px] text-neutral-600">I'll contact you soon.</p>
@@ -149,7 +182,10 @@ export default function TrialForm({ onClose, onSuccess }: { onClose: () => void;
             autoComplete="given-name"
             value={values.firstname}
             onChange={(e) => set("firstname", e.target.value)}
+            maxLength={100}
+            aria-required="true"
             aria-invalid={!!errors.firstname}
+            aria-describedby={errors.firstname ? "tf-firstname-error" : undefined}
             className={inputClass}
           />
         </Field>
@@ -162,7 +198,10 @@ export default function TrialForm({ onClose, onSuccess }: { onClose: () => void;
             autoComplete="email"
             value={values.email}
             onChange={(e) => set("email", e.target.value)}
+            maxLength={254}
+            aria-required="true"
             aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? "tf-email-error" : undefined}
             className={inputClass}
           />
         </Field>
@@ -214,7 +253,8 @@ export default function TrialForm({ onClose, onSuccess }: { onClose: () => void;
         <input
           id="tf-messenger"
           name="messenger"
-          autoComplete="tel"
+          autoComplete="off"
+          maxLength={100}
           placeholder="@username or +380…"
           value={values.messenger}
           onChange={(e) => set("messenger", e.target.value)}
@@ -227,6 +267,7 @@ export default function TrialForm({ onClose, onSuccess }: { onClose: () => void;
           id="tf-message"
           name="message"
           rows={3}
+          maxLength={2000}
           placeholder="Anything I should know? Preferred time, topics…"
           value={values.message}
           onChange={(e) => set("message", e.target.value)}
@@ -261,6 +302,7 @@ export default function TrialForm({ onClose, onSuccess }: { onClose: () => void;
       <button
         type="submit"
         disabled={status === "sending"}
+        aria-busy={status === "sending"}
         className={[
           "flex w-full items-center justify-center gap-2 rounded-full bg-brand px-6 py-3",
           "text-[15px] font-semibold text-white shadow-sm transition-colors hover:bg-brand/90 disabled:opacity-70",
