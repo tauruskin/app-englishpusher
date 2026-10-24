@@ -51,3 +51,7 @@ test("buildSubmission leaves out empty optional fields and a missing hutk", () =
   });
   assert.equal("hutk" in body.context, false);
 });
+
+test("readHutk does not throw on a malformed value", () => {
+  assert.equal(readHutk("hubspotutk=%E0%A4%A"), "%E0%A4%A");
+});

@@ -17,7 +17,12 @@ type Field = { objectTypeId: "0-1"; name: string; value: string };
 
 export function readHutk(cookie: string): string | undefined {
   const match = cookie.match(/(?:^|;\s*)hubspotutk=([^;]+)/);
-  return match ? decodeURIComponent(match[1]) : undefined;
+  if (!match) return undefined;
+  try {
+    return decodeURIComponent(match[1]);
+  } catch {
+    return match[1];
+  }
 }
 
 // HubSpot property name -> value. Empty optional fields are not sent.
@@ -49,5 +54,8 @@ export async function submitTrialForm(values: TrialFormValues): Promise<void> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error(`HubSpot submission failed: ${res.status}`);
+  if (!res.ok) {
+    const detail = await res.text().catch(() => "");
+    throw new Error(`HubSpot submission failed: ${res.status} ${detail.slice(0, 300)}`);
+  }
 }
