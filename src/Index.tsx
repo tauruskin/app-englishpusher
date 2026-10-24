@@ -376,7 +376,7 @@ export default function Index() {
               guidance — and gain the fluency and confidence you've always wanted.
             </p>
 
-            {/* Trial lesson button → HubSpot form in a modal */}
+            {/* Trial lesson button → custom trial form in a modal */}
             <TrialLessonForm />
 
             {/* Teacher character — desktop only */}
