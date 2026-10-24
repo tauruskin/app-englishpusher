@@ -75,8 +75,8 @@ I'll contact you soon."*, a short confetti burst (`canvas-confetti`, already a d
 
 POST `https://api.hsforms.com/submissions/v3/integration/submit/149535757/2226dfee-47d4-406f-ae1a-2e8c0952dec2`
 with `Content-Type: application/json`. This public endpoint needs no key. The portal is in eu1:
-the first implementation step sends one test submission to confirm the endpoint accepts it; if it
-does not, use the `api-eu1.hsforms.com` host instead and record that here.
+confirmed on 2026-10-24: a test submission (firstname + email only) to this `api.hsforms.com` host
+returned HTTP 200, so the EU host is not needed.
 
 Body:
 
@@ -109,7 +109,7 @@ Body:
 
 ### Spam
 
-A hidden `website` text input (off-screen, `tabIndex={-1}`, `autoComplete="off"`,
+A hidden `company_url` text input (off-screen, `tabIndex={-1}`, `autoComplete="off"`,
 `aria-hidden`). If it has a value, show the success screen and send nothing.
 
 ### Analytics

@@ -283,7 +283,7 @@ export default function TrialForm({ onClose, onSuccess }: { onClose: () => void;
         <label>
           Website
           <input
-            name="website"
+            name="company_url"
             tabIndex={-1}
             autoComplete="off"
             value={honeypot}
