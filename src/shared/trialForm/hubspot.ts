@@ -43,6 +43,15 @@ export function buildSubmission(values: TrialFormValues, context: SubmitContext)
   return { fields, context: ctx };
 }
 
+// AbortSignal.timeout is missing on iOS 15 and older; fall back to a controller.
+function timeoutSignal(ms: number): AbortSignal | undefined {
+  if (typeof AbortSignal !== "undefined" && "timeout" in AbortSignal) return AbortSignal.timeout(ms);
+  if (typeof AbortController === "undefined") return undefined;
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), ms);
+  return controller.signal;
+}
+
 export async function submitTrialForm(values: TrialFormValues): Promise<void> {
   const body = buildSubmission(values, {
     hutk: readHutk(document.cookie),
@@ -53,7 +62,7 @@ export async function submitTrialForm(values: TrialFormValues): Promise<void> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
-    signal: AbortSignal.timeout(15000),
+    signal: timeoutSignal(15000),
   });
   if (!res.ok) {
     const detail = await res.text().catch(() => "");

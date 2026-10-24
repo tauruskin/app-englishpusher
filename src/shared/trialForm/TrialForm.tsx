@@ -90,7 +90,10 @@ export default function TrialForm({ onClose, onSuccess }: { onClose: () => void;
   };
 
   const toggleGoal = (goal: string) =>
-    set("goals", values.goals.includes(goal) ? values.goals.filter((g) => g !== goal) : [...values.goals, goal]);
+    setValues((v) => ({
+      ...v,
+      goals: v.goals.includes(goal) ? v.goals.filter((g) => g !== goal) : [...v.goals, goal],
+    }));
 
   const finish = () => {
     setStatus("done");

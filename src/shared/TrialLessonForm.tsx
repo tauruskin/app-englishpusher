@@ -79,17 +79,15 @@ export default function TrialLessonForm({ className = "" }: { className?: string
       {mounted && (
         <div
           className={`fixed inset-0 z-50 overflow-y-auto bg-black/50 ${open ? "block" : "hidden"}`}
-          onMouseDown={(e) => (pressedOnBackdrop.current = e.target === e.currentTarget)}
-          onClick={(e) => {
-            if (pressedOnBackdrop.current && e.target === e.currentTarget) closeModal();
-          }}
           role="dialog"
           aria-modal="true"
           aria-label="Book a trial lesson"
         >
           <div
             className="flex min-h-full items-center justify-center px-4 pb-6 pt-20"
-            onMouseDown={(e) => (pressedOnBackdrop.current = e.target === e.currentTarget)}
+            onPointerDown={(e) => {
+              pressedOnBackdrop.current = e.target === e.currentTarget;
+            }}
             onClick={(e) => {
               if (pressedOnBackdrop.current && e.target === e.currentTarget) closeModal();
             }}
