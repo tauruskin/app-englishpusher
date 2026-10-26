@@ -7,7 +7,9 @@ import {
 } from "../shared/savedWords.tsx";
 import { logStudyEvent } from "../shared/progress.ts";
 import { WordList } from "../shared/WordList.tsx";
-import { TOPICS, type Topic, type B1Word } from "./data.ts";
+import type { Topic, Word } from "./types.ts";
+import { useLevel } from "./mount.tsx";
+import { flashcardsAppId, pageUrl } from "./level.ts";
 import teacherThinking from "../assets/teacher-thinking.png";
 import teacherCorrect from "../assets/teacher-correct.png";
 
@@ -107,6 +109,7 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
 // ---------------------------------------------------------------------------
 
 function TopicSelectScreen({ topics, onSelect }: { topics: Topic[]; onSelect: (topic: Topic) => void }) {
+  const level = useLevel();
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -117,7 +120,7 @@ function TopicSelectScreen({ topics, onSelect }: { topics: Topic[]; onSelect: (t
     >
       <div className="flex flex-col gap-1">
         <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-brand uppercase tracking-wide w-fit">
-          B1 Vocabulary
+          {level.id} Vocabulary
         </span>
         <h2 className="font-display text-3xl font-bold text-neutral-900 mt-2">
           Flash Cards
@@ -163,7 +166,7 @@ function FlashCard({
   reversed,
   onFlip,
 }: {
-  word: B1Word;
+  word: Word;
   index: number;
   isFlipped: boolean;
   reversed: boolean;
@@ -303,7 +306,9 @@ function FlashCard({
 // App
 // ---------------------------------------------------------------------------
 
-export default function App() {
+export default function FlashcardsPage() {
+  const level = useLevel();
+  const TOPICS = level.topics;
   const initialTopic = (() => {
     const id = new URLSearchParams(window.location.search).get("topic");
     return id ? (TOPICS.find((t) => t.id === id) ?? null) : null;
@@ -316,7 +321,7 @@ export default function App() {
   const [reversed, setReversed] = useState(false);
 
   // Saved words / My Words virtual topic
-  const { enabled: starsEnabled, savedWords, savedSet, toggle } = useSavedWords("B1");
+  const { enabled: starsEnabled, savedWords, savedSet, toggle } = useSavedWords(level.id);
   const myWordsTopic = useMemo<Topic | null>(() => {
     const words = resolveSavedWords(savedWords, TOPICS);
     if (words.length === 0) return null;
@@ -325,7 +330,7 @@ export default function App() {
       title: "My Words",
       icon: "⭐",
       description: "Words you saved for later practice",
-      triviaUrl: "/b1-trivia/?topic=my-words",
+      triviaUrl: `${pageUrl(level, "trivia")}?topic=my-words`,
       words,
     };
   }, [savedWords]);
@@ -349,7 +354,7 @@ export default function App() {
     if (phase !== "studying" || !topic) return;
     if (loggedTopicRef.current === topic.id) return;
     loggedTopicRef.current = topic.id;
-    logStudyEvent("b1-flashcards", topic.id);
+    logStudyEvent(flashcardsAppId(level), topic.id);
   }, [phase, topic]);
 
   useEffect(() => {
@@ -391,7 +396,7 @@ export default function App() {
       {/* Header */}
       <AppHeader
         title="Vocabulary Cards"
-        subtitle="B1 · by Englishpusher"
+        subtitle={`${level.id} · by Englishpusher`}
         onTopics={handleBackToSelect}
         showTopics={phase === "studying"}
       />
