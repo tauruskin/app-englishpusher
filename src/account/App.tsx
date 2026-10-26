@@ -20,8 +20,12 @@ function topicTitle(app: AppId, topicId: string): string | null {
 }
 
 const APP_LABEL: Record<AppId, string> = {
+  "a2-trivia": "A2 Trivia",
+  "a2plus-trivia": "A2+ Trivia",
   "b1-trivia": "B1 Trivia",
   "c1-trivia": "C1 Trivia",
+  "a2-flashcards": "A2 Flash Cards",
+  "a2plus-flashcards": "A2+ Flash Cards",
   "b1-flashcards": "B1 Flash Cards",
   "c1-flashcards": "C1 Flash Cards",
 };
