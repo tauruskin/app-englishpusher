@@ -10,7 +10,9 @@ import {
   useSavedWords, resolveSavedWords, findOriginTopicId, StarButton, MY_WORDS_TOPIC_ID,
 } from "../shared/savedWords.tsx";
 import confetti from "canvas-confetti";
-import { TOPICS, type Topic, type B1Word } from "../b1-flashcards/data.ts";
+import type { Topic, Word } from "./types.ts";
+import { useLevel } from "./mount.tsx";
+import { triviaAppId } from "./level.ts";
 import teacherThinking from "../assets/teacher-thinking.png";
 import teacherCorrect from "../assets/teacher-correct.png";
 import teacherSad from "../assets/teacher-sad.png";
@@ -32,14 +34,14 @@ type Phase = "select" | "playing" | "end";
 
 interface Question {
   type: QuestionType;
-  words: B1Word[];        // matching: 5 words; others: [targetWord]
+  words: Word[];        // matching: 5 words; others: [targetWord]
   options: string[];       // MC options; empty for type-word / matching
   correctAnswer: string;
   shownTranslation?: string; // true-false only
 }
 
 interface AnswerResult {
-  word: B1Word;
+  word: Word;
   questionType: QuestionType;
   correct: boolean;
   answer: string;
@@ -134,16 +136,16 @@ function shuffle<T>(arr: T[]): T[] {
 
 // Two words are interchangeable if they share a translation or either lists the other in `similar` —
 // such a word must never be offered as a "wrong" option, or the question has two right answers.
-function isInterchangeable(a: B1Word, b: B1Word): boolean {
+function isInterchangeable(a: Word, b: Word): boolean {
   return a.word === b.word || a.translation === b.translation
     || !!a.similar?.includes(b.word) || !!b.similar?.includes(a.word);
 }
 
-function getDistractors(pool: B1Word[], exclude: B1Word[], count: number): B1Word[] {
+function getDistractors(pool: Word[], exclude: Word[], count: number): Word[] {
   return shuffle(pool.filter(w => !exclude.some(e => isInterchangeable(e, w)))).slice(0, count);
 }
 
-function makeQuestion(word: B1Word, pool: B1Word[], type: QuestionType): Question {
+function makeQuestion(word: Word, pool: Word[], type: QuestionType): Question {
   const dist = getDistractors(pool, [word], 3);
   switch (type) {
     case "en-to-native":
@@ -164,7 +166,7 @@ function makeQuestion(word: B1Word, pool: B1Word[], type: QuestionType): Questio
   }
 }
 
-function generateQuestions(pool: B1Word[]): Question[] {
+function generateQuestions(pool: Word[]): Question[] {
   const shuffled = shuffle([...pool]);
   const result: Question[] = [];
 
@@ -302,7 +304,7 @@ function OptionButton({ label, onClick, state, centered }: { label: string; onCl
 function MatchingCard({
   words, onSubmit, isReviewing, onSpeak, onMistake,
 }: {
-  words: B1Word[]; onSubmit: (a: string) => void; isReviewing: boolean; onSpeak: (w: string) => void; onMistake?: (wordKey: string) => void;
+  words: Word[]; onSubmit: (a: string) => void; isReviewing: boolean; onSpeak: (w: string) => void; onMistake?: (wordKey: string) => void;
 }) {
   const shuffledUa = useMemo(() => shuffle(words.map(w => w.translation)), []);
   const initPairs = isReviewing ? new Set(words.map(w => w.word)) : new Set<string>();
@@ -317,7 +319,7 @@ function MatchingCard({
     }
   }, [allDone, isReviewing, onSubmit]);
 
-  function handleEnClick(word: B1Word) {
+  function handleEnClick(word: Word) {
     if (correctPairs.has(word.word) || allDone || isReviewing) return;
     setSelectedEn(prev => prev === word.word ? null : word.word);
   }
@@ -536,6 +538,7 @@ const itemVariants = {
 };
 
 function TopicSelectScreen({ topics, onSelect }: { topics: Topic[]; onSelect: (topic: Topic) => void }) {
+  const level = useLevel();
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
@@ -546,7 +549,7 @@ function TopicSelectScreen({ topics, onSelect }: { topics: Topic[]; onSelect: (t
       <div className="flex items-end gap-6">
         <div className="flex-1">
           <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 uppercase tracking-wide">
-            B1 Vocabulary
+            {level.id} Vocabulary
           </span>
           <h2 className="font-display text-3xl font-bold text-neutral-900 mt-3 mb-1">Vocabulary Trivia</h2>
           <p className="text-neutral-500 text-base">Choose a topic to start the quiz</p>
@@ -585,9 +588,11 @@ function TopicSelectScreen({ topics, onSelect }: { topics: Topic[]; onSelect: (t
 function EndScreen({
   score, total, results, topicId, onReplay, onPracticeWeak,
 }: {
-  score: number; total: number; results: AnswerResult[]; topicId: string; onReplay: () => void; onPracticeWeak: (words: B1Word[]) => void;
+  score: number; total: number; results: AnswerResult[]; topicId: string; onReplay: () => void; onPracticeWeak: (words: Word[]) => void;
 }) {
-  const { enabled: starsEnabled, savedSet, toggle } = useSavedWords("B1");
+  const level = useLevel();
+  const TOPICS = level.topics;
+  const { enabled: starsEnabled, savedSet, toggle } = useSavedWords(level.id);
   const starFor = (word: string) => starsEnabled && (
     <StarButton
       size={15}
@@ -661,7 +666,7 @@ function EndScreen({
         {/* Progress save (signed-in) / sign-in hint (guest) */}
         <TriviaSaveStatus
           input={{
-            app: "b1-trivia",
+            app: triviaAppId(level),
             topicId,
             scorePct: pct,
             correctWords: correct.map(r => r.word.word),
@@ -730,7 +735,9 @@ function EndScreen({
 // Root App
 // ---------------------------------------------------------------------------
 
-export default function App() {
+export default function TriviaPage() {
+  const level = useLevel();
+  const TOPICS = level.topics;
   // ── Topic / phase ──────────────────────────────────────────────────────────
   const initialTopic = (() => {
     const id = new URLSearchParams(window.location.search).get("topic");
@@ -740,8 +747,8 @@ export default function App() {
   const [phase, setPhase] = useState<Phase>(initialTopic ? "playing" : "select");
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(initialTopic);
 
-  // My Words virtual quiz topic (signed-in students with saved B1 words)
-  const { savedWords } = useSavedWords("B1");
+  // My Words virtual quiz topic (signed-in students with saved words of this level)
+  const { savedWords } = useSavedWords(level.id);
   const myWordsTopic = useMemo<Topic | null>(() => {
     const words = resolveSavedWords(savedWords, TOPICS);
     if (words.length === 0) return null;
@@ -893,7 +900,7 @@ export default function App() {
   }, [myWordsTopic, phase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Game control ───────────────────────────────────────────────────────────
-  function startGame(topic: Topic, wordPool?: B1Word[]) {
+  function startGame(topic: Topic, wordPool?: Word[]) {
     const pool = wordPool ?? topic.words;
     const qs = generateQuestions(pool);
     setQuestions(qs);
@@ -924,7 +931,7 @@ export default function App() {
     if (selectedTopic) startGame(selectedTopic);
   }
 
-  function handlePracticeWeak(words: B1Word[]) {
+  function handlePracticeWeak(words: Word[]) {
     if (selectedTopic) startGame(selectedTopic, words);
   }
 
@@ -954,7 +961,7 @@ export default function App() {
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <AppHeader
         title="Vocabulary Trivia"
-        subtitle={phase !== "select" && selectedTopic ? selectedTopic.title : "B1 · by Englishpusher"}
+        subtitle={phase !== "select" && selectedTopic ? selectedTopic.title : `${level.id} · by Englishpusher`}
         onTitleClick={phase !== "select" ? handleBackToSelect : undefined}
         onTopics={handleBackToSelect}
         showTopics={phase !== "select"}
