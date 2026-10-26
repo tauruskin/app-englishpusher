@@ -189,7 +189,7 @@ export default function VocabularyPage() {
               <img
                 src={teacherCelebrate}
                 alt="Teacher"
-                className="h-36 w-auto"
+                className="h-36 w-auto -scale-x-100"
                 draggable={false}
               />
             </div>
