@@ -192,7 +192,8 @@ Floating teacher-with-magnifier button (`src/assets/teacher-search.png`, same pi
 - **Vite MPA**: `vite.config.ts` uses `build.rollupOptions.input` with one entry per app. Each builds to its own path in `dist/`. Source HTML lives in `apps/<name>/index.html`; a post-build plugin moves them to `dist/<name>/index.html` so deployed URLs stay as `/<name>/`.
 - **Dev rewrite plugin**: `configureServer` middleware rewrites `/<app>/*` → `/apps/<app>/*` in dev so local URLs match deployed URLs exactly.
 - Hub lives in a **single `Index.tsx`** — no routing, no sub-pages.
-- App cards data lives in the `ITEMS` array at the top of `Index.tsx` — easy to update. Each item has a `level: "B1" | "C1"` field used by the level tabs.
+- App cards data lives in the `ITEMS` array at the top of `Index.tsx` — easy to update. Each item has a `level: "A2" | "A2+" | "B1" | "C1"` field used by the level tabs. Tab and card order comes from `src/hub/order.ts`: A-levels with topics first, then B1/C1, then A-levels still "Coming soon" (their cards are disabled with a badge while their `TOPICS` list is empty).
+- **Level pages (A2, A2+, B1):** one shared set of pages in `src/levels/` (`VocabularyPage`, `FlashcardsPage`, `TriviaPage`), mounted per level by `src/<slug>-<page>/main.tsx` via `mountLevelPage()`. Words live in `src/<slug>-flashcards/data.ts` (`a2`, `a2plus`, `b1`); the level config is next to it in `level.ts`. C1 keeps its own separate pages. Flashcards/Trivia of a level with no topics redirect to its Vocabulary page, which shows "Coming soon".
 - **Background colour must be set on `body` in `index.css`**, NOT on the `motion.div` wrapper — otherwise motion's transform creates a stacking context that hides any background layer behind it.
 - **WSL HMR fix**: `server: { watch: { usePolling: true } }` in `vite.config.ts` — inotify can't watch Windows filesystem from WSL.
 
@@ -226,7 +227,7 @@ Left: copyright + main site link. Right: Instagram icon + handle.
 
 Hub has level tabs (All / B1 / C1) above the accordion — filters `filteredItems`.
 
-Both vocabulary cards open a **chooser page** (`/b1-vocabulary/`, `/c1-business/`) listing that level's activities. Word Connections lives inside the B1 chooser but is `hidden: true` (teacher request) — re-enable in `src/b1-vocabulary/App.tsx`; the app itself stays reachable at `/word-connections/`.
+Both vocabulary cards open a **chooser page** (`/b1-vocabulary/`, `/c1-business/`) listing that level's activities. Word Connections lives inside the B1 chooser but is `hidden: true` (teacher request) — re-enable in `src/levels/VocabularyPage.tsx`; the app itself stays reachable at `/word-connections/`.
 
 **CTA convention:** main hub cards always say "Start practicing"; chooser-page cards say "Study now" (flash cards), "Start quiz" (trivia), "Start playing" (games).
 

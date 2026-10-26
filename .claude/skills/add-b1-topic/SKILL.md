@@ -9,7 +9,7 @@ Adds a new vocabulary topic to the Englishpusher B1 apps. One data file feeds bo
 
 ## Single source of truth
 
-`src/b1-flashcards/data.ts` is the ONLY file that needs word data. `src/b1-trivia/App.tsx` imports `TOPICS` directly from it. Never copy words elsewhere.
+`src/b1-flashcards/data.ts` is the ONLY file that needs word data. The shared level pages in `src/levels/` read `TOPICS` from it through the B1 level config (`src/b1-flashcards/level.ts`). Never copy words elsewhere.
 
 ## B1Word interface
 
