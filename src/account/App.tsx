@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { Fragment, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { motion } from "motion/react";
 import { LogOut, BarChart3, Star, Clock, Eye, EyeOff } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
@@ -9,14 +9,25 @@ import {
   type AppId, type Level, type TriviaResultRow, type WeakWord, type StudyEventRow,
 } from "../shared/progress.ts";
 import { useSavedWords } from "../shared/savedWords.tsx";
-import { TOPICS as B1_TOPICS } from "../b1-flashcards/data.ts";
 import { TOPICS as C1_TOPICS } from "../c1-flashcards/data.ts";
+import type { LevelConfig } from "../levels/types.ts";
+import { flashcardsAppId, pageUrl, triviaAppId } from "../levels/level.ts";
+import { A2 } from "../a2-flashcards/level.ts";
+import { A2PLUS } from "../a2plus-flashcards/level.ts";
+import { B1 } from "../b1-flashcards/level.ts";
+
+// Levels whose words carry a Ukrainian translation and share the level pages; C1 is separate.
+const TRANSLATION_LEVELS: LevelConfig[] = [A2, A2PLUS, B1];
+
+function topicsForApp(app: AppId): { id: string; title: string }[] {
+  const level = TRANSLATION_LEVELS.find((l) => app === flashcardsAppId(l) || app === triviaAppId(l));
+  return level ? level.topics : C1_TOPICS;
+}
 
 // Resolve a stored topic reference against app content; null when the topic
 // no longer exists (renamed/removed) — callers drop those rows silently.
 function topicTitle(app: AppId, topicId: string): string | null {
-  const topics = app.startsWith("b1") ? B1_TOPICS : C1_TOPICS;
-  return topics.find((t) => t.id === topicId)?.title ?? null;
+  return topicsForApp(app).find((t) => t.id === topicId)?.title ?? null;
 }
 
 const APP_LABEL: Record<AppId, string> = {
@@ -352,30 +363,35 @@ function WeakWordsList({ weakWords }: { weakWords: WeakWord[] }) {
   );
 }
 
-// Meaning shown next to a saved word: B1 words carry a Ukrainian
+// Meaning shown next to a saved word: A2, A2+ and B1 words carry a Ukrainian
 // translation; C1 words follow the definition-or-translation convention.
 function wordMeaning(level: Level, topicId: string, word: string): string | null {
-  if (level === "B1") {
-    return B1_TOPICS.find((t) => t.id === topicId)?.words.find((w) => w.word === word)?.translation ?? null;
+  const translationLevel = TRANSLATION_LEVELS.find((l) => l.id === level);
+  if (translationLevel) {
+    return translationLevel.topics.find((t) => t.id === topicId)?.words.find((w) => w.word === word)?.translation ?? null;
   }
   const w = C1_TOPICS.find((t) => t.id === topicId)?.words.find((x) => x.word === word);
   return w ? (w.definition ?? w.translation ?? null) : null;
 }
 
 function MyWordsSection() {
-  const b1 = useSavedWords("B1");
-  const c1 = useSavedWords("C1");
+  // Hooks run unconditionally, in a fixed order.
+  const saved: Record<Level, ReturnType<typeof useSavedWords>> = {
+    A2: useSavedWords("A2"),
+    "A2+": useSavedWords("A2+"),
+    B1: useSavedWords("B1"),
+    C1: useSavedWords("C1"),
+  };
+  const LEVELS: Level[] = ["A2", "A2+", "B1", "C1"];
 
-  const rows = [
-    ...b1.savedWords.map((s) => ({ ...s, meaning: wordMeaning("B1", s.topicId, s.word) })),
-    ...c1.savedWords.map((s) => ({ ...s, meaning: wordMeaning("C1", s.topicId, s.word) })),
-  ].filter((r) => r.meaning !== null); // unresolvable references dropped silently
+  const rows = LEVELS.flatMap((level) =>
+    saved[level].savedWords.map((s) => ({ ...s, meaning: wordMeaning(level, s.topicId, s.word) })),
+  ).filter((r) => r.meaning !== null); // unresolvable references dropped silently
 
   if (rows.length === 0) {
     return <EmptyState>No saved words yet — tap the star on any flashcard to save a word.</EmptyState>;
   }
 
-  const hasB1 = rows.some((r) => r.level === "B1");
   const hasC1 = rows.some((r) => r.level === "C1");
 
   return (
@@ -393,7 +409,7 @@ function MyWordsSection() {
               <p className="truncate font-body text-xs text-neutral-400">{r.meaning}</p>
             </div>
             <button
-              onClick={() => (r.level === "B1" ? b1 : c1).toggle(r.word, r.topicId, r.source)}
+              onClick={() => saved[r.level].toggle(r.word, r.topicId, r.source)}
               className="shrink-0 font-body text-xs text-neutral-400 hover:text-red-500 transition-colors"
             >
               Remove
@@ -402,16 +418,16 @@ function MyWordsSection() {
         ))}
       </div>
       <div className="mt-3 flex flex-wrap gap-2 border-t border-neutral-100 pt-3">
-        {hasB1 && (
-          <>
-            <a href="/b1-flashcards/?topic=my-words" className="rounded-lg bg-brand/10 px-3 py-1.5 font-body text-xs font-semibold text-brand hover:bg-brand/20 transition-colors">
-              Study B1 deck
+        {TRANSLATION_LEVELS.filter((l) => rows.some((r) => r.level === l.id)).map((l) => (
+          <Fragment key={l.id}>
+            <a href={`${pageUrl(l, "flashcards")}?topic=my-words`} className="rounded-lg bg-brand/10 px-3 py-1.5 font-body text-xs font-semibold text-brand hover:bg-brand/20 transition-colors">
+              Study {l.id} deck
             </a>
-            <a href="/b1-trivia/?topic=my-words" className="rounded-lg bg-brand/10 px-3 py-1.5 font-body text-xs font-semibold text-brand hover:bg-brand/20 transition-colors">
-              Quiz B1 deck
+            <a href={`${pageUrl(l, "trivia")}?topic=my-words`} className="rounded-lg bg-brand/10 px-3 py-1.5 font-body text-xs font-semibold text-brand hover:bg-brand/20 transition-colors">
+              Quiz {l.id} deck
             </a>
-          </>
-        )}
+          </Fragment>
+        ))}
         {hasC1 && (
           <>
             <a href="/c1-flashcards/?topic=my-words" className="rounded-lg bg-purple-100 px-3 py-1.5 font-body text-xs font-semibold text-purple-700 hover:bg-purple-200 transition-colors">
