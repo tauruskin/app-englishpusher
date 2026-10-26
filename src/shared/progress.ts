@@ -10,8 +10,10 @@ import { supabase, isSupabaseConfigured } from "./supabase.ts";
 //   - word/topic content lives in the apps' data.ts; only references stored
 // ---------------------------------------------------------------------------
 
-export type AppId = "b1-trivia" | "c1-trivia" | "b1-flashcards" | "c1-flashcards";
-export type Level = "B1" | "C1";
+export type AppId =
+  | "a2-trivia" | "a2plus-trivia" | "b1-trivia" | "c1-trivia"
+  | "a2-flashcards" | "a2plus-flashcards" | "b1-flashcards" | "c1-flashcards";
+export type Level = "A2" | "A2+" | "B1" | "C1";
 
 export interface SavedWord {
   word: string;

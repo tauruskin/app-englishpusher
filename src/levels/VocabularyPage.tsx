@@ -2,6 +2,9 @@ import { motion } from "motion/react";
 import { Trophy, CreditCard, Grid2x2, ArrowRight, type LucideIcon } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import teacherCelebrate from "../assets/teacher-celebrate.png";
+import type { LevelConfig } from "./types.ts";
+import { useLevel } from "./mount.tsx";
+import { isComingSoon, pageUrl } from "./level.ts";
 
 // ---------------------------------------------------------------------------
 // Data
@@ -22,47 +25,49 @@ interface ActivityItem {
   hidden?: boolean; // set true to hide without deleting
 }
 
-const ITEMS: ActivityItem[] = [
-  {
-    id: 1,
-    label: "Flash Cards",
-    description:
-      "Study and memorise B1 vocabulary with interactive flashcards — Ukrainian translations included",
-    cta: "Study now",
-    href: "/b1-flashcards/",
-    Icon: CreditCard,
-    bgFrom: "#9f1239",
-    bgTo: "#4c0519",
-    accentColor: "#fb7185",
-    disabled: false,
-  },
-  {
-    id: 2,
-    label: "Vocabulary Trivia",
-    description:
-      "Fun trivia questions ordered easy to hard · track your weak words and practise again",
-    cta: "Start quiz",
-    href: "/b1-trivia/",
-    Icon: Trophy,
-    bgFrom: "#1d4ed8",
-    bgTo: "#1e3a8a",
-    accentColor: "#60a5fa",
-    disabled: false,
-  },
-  {
-    id: 3,
-    label: "Word Connections",
-    description: "Group 16 words into 4 categories — can you find them all?",
-    cta: "Start playing",
-    href: "/word-connections/",
-    Icon: Grid2x2,
-    bgFrom: "#065f46",
-    bgTo: "#022c22",
-    accentColor: "#34d399",
-    disabled: false,
-    hidden: true, // hidden by teacher request — re-enable by removing this line
-  },
-];
+function activityItems(level: LevelConfig): ActivityItem[] {
+  return [
+    {
+      id: 1,
+      label: "Flash Cards",
+      description:
+        `Study and memorise ${level.id} vocabulary with interactive flashcards — Ukrainian translations included`,
+      cta: "Study now",
+      href: pageUrl(level, "flashcards"),
+      Icon: CreditCard,
+      bgFrom: "#9f1239",
+      bgTo: "#4c0519",
+      accentColor: "#fb7185",
+      disabled: false,
+    },
+    {
+      id: 2,
+      label: "Vocabulary Trivia",
+      description:
+        "Fun trivia questions ordered easy to hard · track your weak words and practise again",
+      cta: "Start quiz",
+      href: pageUrl(level, "trivia"),
+      Icon: Trophy,
+      bgFrom: "#1d4ed8",
+      bgTo: "#1e3a8a",
+      accentColor: "#60a5fa",
+      disabled: false,
+    },
+    {
+      id: 3,
+      label: "Word Connections",
+      description: "Group 16 words into 4 categories — can you find them all?",
+      cta: "Start playing",
+      href: "/word-connections/",
+      Icon: Grid2x2,
+      bgFrom: "#065f46",
+      bgTo: "#022c22",
+      accentColor: "#34d399",
+      disabled: false,
+      hidden: true, // hidden by teacher request — re-enable by removing this line
+    },
+  ];
+}
 
 // ---------------------------------------------------------------------------
 // Activity card
@@ -136,12 +141,14 @@ function ActivityCard({ item }: { item: ActivityItem }) {
 // App
 // ---------------------------------------------------------------------------
 
-export default function App() {
-  const visibleItems = ITEMS.filter((item) => !item.hidden);
+export default function VocabularyPage() {
+  const level = useLevel();
+  const comingSoon = isComingSoon(level);
+  const visibleItems = activityItems(level).filter((item) => !item.hidden);
 
   return (
     <div className="relative min-h-screen flex flex-col">
-      <AppHeader title="B1 General" subtitle="Englishpusher App" />
+      <AppHeader title={level.title} subtitle="Englishpusher App" />
 
       {/* Main */}
       <main className="flex flex-1 items-start justify-center px-6 py-14">
@@ -156,14 +163,24 @@ export default function App() {
                 transition={{ duration: 0.35, ease: "easeOut" }}
               >
                 <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-700 uppercase tracking-wide">
-                  B1 General
+                  {level.title}
                 </span>
                 <h2 className="font-display text-3xl font-bold text-neutral-900 mt-3 mb-1">
-                  Choose your activity
+                  {comingSoon ? "Coming soon" : "Choose your activity"}
                 </h2>
                 <p className="text-neutral-500 text-base">
-                  Select how you'd like to practise today
+                  {comingSoon
+                    ? `${level.id} topics are being prepared. Check back soon!`
+                    : "Select how you'd like to practise today"}
                 </p>
+                {comingSoon && (
+                  <a
+                    href="/"
+                    className="mt-5 inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand/90 transition-colors"
+                  >
+                    Back to the App <ArrowRight size={15} />
+                  </a>
+                )}
               </motion.div>
             </div>
 
@@ -172,23 +189,25 @@ export default function App() {
               <img
                 src={teacherCelebrate}
                 alt="Teacher"
-                className="h-36 w-auto"
+                className="h-36 w-auto -scale-x-100"
                 draggable={false}
               />
             </div>
           </div>
 
           {/* Activity cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-5"
-          >
-            {visibleItems.map((item) => (
-              <ActivityCard key={item.id} item={item} />
-            ))}
-          </motion.div>
+          {!comingSoon && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-5"
+            >
+              {visibleItems.map((item) => (
+                <ActivityCard key={item.id} item={item} />
+              ))}
+            </motion.div>
+          )}
         </div>
       </main>
 

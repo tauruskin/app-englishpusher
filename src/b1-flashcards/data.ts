@@ -1,19 +1,7 @@
-export interface B1Word {
-  word: string;
-  translation: string;
-  example: string; // use ___ as placeholder for the word
-  transcription?: string; // IPA phonetic transcription (single words / short phrases only)
-  similar?: string[]; // near-synonyms in the same topic — trivia never offers them as wrong options for this word
-}
+import type { Topic } from "../levels/types.ts";
 
-export interface Topic {
-  id: string;
-  title: string;
-  icon: string;
-  description: string;
-  words: B1Word[];
-  triviaUrl?: string; // link to corresponding trivia topic
-}
+// Word and Topic shapes live in src/levels/types.ts (shared with A2 and A2+).
+export type { Topic, Word as B1Word } from "../levels/types.ts";
 
 export const TOPICS: Topic[] = [
   {

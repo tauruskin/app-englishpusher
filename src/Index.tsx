@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, BookOpen, Layers, Zap, Instagram, type LucideIcon } from "lucide-react";
+import { ArrowRight, BookOpen, Layers, Zap, Instagram, Sprout, Leaf, type LucideIcon } from "lucide-react";
 import teacherCelebrate from "./assets/teacher-celebrate.png";
 import { AccountLink } from "./shared/AppShell.tsx";
 import TrialLessonForm from "./shared/TrialLessonForm.tsx";
+import { A2 } from "./a2-flashcards/level.ts";
+import { A2PLUS } from "./a2plus-flashcards/level.ts";
+import { isComingSoon } from "./levels/level.ts";
+import { hubLevelOrder, sortByLevel, type HubLevel } from "./hub/order.ts";
 
 // ---------------------------------------------------------------------------
 // ElegantShape — floating pill decoration for the background
@@ -61,7 +65,10 @@ function ElegantShape({
 // Data
 // ---------------------------------------------------------------------------
 
-type Level = "B1" | "C1";
+type Level = HubLevel;
+
+const A2_SOON = isComingSoon(A2);
+const A2PLUS_SOON = isComingSoon(A2PLUS);
 
 interface AppItem {
   id: number;
@@ -97,7 +104,7 @@ const ITEMS: AppItem[] = [
     id: 2,
     label: "B1 Vocabulary",
     // Word Connections also lives inside this page (currently hidden by
-    // teacher request — see src/b1-vocabulary/App.tsx to re-enable)
+    // teacher request — see src/levels/VocabularyPage.tsx to re-enable)
     description: "Vocabulary practice — interactive flashcards and trivia",
     cta: "Start practicing",
     href: "/b1-vocabulary/",
@@ -120,6 +127,34 @@ const ITEMS: AppItem[] = [
     Icon: Zap,
     disabled: false,
     level: "C1",
+  },
+  {
+    id: 4,
+    label: "A2 Vocabulary",
+    description: "Everyday vocabulary — flashcards and trivia",
+    cta: "Start practicing",
+    href: "/a2-vocabulary/",
+    bgFrom: "#0f766e",
+    bgTo: "#134e4a",
+    borderColor: "#14b8a6",
+    Icon: Sprout,
+    disabled: A2_SOON,
+    badge: A2_SOON ? "Coming soon" : undefined,
+    level: "A2",
+  },
+  {
+    id: 5,
+    label: "A2+ Vocabulary",
+    description: "Next-step vocabulary — flashcards and trivia",
+    cta: "Start practicing",
+    href: "/a2plus-vocabulary/",
+    bgFrom: "#1d4ed8",
+    bgTo: "#172554",
+    borderColor: "#3b82f6",
+    Icon: Leaf,
+    disabled: A2PLUS_SOON,
+    badge: A2PLUS_SOON ? "Coming soon" : undefined,
+    level: "A2+",
   },
 ];
 
@@ -299,19 +334,21 @@ function AccordionPanel({
 // ---------------------------------------------------------------------------
 
 type Tab = "all" | Level;
+const LEVEL_ORDER = hubLevelOrder({ A2: !A2_SOON, "A2+": !A2PLUS_SOON });
+const TAB_LABEL: Record<Level, string> = { A2: "A2", "A2+": "A2+", B1: "B1 General", C1: "C1 Business" };
 const TABS: { id: Tab; label: string }[] = [
   { id: "all", label: "All levels" },
-  { id: "B1",  label: "B1 General" },
-  { id: "C1",  label: "C1 Business" },
+  ...LEVEL_ORDER.map((level) => ({ id: level, label: TAB_LABEL[level] })),
 ];
+const ORDERED_ITEMS = sortByLevel(ITEMS, LEVEL_ORDER);
 
 export default function Index() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<Tab>("all");
 
   const filteredItems = (activeTab === "all"
-    ? ITEMS
-    : ITEMS.filter((item) => item.level === activeTab)
+    ? ORDERED_ITEMS
+    : ORDERED_ITEMS.filter((item) => item.level === activeTab)
   ).filter((item) => !item.hidden);
 
   return (
@@ -394,7 +431,7 @@ export default function Index() {
           <div className="flex-1 min-w-0 flex flex-col gap-4">
 
             {/* Tabs */}
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {TABS.map((tab) => (
                 <button
                   key={tab.id}
