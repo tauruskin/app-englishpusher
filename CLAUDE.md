@@ -104,6 +104,7 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Lesson 14: Actions | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=lesson-14-actions |
 | Air Travel | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=air-travel |
 | Everyday Activities | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=everyday-activities |
+| Jobs | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=jobs |
 
 **A2+ Vocabulary Trivia** (`/a2plus-trivia/`):
 
@@ -112,6 +113,7 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Lesson 14: Actions | https://app.englishpusher.in.ua/a2plus-trivia/?topic=lesson-14-actions |
 | Air Travel | https://app.englishpusher.in.ua/a2plus-trivia/?topic=air-travel |
 | Everyday Activities | https://app.englishpusher.in.ua/a2plus-trivia/?topic=everyday-activities |
+| Jobs | https://app.englishpusher.in.ua/a2plus-trivia/?topic=jobs |
 
 **How it works:** `?topic=<id>` is read on mount via `URLSearchParams`. The URL updates automatically when the user selects a topic, and clears when they go back to the topic list. The `id` field in `TOPICS` in `data.ts` is the canonical key — keep it stable, never rename it after publishing.
 
