@@ -79,6 +79,7 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 |---|---|
 | Lesson 51: Clothes & Appearance | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-51-clothes-appearance |
 | Lesson 56: Directions | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-56-directions |
+| Lesson 5: Adjectives for Feelings | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-5-adjectives-feelings |
 
 **A2 Vocabulary Trivia** (`/a2-trivia/`):
 
@@ -86,6 +87,7 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 |---|---|
 | Lesson 51: Clothes & Appearance | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-51-clothes-appearance |
 | Lesson 56: Directions | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-56-directions |
+| Lesson 5: Adjectives for Feelings | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-5-adjectives-feelings |
 
 **A2+ Vocabulary Cards** (`/a2plus-flashcards/`):
 
