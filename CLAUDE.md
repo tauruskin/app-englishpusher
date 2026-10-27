@@ -77,11 +77,13 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 
 | Topic | Direct link |
 |---|---|
+| Food | https://app.englishpusher.in.ua/a2-flashcards/?topic=food |
 
 **A2 Vocabulary Trivia** (`/a2-trivia/`):
 
 | Topic | Direct link |
 |---|---|
+| Food | https://app.englishpusher.in.ua/a2-trivia/?topic=food |
 
 **A2+ Vocabulary Cards** (`/a2plus-flashcards/`):
 
