@@ -89,6 +89,7 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Food and Drinks | https://app.englishpusher.in.ua/a2-flashcards/?topic=food-and-drinks |
 | Lesson 2: Professions | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-2-professions |
 | Rooms and Furniture | https://app.englishpusher.in.ua/a2-flashcards/?topic=rooms-and-furniture |
+| Lesson 1: Hello! | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-1-hello |
 
 **A2 Vocabulary Trivia** (`/a2-trivia/`):
 
@@ -106,6 +107,7 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Food and Drinks | https://app.englishpusher.in.ua/a2-trivia/?topic=food-and-drinks |
 | Lesson 2: Professions | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-2-professions |
 | Rooms and Furniture | https://app.englishpusher.in.ua/a2-trivia/?topic=rooms-and-furniture |
+| Lesson 1: Hello! | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-1-hello |
 
 **A2+ Vocabulary Cards** (`/a2plus-flashcards/`):
 
