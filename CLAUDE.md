@@ -243,6 +243,15 @@ import { AppFooter } from "../shared/AppShell.tsx";
 
 Floating teacher-with-magnifier button (`src/assets/teacher-search.png`, same picture as the Moodle lesson-search button) shown on A2, A2+, B1 and C1 flashcard topics, My Words included. Opens a searchable list of the topic's words (word + translation, or C1 definition clamped to 2 lines; current card highlighted, starred words marked). Tap / Enter jumps to the card (`onJump` sets `index`, unflips). Bottom sheet on phones, panel above the button on desktop. Props: `items` ({word, hint}), `current`, `saved?`, `onJump`. Added 2026-10-22 at the teacher's request.
 
+## Seasonal decorations — `src/shared/seasonal/` + `src/shared/Seasonal.tsx`
+
+Holiday decorations switched on by date (Halloween 24 Oct – 1 Nov so far; winter and Easter later). Same themes and rules as the Moodle snippet (moodle-task-builder `seasonal-decorations/`, whose README explains how to add a theme; copy art, words and dates to `themes.ts` here too).
+
+- `<Seasonal />` is rendered in `AppFooter` and in the hub footer, so every page gets it; `<SeasonalGreeting />` is the "Happy Halloween!" chip next to the hub badge (opens the "Did you know?" card).
+- `pageLevel(pathname)`: hub, level/chooser pages and account = everything (moving spider, bats, pop-up card); flash cards, trivia and games = the same pictures completely still, and nothing at all on phones.
+- Students choose Animated / Still / Off with the round button bottom-left (saved in localStorage); "reduce motion" devices start on Still. Bats: three waves on the first page of the day, then one wave at most every 15 minutes.
+- Test any theme on any date with `?ep-season=halloween`. Tests: `src/shared/seasonal/themes.test.ts`.
+
 ## Architecture decisions
 
 - **Vite MPA**: `vite.config.ts` uses `build.rollupOptions.input` with one entry per app. Each builds to its own path in `dist/`. Source HTML lives in `apps/<name>/index.html`; a post-build plugin moves them to `dist/<name>/index.html` so deployed URLs stay as `/<name>/`.

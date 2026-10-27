@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import { Home, User } from "lucide-react";
 import { useSessionUser } from "./auth.tsx";
+import { Seasonal } from "./Seasonal.tsx";
 
 // Account entry point, shared by the hub header and AppShell. Guests get an
 // explicit "Sign in" pill. Signed-in users get an initial avatar plus their
@@ -133,6 +134,7 @@ interface AppFooterProps {
 export function AppFooter({ onTopics, showTopics }: AppFooterProps) {
   return (
     <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-3">
+      <Seasonal />
       {/* Mobile nav — hidden on desktop */}
       <div className="md:hidden mx-auto max-w-4xl flex items-center justify-between gap-4 text-sm mb-3">
         {showTopics && onTopics ? (

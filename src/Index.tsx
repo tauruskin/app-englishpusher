@@ -4,6 +4,7 @@ import { ArrowRight, BookOpen, Layers, Zap, Instagram, Sprout, Leaf, type Lucide
 import teacherCelebrate from "./assets/teacher-celebrate.png";
 import { AccountLink } from "./shared/AppShell.tsx";
 import TrialLessonForm from "./shared/TrialLessonForm.tsx";
+import { Seasonal, SeasonalGreeting } from "./shared/Seasonal.tsx";
 import { A2 } from "./a2-flashcards/level.ts";
 import { A2PLUS } from "./a2plus-flashcards/level.ts";
 import { isComingSoon } from "./levels/level.ts";
@@ -393,14 +394,17 @@ export default function Index() {
 
           {/* ── Left: hero text ─────────────────────────────────────────── */}
           <div className="flex flex-col gap-5 md:w-[380px] md:shrink-0">
-            <a
-              href="https://englishpusher.in.ua"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex w-fit items-center gap-1.5 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand hover:bg-brand/20 transition-colors"
-            >
-              englishpusher.in.ua ↗
-            </a>
+            <div className="flex flex-wrap items-center gap-2">
+              <a
+                href="https://englishpusher.in.ua"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-fit items-center gap-1.5 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand hover:bg-brand/20 transition-colors"
+              >
+                englishpusher.in.ua ↗
+              </a>
+              <SeasonalGreeting />
+            </div>
 
             <h2 className="font-display text-3xl font-bold leading-tight text-neutral-900 md:text-[2.6rem] md:leading-[1.15]">
               Learn English<br />
@@ -477,6 +481,7 @@ export default function Index() {
 
       {/* ── Footer ─────────────────────────────────────────────────────── */}
       <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-4">
+        <Seasonal />
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-2 sm:flex-row sm:justify-between">
           <span className="text-sm text-neutral-400">
             Copyright &copy; 2026 &mdash; Developed by{" "}
