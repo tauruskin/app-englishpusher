@@ -1,5 +1,41 @@
 import type { Topic } from "../levels/types.ts";
 
 // A2 vocabulary topics. Added by the add-a2-topic skill (via @Englishpusher_bot or Claude Code).
-// While this list is empty, the App shows A2 as "Coming soon".
-export const TOPICS: Topic[] = [];
+export const TOPICS: Topic[] = [
+  {
+    id: "lesson-51-clothes-appearance",
+    title: "Lesson 51: Clothes & Appearance",
+    icon: "👕",
+    description: "Clothing items and words for describing people's appearance",
+    triviaUrl: "/a2-trivia/?topic=lesson-51-clothes-appearance",
+    words: [
+      { word: "tall", translation: "високий (про людей)", transcription: "/tɔːl/", example: "My brother is 190 centimetres ___, so he needs very long trousers." },
+      { word: "short", translation: "низький (про людей)", transcription: "/ʃɔːt/", example: "My sister is quite ___, so she cannot reach the top shelf." },
+      { word: "bald", translation: "лисий", transcription: "/bɔːld/", example: "My grandfather has no hair at all — he is completely ___." },
+      { word: "short blond(e) hair", translation: "коротке світле волосся", transcription: "/ʃɔːt blɒnd heə/", example: "The actress cut her long hair very short and coloured it light yellow for her new film, so now she has ___." },
+      { word: "straight hair", translation: "пряме волосся", transcription: "/streɪt heə/", example: "Her hair has no curls — it is completely flat — so she has ___." },
+      { word: "curly hair", translation: "кучеряве волосся", transcription: "/ˈkɜːli heə/", example: "Her hair always makes small curls, even after she brushes it, so she has ___." },
+      { word: "dark hair", translation: "темне волосся", transcription: "/dɑːk heə/", example: "His hair is nearly black, much darker than his sister's, so everyone says he has ___." },
+      { word: "red hair", translation: "руде волосся", transcription: "/red heə/", example: "Her hair is orange-red, and people often call her 'Ginger' because of it, so she has ___." },
+      { word: "long hair", translation: "довге волосся", transcription: "/lɒŋ heə/", example: "She has not cut her hair for three years, and now it goes all the way down to her back, so she has ___." },
+      { word: "beard", translation: "борода", transcription: "/bɪəd/", example: "He has not shaved for weeks, so he now has a long ___ on his chin." },
+      { word: "moustache", translation: "вуса", transcription: "/məˈstɑːʃ/", example: "He grows hair just above his top lip and trims it every week — that is his ___." },
+      { word: "socks", translation: "шкарпетки", transcription: "/sɒks/", example: "Before I put on my shoes, I always put on a clean pair of ___." },
+      { word: "jeans", translation: "джинси", transcription: "/dʒiːnz/", example: "These ___ are blue and made of denim, with two pockets at the front." },
+      { word: "trousers", translation: "штани, брюки", transcription: "/ˈtraʊzəz/", example: "He wore smart black ___ that matched his suit jacket for the job interview.", similar: ["pants"] },
+      { word: "pants", translation: "штани, брюки", transcription: "/pænts/", example: "In American English, people call trousers ___.", similar: ["trousers"] },
+      { word: "suit", translation: "костюм", transcription: "/suːt/", example: "He wore a ___ with a jacket and trousers made from the same cloth to the wedding." },
+      { word: "jacket", translation: "куртка, піджак", transcription: "/ˈdʒækɪt/", example: "She put on a blue denim ___ over her T-shirt because it was a bit cold." },
+      { word: "shirt", translation: "сорочка (чоловіча)", transcription: "/ʃɜːt/", example: "He wore a white ___ with a collar and buttons for his new job." },
+      { word: "tie", translation: "краватка", transcription: "/taɪ/", example: "He wore a red ___ around his neck with his shirt for the party." },
+      { word: "top", translation: "топ, майка", transcription: "/tɒp/", example: "She wore a black ___ with thin straps and no sleeves." },
+      { word: "skirt", translation: "спідниця", transcription: "/skɜːt/", example: "She wore a blue denim ___ that came down to her knees, with a white top." },
+      { word: "jumper", translation: "джемпер, светр", transcription: "/ˈdʒʌmpə/", example: "It was cold, so she put on a warm wool ___ over her shirt.", similar: ["sweater"] },
+      { word: "sweater", translation: "светр", transcription: "/ˈswetə/", example: "He bought a warm wool ___ to wear in the cold winter.", similar: ["jumper"] },
+      { word: "shorts", translation: "шорти", transcription: "/ʃɔːts/", example: "It was hot, so he put on denim ___ that stopped just above his knees." },
+      { word: "dress", translation: "сукня", transcription: "/dres/", example: "She wore a long red ___ that covered her from her shoulders down to her feet." },
+      { word: "T-shirt", translation: "футболка", transcription: "/ˈtiːʃɜːt/", example: "He put on a clean cotton ___ with short sleeves and no collar before going for a run." },
+      { word: "coat", translation: "пальто, куртка", transcription: "/kəʊt/", example: "It was snowing, so she put on a long warm ___ that came down to her knees." },
+    ],
+  },
+];
