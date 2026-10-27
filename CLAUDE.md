@@ -81,6 +81,7 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Lesson 56: Directions | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-56-directions |
 | Lesson 5: Adjectives for Feelings | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-5-adjectives-feelings |
 | Lesson 53: Types of Transport | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-53-types-of-transport |
+| Lesson 53: Transport Collocations | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-53-transport-collocations |
 
 **A2 Vocabulary Trivia** (`/a2-trivia/`):
 
@@ -90,6 +91,7 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Lesson 56: Directions | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-56-directions |
 | Lesson 5: Adjectives for Feelings | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-5-adjectives-feelings |
 | Lesson 53: Types of Transport | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-53-types-of-transport |
+| Lesson 53: Transport Collocations | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-53-transport-collocations |
 
 **A2+ Vocabulary Cards** (`/a2plus-flashcards/`):
 
