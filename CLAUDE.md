@@ -18,12 +18,14 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 | B1 Vocabulary Cards | https://app.englishpusher.in.ua/b1-flashcards/ |
 | C1 Flash Cards | https://app.englishpusher.in.ua/c1-flashcards/ |
 | C1 Vocabulary Trivia | https://app.englishpusher.in.ua/c1-trivia/ |
+| A2 Vocabulary (chooser page) | https://app.englishpusher.in.ua/a2-vocabulary/ |
+| A2+ Vocabulary (chooser page) | https://app.englishpusher.in.ua/a2plus-vocabulary/ |
 | My Account (login + personal page) | https://app.englishpusher.in.ua/account/ |
 | Instagram | https://www.instagram.com/teti_push_english?igsh=MWMxbGxodnJrOHI2 |
 
 ### Direct topic links — Flash Card apps
 
-Both flash card apps support `?topic=<id>` deep links. The teacher can copy and share these to send students directly to a specific topic.
+All flash card apps support `?topic=<id>` deep links. The teacher can copy and share these to send students directly to a specific topic.
 
 **B1 Vocabulary Cards** (`/b1-flashcards/`):
 
@@ -70,6 +72,26 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Writing CEO Communication | https://app.englishpusher.in.ua/c1-trivia/?topic=ceo-communication |
 | Leadership & Equality | https://app.englishpusher.in.ua/c1-trivia/?topic=leadership-equality |
 | Innovation & Leadership | https://app.englishpusher.in.ua/c1-trivia/?topic=innovation-leadership |
+
+**A2 Vocabulary Cards** (`/a2-flashcards/`):
+
+| Topic | Direct link |
+|---|---|
+
+**A2 Vocabulary Trivia** (`/a2-trivia/`):
+
+| Topic | Direct link |
+|---|---|
+
+**A2+ Vocabulary Cards** (`/a2plus-flashcards/`):
+
+| Topic | Direct link |
+|---|---|
+
+**A2+ Vocabulary Trivia** (`/a2plus-trivia/`):
+
+| Topic | Direct link |
+|---|---|
 
 **How it works:** `?topic=<id>` is read on mount via `URLSearchParams`. The URL updates automatically when the user selects a topic, and clears when they go back to the topic list. The `id` field in `TOPICS` in `data.ts` is the canonical key — keep it stable, never rename it after publishing.
 
@@ -286,6 +308,7 @@ Project skills auto-discovered by Claude Code (each must live at `.claude/skills
 |---|---|
 | `add-b1-topic` | Add a new B1 vocabulary topic (feeds b1-flashcards + b1-trivia) from a teacher wordlist |
 | `add-c1-topic` | Add a new C1 vocabulary topic (feeds c1-flashcards + c1-trivia); definition or translation mode |
+| `add-a2-topic` | Add a new A2 or A2+ vocabulary topic (level is the first argument; feeds a2- or a2plus-flashcards + trivia) |
 | `flashcards` | Build guide for creating a NEW flash-card app from scratch |
 
 The old `SKIILS/` folder was removed (2026-07-08) — its content was migrated/superseded here.

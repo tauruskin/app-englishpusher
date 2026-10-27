@@ -39,8 +39,8 @@ behind it). Decorative animation (`ElegantShape` and similar) uses only
 canvas; these are unreliable with `motion/react` v11 in this codebase.
 
 ### VI. Topic Additions Go Through Their Skill
-New B1 or C1 vocabulary topics are added via the `add-b1-topic` /
-`add-c1-topic` skills, not by hand-editing multiple files ad hoc. Every new
+New A2, A2+, B1 or C1 vocabulary topics are added via the `add-a2-topic`,
+`add-b1-topic` and `add-c1-topic` skills, not by hand-editing multiple files ad hoc. Every new
 topic's direct `?topic=` link is added to the table in the root `CLAUDE.md`
 immediately, not deferred.
 
