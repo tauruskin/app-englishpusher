@@ -83,6 +83,7 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Lesson 53: Types of Transport | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-53-types-of-transport |
 | Lesson 53: Transport Collocations | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-53-transport-collocations |
 | Lesson 59: Skills and Qualities | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-59-skills-and-qualities |
+| Lesson 35: Shops | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-35-shops |
 
 **A2 Vocabulary Trivia** (`/a2-trivia/`):
 
@@ -94,6 +95,7 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Lesson 53: Types of Transport | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-53-types-of-transport |
 | Lesson 53: Transport Collocations | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-53-transport-collocations |
 | Lesson 59: Skills and Qualities | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-59-skills-and-qualities |
+| Lesson 35: Shops | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-35-shops |
 
 **A2+ Vocabulary Cards** (`/a2plus-flashcards/`):
 
