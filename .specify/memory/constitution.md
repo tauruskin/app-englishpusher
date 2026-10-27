@@ -10,7 +10,8 @@ be wired whenever the activity has a topic-selection screen.
 
 ### II. Single Source of Truth for Vocabulary
 Each vocabulary set lives in exactly one `data.ts` (e.g.
-`b1-flashcards/data.ts`, `c1-flashcards/data.ts`). Apps that reuse the same
+`a2-flashcards/data.ts`, `a2plus-flashcards/data.ts`, `b1-flashcards/data.ts`,
+`c1-flashcards/data.ts`). Apps that reuse the same
 words (trivia reusing flashcard data, etc.) MUST import from that file
 rather than duplicating word lists. The `id` field on a topic is a public
 contract once a `?topic=` deep link has been shared — it MUST NOT be renamed
@@ -40,9 +41,9 @@ canvas; these are unreliable with `motion/react` v11 in this codebase.
 
 ### VI. Topic Additions Go Through Their Skill
 New A2, A2+, B1 or C1 vocabulary topics are added via the `add-a2-topic`,
-`add-b1-topic` and `add-c1-topic` skills, not by hand-editing multiple files ad hoc. Every new
-topic's direct `?topic=` link is added to the table in the root `CLAUDE.md`
-immediately, not deferred.
+`add-b1-topic` and `add-c1-topic` skills, not by hand-editing multiple files
+ad hoc. Every new topic's direct `?topic=` link is added to the table in the
+root `CLAUDE.md` immediately, not deferred.
 
 ## Development Workflow
 

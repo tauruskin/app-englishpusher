@@ -9,7 +9,7 @@ Adds a vocabulary topic to the App's **A2** or **A2+** level. The level's data f
 
 ## Step 0 — Pick the level
 
-The level is the first word of the request: `A2` or `A2+` (accept `A2plus` as `A2+`).
+The level is named in the request (when the skill is run as a command, it is the first argument). Read the whole token: `A2+`, `A2plus` and `A2 plus` mean **A2+**; a plain `A2` (also written with a lesson number, like `A2.1` or `A2.2`) means **A2**.
 
 - If the request names neither and you are in an interactive session: ask "A2 or A2+?" before doing anything else.
 - If the request names neither and `APP_TOPIC_HEADLESS=1` is set: change no file, do not write `.topic-summary.json`, and stop (the bridge then reports that no summary was written).
@@ -88,10 +88,10 @@ The sentence is used in the "Fill in the sentence" trivia question.
 - Still no rare words besides the target word.
 
 **Patterns:**
-- Noun: `"I always have a cup of tea with my ___ in the morning."`
+- Noun: `"I have tea with my ___ every morning."`
 - Verb: `"My brother likes to ___ in the park on Sundays."`
 - Adjective: `"The soup is very ___, so be careful."`
-- Collocation: `"I ___ my homework after dinner."`
+- Collocation: `"I usually ___ after dinner."` (word: `"do my homework"`)
 
 ---
 
@@ -174,6 +174,7 @@ For A2+ use `a2plus-flashcards` and `a2plus-trivia`.
 - [ ] `id` is unique within the level's `TOPICS`
 - [ ] `npm test` passes (it includes `src/levels/data.test.ts`)
 - [ ] `npm run build` passes (exit 0)
+- [ ] If a check fails and you cannot fix it: in headless mode do NOT write `.topic-summary.json` (the bridge then reports the build as failed); in interactive mode tell the user what failed
 - [ ] `CLAUDE.md` has both new links
 
 ---
@@ -200,11 +201,14 @@ For A2+ use `a2plus-flashcards` and `a2plus-trivia`.
 **Interactive mode (normal Claude Code session):** do **not** run `npm run deploy` (it would publish without a commit on `main`, and the next GitHub Actions deploy would remove the topic again). Instead:
 
 ```bash
-git switch -c app-topic/<a2 or a2plus>-<id>
+git fetch origin
+git switch -c app-topic/<a2 or a2plus>-<id> origin/main   # your uncommitted topic changes come along
 git add src/a2-flashcards/data.ts CLAUDE.md   # A2+: src/a2plus-flashcards/data.ts
 git commit -m "feat: add <A2 or A2+> topic '<title>'"
 git push -u origin app-topic/<a2 or a2plus>-<id>
 ```
+
+If that branch name already exists, add `-2` to it.
 
 Then give the user the link `https://github.com/tauruskin/app-englishpusher/compare/main...app-topic/<a2 or a2plus>-<id>?expand=1`. Merging the pull request deploys the App (GitHub Actions, about 2 minutes). Never merge it yourself.
 

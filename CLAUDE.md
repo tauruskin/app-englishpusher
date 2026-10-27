@@ -207,7 +207,7 @@ import { AppFooter } from "../shared/AppShell.tsx";
 
 ## Shared component — `src/shared/WordList.tsx` (flashcards word list)
 
-Floating teacher-with-magnifier button (`src/assets/teacher-search.png`, same picture as the Moodle lesson-search button) shown on B1 and C1 flashcard topics, My Words included. Opens a searchable list of the topic's words (word + translation, or C1 definition clamped to 2 lines; current card highlighted, starred words marked). Tap / Enter jumps to the card (`onJump` sets `index`, unflips). Bottom sheet on phones, panel above the button on desktop. Props: `items` ({word, hint}), `current`, `saved?`, `onJump`. Added 2026-10-22 at the teacher's request.
+Floating teacher-with-magnifier button (`src/assets/teacher-search.png`, same picture as the Moodle lesson-search button) shown on A2, A2+, B1 and C1 flashcard topics, My Words included. Opens a searchable list of the topic's words (word + translation, or C1 definition clamped to 2 lines; current card highlighted, starred words marked). Tap / Enter jumps to the card (`onJump` sets `index`, unflips). Bottom sheet on phones, panel above the button on desktop. Props: `items` ({word, hint}), `current`, `saved?`, `onJump`. Added 2026-10-22 at the teacher's request.
 
 ## Architecture decisions
 
@@ -297,7 +297,7 @@ The `gh-pages` package **replaces the entire `gh-pages` branch** with the conten
   4. Match word → definition (4 options)
 - End screen: score %, word lists side-by-side, "Practice weak words" button rebuilds session from missed words
 - All screens: `max-w-4xl`, teacher sidebar `w-56 max-w-none` (prevents squeeze)
-- **Unambiguous examples (both trivia apps):** fill-in-the-blank options are 3 random words from the same topic, so every `example` must fit ONLY its own word. For true synonyms, add `similar: ["other word"]` to the word in `data.ts` (B1 and C1). `getDistractors` then never offers them as wrong options. It already skips words with an identical translation/definition.
+- **Unambiguous examples (all trivia apps):** fill-in-the-blank options are 3 random words from the same topic, so every `example` must fit ONLY its own word. For true synonyms, add `similar: ["other word"]` to the word in `data.ts` (A2, A2+, B1 and C1). `getDistractors` then never offers them as wrong options. It already skips words with an identical translation/definition.
 - Purple colour scheme (`bg-purple-600`) distinguishes C1 from B1 apps
 
 ## Claude Code skills — `.claude/skills/`
