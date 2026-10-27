@@ -18,12 +18,14 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 | B1 Vocabulary Cards | https://app.englishpusher.in.ua/b1-flashcards/ |
 | C1 Flash Cards | https://app.englishpusher.in.ua/c1-flashcards/ |
 | C1 Vocabulary Trivia | https://app.englishpusher.in.ua/c1-trivia/ |
+| A2 Vocabulary (chooser page) | https://app.englishpusher.in.ua/a2-vocabulary/ |
+| A2+ Vocabulary (chooser page) | https://app.englishpusher.in.ua/a2plus-vocabulary/ |
 | My Account (login + personal page) | https://app.englishpusher.in.ua/account/ |
 | Instagram | https://www.instagram.com/teti_push_english?igsh=MWMxbGxodnJrOHI2 |
 
 ### Direct topic links — Flash Card apps
 
-Both flash card apps support `?topic=<id>` deep links. The teacher can copy and share these to send students directly to a specific topic.
+All flash card apps support `?topic=<id>` deep links. The teacher can copy and share these to send students directly to a specific topic.
 
 **B1 Vocabulary Cards** (`/b1-flashcards/`):
 
@@ -70,6 +72,26 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Writing CEO Communication | https://app.englishpusher.in.ua/c1-trivia/?topic=ceo-communication |
 | Leadership & Equality | https://app.englishpusher.in.ua/c1-trivia/?topic=leadership-equality |
 | Innovation & Leadership | https://app.englishpusher.in.ua/c1-trivia/?topic=innovation-leadership |
+
+**A2 Vocabulary Cards** (`/a2-flashcards/`):
+
+| Topic | Direct link |
+|---|---|
+
+**A2 Vocabulary Trivia** (`/a2-trivia/`):
+
+| Topic | Direct link |
+|---|---|
+
+**A2+ Vocabulary Cards** (`/a2plus-flashcards/`):
+
+| Topic | Direct link |
+|---|---|
+
+**A2+ Vocabulary Trivia** (`/a2plus-trivia/`):
+
+| Topic | Direct link |
+|---|---|
 
 **How it works:** `?topic=<id>` is read on mount via `URLSearchParams`. The URL updates automatically when the user selects a topic, and clears when they go back to the topic list. The `id` field in `TOPICS` in `data.ts` is the canonical key — keep it stable, never rename it after publishing.
 
@@ -185,7 +207,7 @@ import { AppFooter } from "../shared/AppShell.tsx";
 
 ## Shared component — `src/shared/WordList.tsx` (flashcards word list)
 
-Floating teacher-with-magnifier button (`src/assets/teacher-search.png`, same picture as the Moodle lesson-search button) shown on B1 and C1 flashcard topics, My Words included. Opens a searchable list of the topic's words (word + translation, or C1 definition clamped to 2 lines; current card highlighted, starred words marked). Tap / Enter jumps to the card (`onJump` sets `index`, unflips). Bottom sheet on phones, panel above the button on desktop. Props: `items` ({word, hint}), `current`, `saved?`, `onJump`. Added 2026-10-22 at the teacher's request.
+Floating teacher-with-magnifier button (`src/assets/teacher-search.png`, same picture as the Moodle lesson-search button) shown on A2, A2+, B1 and C1 flashcard topics, My Words included. Opens a searchable list of the topic's words (word + translation, or C1 definition clamped to 2 lines; current card highlighted, starred words marked). Tap / Enter jumps to the card (`onJump` sets `index`, unflips). Bottom sheet on phones, panel above the button on desktop. Props: `items` ({word, hint}), `current`, `saved?`, `onJump`. Added 2026-10-22 at the teacher's request.
 
 ## Architecture decisions
 
@@ -275,7 +297,7 @@ The `gh-pages` package **replaces the entire `gh-pages` branch** with the conten
   4. Match word → definition (4 options)
 - End screen: score %, word lists side-by-side, "Practice weak words" button rebuilds session from missed words
 - All screens: `max-w-4xl`, teacher sidebar `w-56 max-w-none` (prevents squeeze)
-- **Unambiguous examples (both trivia apps):** fill-in-the-blank options are 3 random words from the same topic, so every `example` must fit ONLY its own word. For true synonyms, add `similar: ["other word"]` to the word in `data.ts` (B1 and C1). `getDistractors` then never offers them as wrong options. It already skips words with an identical translation/definition.
+- **Unambiguous examples (all trivia apps):** fill-in-the-blank options are 3 random words from the same topic, so every `example` must fit ONLY its own word. For true synonyms, add `similar: ["other word"]` to the word in `data.ts` (A2, A2+, B1 and C1). `getDistractors` then never offers them as wrong options. It already skips words with an identical translation/definition.
 - Purple colour scheme (`bg-purple-600`) distinguishes C1 from B1 apps
 
 ## Claude Code skills — `.claude/skills/`
@@ -286,6 +308,7 @@ Project skills auto-discovered by Claude Code (each must live at `.claude/skills
 |---|---|
 | `add-b1-topic` | Add a new B1 vocabulary topic (feeds b1-flashcards + b1-trivia) from a teacher wordlist |
 | `add-c1-topic` | Add a new C1 vocabulary topic (feeds c1-flashcards + c1-trivia); definition or translation mode |
+| `add-a2-topic` | Add a new A2 or A2+ vocabulary topic (level is the first argument; feeds a2- or a2plus-flashcards + trivia) |
 | `flashcards` | Build guide for creating a NEW flash-card app from scratch |
 
 The old `SKIILS/` folder was removed (2026-07-08) — its content was migrated/superseded here.
