@@ -4,13 +4,37 @@ import { SEASONS, THEMES, activeTheme, orthodoxEaster, pageLevel, seasonFor, typ
 
 const ymd = (d: Date) => [d.getFullYear(), d.getMonth() + 1, d.getDate()];
 
-const on =(month: number, day: number, seasons = SEASONS) => seasonFor(new Date(2026, month - 1, day), seasons);
+const on = (month: number, day: number, seasons = SEASONS) => seasonFor(new Date(2026, month - 1, day), seasons);
 
 test("Halloween runs from 24 October to 1 November", () => {
   assert.equal(on(10, 23), "");
   assert.equal(on(10, 24), "halloween");
   assert.equal(on(11, 1), "halloween");
   assert.equal(on(11, 2), "");
+});
+
+test("winter runs from 6 December to 10 January", () => {
+  assert.equal(on(12, 5), "");
+  assert.equal(on(12, 6), "winter");
+  assert.equal(on(1, 1), "winter");
+  assert.equal(on(1, 10), "winter");
+  assert.equal(on(1, 11), "");
+});
+
+test("Valentine's Day runs from 10 to 15 February", () => {
+  assert.equal(on(2, 9), "");
+  assert.equal(on(2, 10), "valentine");
+  assert.equal(on(2, 15), "valentine");
+  assert.equal(on(2, 16), "");
+});
+
+test("Easter runs from a week before to a week after Orthodox Easter", () => {
+  const at = (y: number, m: number, d: number) => seasonFor(new Date(y, m - 1, d));
+  assert.equal(at(2027, 4, 24), "");
+  assert.equal(at(2027, 4, 25), "easter");
+  assert.equal(at(2027, 5, 9), "easter");
+  assert.equal(at(2027, 5, 10), "");
+  assert.equal(at(2028, 4, 9), "easter");
 });
 
 test("a range can run over New Year", () => {

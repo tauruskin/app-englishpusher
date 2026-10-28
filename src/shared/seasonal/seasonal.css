@@ -17,12 +17,12 @@
 .ep-s-fly svg{animation:ep-s-flap .2s ease-in-out infinite alternate}
 @keyframes ep-s-across{0%{transform:translate(0,0)}25%{transform:translate(28vw,-6vh)}50%{transform:translate(56vw,4vh)}75%{transform:translate(84vw,-4vh)}100%{transform:translate(calc(100vw + 140px),2vh)}}
 @keyframes ep-s-flap{from{transform:scaleY(1)}to{transform:scaleY(.45)}}
-.ep-s-fall{top:-50px;width:24px;animation:ep-s-down 11s linear forwards}
+.ep-s-fall{top:var(--ep-s-top,0);width:24px;animation:ep-s-down 11s linear both}
 .ep-s-fall svg{animation:ep-s-spin 6s linear infinite}
-@keyframes ep-s-down{0%{transform:translate(0,0)}50%{transform:translate(-3vw,55vh)}100%{transform:translate(2vw,calc(100vh + 80px))}}
+@keyframes ep-s-down{0%{transform:translate(0,-20px);opacity:0}6%{opacity:1}50%{transform:translate(-3vw,50vh)}100%{transform:translate(2vw,calc(100vh + 40px))}}
 @keyframes ep-s-spin{to{transform:rotate(360deg)}}
-.ep-s-rise{bottom:-50px;width:26px;animation:ep-s-up 9s ease-in forwards}
-@keyframes ep-s-up{0%{transform:translate(0,0)}33%{transform:translate(2vw,-35vh)}66%{transform:translate(-2vw,-70vh)}100%{transform:translate(1vw,calc(-100vh - 80px));opacity:.4}}
+.ep-s-rise{bottom:-50px;width:26px;animation:ep-s-up 9s ease-in both}
+@keyframes ep-s-up{0%{transform:translate(0,0)}33%{transform:translate(2vw,-30vh)}66%{transform:translate(-2vw,-60vh);opacity:1}100%{transform:translate(1vw,calc(var(--ep-s-top,0px) - 100vh));opacity:0}}
 .ep-s-ctl{left:92px;bottom:12px;pointer-events:auto}
 .ep-s-ctl>button{width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid #d4d4d4;box-shadow:0 2px 6px rgba(0,0,0,.18);color:var(--ep-s-ink,#6b21a8);display:flex;align-items:center;justify-content:center}
 .ep-s-ctl>button:hover,.ep-s-ctl>button:focus-visible{border-color:var(--ep-s-ink,#6b21a8)}
