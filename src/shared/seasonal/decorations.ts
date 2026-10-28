@@ -60,6 +60,8 @@ export function startSeasonal(theme: string, level: PageLevel): () => void {
   const header = document.querySelector("header");
   const headerGap = Math.max(0, Math.round(header?.getBoundingClientRect().bottom ?? 0));
   root.style.setProperty("--ep-s-top", `${headerGap}px`);
+  root.style.setProperty("--ep-s-ink", art.accent.ink);
+  root.style.setProperty("--ep-s-soft", art.accent.soft);
 
   let mode = startMode();
   let lastWord = -1;
@@ -123,8 +125,9 @@ export function startSeasonal(theme: string, level: PageLevel): () => void {
     }, 2500);
   }
 
-  // Flyers cross the screen only when animated: three waves of three on the first page of the day,
-  // then one wave at most every FLY_GAP minutes (shared by all tabs).
+  // Flyers move only when animated, in the theme's kind of flight: bats "across" the screen,
+  // snowflakes or petals "fall", hearts or balloons "rise". Three waves on the first page of the
+  // day, then one wave at most every FLY_GAP minutes (shared by all tabs).
   function flyOnce() {
     if (shown() !== "full" || !art!.flyer) return;
     const now = Date.now();
@@ -133,13 +136,21 @@ export function startSeasonal(theme: string, level: PageLevel): () => void {
     const waves = read("localStorage", "ep-season-flew-day") === today ? [0] : [0, 1, 2];
     write("localStorage", "ep-season-flew-at", String(now));
     write("localStorage", "ep-season-flew-day", today);
+    const kind = art!.flight;
+    const spots = kind === "fall" ? [8, 22, 37, 52, 67, 82, 94] : kind === "rise" ? [14, 38, 62, 86] : [0, 900, 1700];
     for (const wave of waves) {
-      [0, 900, 1700].forEach((delay, n) => {
-        const f = el("div", "ep-s ep-s-fly", art!.flyer);
+      spots.forEach((spot, n) => {
+        const f = el("div", `ep-s ${kind === "across" ? "ep-s-fly" : `ep-s-${kind}`}`, art!.flyer);
         f.setAttribute("aria-hidden", "true");
-        f.style.top = `${12 + n * 9 + wave * 5}vh`;
-        f.style.width = `${56 - n * 10}px`;
-        f.style.animationDelay = `${wave * 7000 + delay}ms`;
+        if (kind === "across") {
+          f.style.top = `${12 + n * 9 + wave * 5}vh`;
+          f.style.width = `${56 - n * 10}px`;
+          f.style.animationDelay = `${wave * 7000 + spot}ms`;
+        } else {
+          f.style.left = `${spot + wave * 3}vw`;
+          f.style.width = `${kind === "fall" ? 16 + (n % 3) * 6 : 20 + (n % 2) * 8}px`;
+          f.style.animationDelay = `${wave * 7000 + n * 650}ms`;
+        }
         f.addEventListener("animationend", (e) => {
           if (e.target === f) f.remove();
         });
