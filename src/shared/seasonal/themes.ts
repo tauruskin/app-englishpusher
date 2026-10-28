@@ -4,15 +4,15 @@
 
 export type PageLevel = "full" | "quiet" | "";
 
-export interface Season {
-  theme: string;
-  from: [number, number]; // [month, day], inclusive
-  to: [number, number];
-}
+export type Season =
+  | { theme: string; from: [number, number]; to: [number, number] } // [month, day], inclusive
+  | { theme: string; easter: [number, number] }; // days before / after Orthodox Easter
 
 export interface Theme {
   name: string;
   greeting: string; // chip next to the hero badge on the hub page
+  accent: { ink: string; soft: string }; // ink: menu, card label and chip text; soft: chip and pressed-button background
+  flight: "across" | "fall" | "rise"; // how the flyer moves
   corner: string; // SVG: top right corner picture
   hanger: string; // SVG: hangs from the corner on a thread (clickable)
   ground: string; // SVG: sits in the bottom left (clickable)
@@ -21,12 +21,26 @@ export interface Theme {
   fact?: { title: string; uk: string; text: string }; // "Did you know?" card
 }
 
-// A range may run over New Year (from [12, 6] to [1, 10]). Add a row when a theme's art is ready.
+// A row is either from/to ([month, day], both inclusive; a range may run over New Year, from
+// [12, 6] to [1, 10]) or easter: [daysBefore, daysAfter] around Orthodox Easter, e.g.
+// { theme: "easter", easter: [-7, 7] }. Add a row when a theme's art is ready.
 export const SEASONS: Season[] = [{ theme: "halloween", from: [10, 24], to: [11, 1] }];
+
+// Orthodox Easter for a year (Meeus' Julian formula, moved to our calendar; right for 1900-2099).
+export function orthodoxEaster(year: number): Date {
+  const a = year % 4, b = year % 7, c = year % 19;
+  const d = (19 * c + 15) % 30, e = (2 * a + 4 * b - d + 34) % 7, n = d + e + 114;
+  return new Date(year, Math.floor(n / 31) - 1, (n % 31) + 1 + 13);
+}
 
 export function seasonFor(date: Date, seasons: Season[] = SEASONS): string {
   const md = (date.getMonth() + 1) * 100 + date.getDate();
+  const day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
   const hit = seasons.find((s) => {
+    if ("easter" in s) {
+      const diff = Math.round((day.getTime() - orthodoxEaster(day.getFullYear()).getTime()) / 86400000);
+      return diff >= s.easter[0] && diff <= s.easter[1];
+    }
     const from = s.from[0] * 100 + s.from[1];
     const to = s.to[0] * 100 + s.to[1];
     return from <= to ? md >= from && md <= to : md >= from || md <= to;
@@ -56,7 +70,7 @@ function webSvg(): string {
       d += `M${pt(rad, angles[i])}Q${pt(rad * 0.86, (angles[i] + angles[i + 1]) / 2)} ${pt(rad, angles[i + 1])}`;
     }
   }
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 170"><path d="${d}" fill="none" stroke="#7d8790" stroke-width="1"/></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 170"><path d="${d}" fill="none" stroke="#7d8790" stroke-width="1" stroke-opacity=".7"/></svg>`;
 }
 
 const SVG = 'xmlns="http://www.w3.org/2000/svg"';
@@ -65,6 +79,8 @@ export const THEMES: Record<string, Theme> = {
   halloween: {
     name: "Halloween",
     greeting: "Happy Halloween!",
+    accent: { ink: "#6b21a8", soft: "#f3e8ff" },
+    flight: "across",
     corner: webSvg(),
     hanger:
       `<svg ${SVG} viewBox="0 0 44 40"><g fill="none" stroke="#2b2d31" stroke-width="2" stroke-linecap="round">` +
