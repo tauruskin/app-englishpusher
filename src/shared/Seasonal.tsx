@@ -34,7 +34,8 @@ export function SeasonalGreeting() {
         e.stopPropagation();
         if (ref.current) showSeasonFact(ref.current);
       }}
-      className="inline-flex w-fit items-center gap-1.5 rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-800 hover:bg-purple-200 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-700"
+      className="inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold hover:brightness-95 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-current"
+      style={{ color: art.accent.ink, background: art.accent.soft }}
     >
       <span className="block w-4" aria-hidden="true" dangerouslySetInnerHTML={{ __html: art.ground }} />
       {art.greeting}
