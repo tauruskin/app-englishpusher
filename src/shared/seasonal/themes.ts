@@ -190,7 +190,7 @@ export const THEMES: Record<string, Theme> = {
       ["wrap a present", "загорнути подарунок", "I need some paper to wrap this present."],
       ["stocking", "різдвяна шкарпетка для подарунків", "Santa puts small gifts in the stocking."],
       ["Christmas Eve", "Святвечір", "We have a big family dinner on Christmas Eve."],
-      ["fireworks", "феєрверк", "At midnight, everyone went outside to watch the fireworks."],
+      ["fireworks", "феєрверк, феєрверки", "At midnight, everyone went outside to watch the fireworks."],
       ["New Year's resolution", "новорічна обіцянка собі", "My New Year's resolution is to read more books."],
       ["countdown", "зворотний відлік", "The countdown to midnight begins: ten, nine, eight..."],
       ["cosy (UK) / cozy (US)", "затишний", "It's so cosy by the fire."],
@@ -251,7 +251,7 @@ export const THEMES: Record<string, Theme> = {
       ["romantic", "романтичний", "What a romantic dinner!"],
       ["bouquet", "букет", "He gave her a bouquet of red roses."],
       ["heart-shaped", "у формі серця", "She baked heart-shaped cookies."],
-      ["propose", "освідчитися", "He proposed to her on Valentine's Day."],
+      ["propose", "зробити пропозицію", "He proposed to her on Valentine's Day."],
       ["be into someone", "бути захопленим кимось", "I'm really into him, but he doesn't know."],
     ],
     fact: {
@@ -369,7 +369,7 @@ export const THEMES: Record<string, Theme> = {
 // The theme on today (or the one in ?ep-season=<theme>, to check a theme on any date).
 export function activeTheme(search: string, now: Date = new Date()): string {
   const forced = /[?&]ep-season=([a-z]+)/.exec(search)?.[1];
-  if (forced && THEMES[forced]) return forced;
+  if (forced && Object.prototype.hasOwnProperty.call(THEMES, forced)) return forced;
   const theme = seasonFor(now);
   return THEMES[theme] ? theme : "";
 }

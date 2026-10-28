@@ -137,7 +137,7 @@ export function startSeasonal(theme: string, level: PageLevel): () => void {
     write("localStorage", "ep-season-flew-at", String(now));
     write("localStorage", "ep-season-flew-day", today);
     const kind = art!.flight;
-    const spots = kind === "fall" ? [8, 22, 37, 52, 67, 82, 94] : kind === "rise" ? [14, 38, 62, 86] : [0, 900, 1700];
+    const spots = kind === "fall" ? [8, 22, 37, 52, 67, 82, 90] : kind === "rise" ? [14, 38, 62, 86] : [0, 900, 1700];
     for (const wave of waves) {
       spots.forEach((spot, n) => {
         const f = el("div", `ep-s ${kind === "across" ? "ep-s-fly" : `ep-s-${kind}`}`, art!.flyer);
@@ -175,6 +175,8 @@ export function startSeasonal(theme: string, level: PageLevel): () => void {
 
   function draw() {
     deco.forEach((node) => node.remove());
+    // Flyers already on their way stop too when the student picks Still or Off.
+    root.querySelectorAll(".ep-s-fly, .ep-s-fall, .ep-s-rise").forEach((node) => node.remove());
     deco = [];
     closeBubble();
     root.className = `ep-s-${shown()}`;

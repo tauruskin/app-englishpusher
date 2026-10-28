@@ -105,5 +105,6 @@ test("?ep-season= shows a theme on any date; unknown names are ignored", () => {
   assert.equal(activeTheme("?ep-season=halloween", june), "halloween");
   assert.equal(activeTheme("?topic=jobs&ep-season=halloween", june), "halloween");
   assert.equal(activeTheme("?ep-season=nope", june), "");
+  assert.equal(activeTheme("?ep-season=constructor", june), "");
   assert.equal(activeTheme("", new Date(2026, 9, 30)), "halloween");
 });
