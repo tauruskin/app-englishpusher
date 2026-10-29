@@ -90,6 +90,28 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Lesson 2: Professions | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-2-professions |
 | Rooms and Furniture | https://app.englishpusher.in.ua/a2-flashcards/?topic=rooms-and-furniture |
 | Lesson 1: Hello! | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-1-hello |
+| Everyday Objects | https://app.englishpusher.in.ua/a2-flashcards/?topic=everyday-objects |
+| Colours | https://app.englishpusher.in.ua/a2-flashcards/?topic=colours |
+| Countries and Nationalities | https://app.englishpusher.in.ua/a2-flashcards/?topic=countries-and-nationalities |
+| Days of the Week | https://app.englishpusher.in.ua/a2-flashcards/?topic=days-of-the-week |
+| Common Verb Phrases | https://app.englishpusher.in.ua/a2-flashcards/?topic=common-verb-phrases |
+| Family | https://app.englishpusher.in.ua/a2-flashcards/?topic=family |
+| Everyday Activities | https://app.englishpusher.in.ua/a2-flashcards/?topic=everyday-activities |
+| Social Phrases and Excuses | https://app.englishpusher.in.ua/a2-flashcards/?topic=social-phrases-and-excuses |
+| Months and Dates | https://app.englishpusher.in.ua/a2-flashcards/?topic=months-and-dates |
+| Ordinal Numbers | https://app.englishpusher.in.ua/a2-flashcards/?topic=ordinal-numbers |
+| Amounts | https://app.englishpusher.in.ua/a2-flashcards/?topic=amounts |
+| Big Numbers | https://app.englishpusher.in.ua/a2-flashcards/?topic=big-numbers |
+| Weather and Seasons | https://app.englishpusher.in.ua/a2-flashcards/?topic=weather-and-seasons |
+| Time Phrases | https://app.englishpusher.in.ua/a2-flashcards/?topic=time-phrases |
+| Life Events | https://app.englishpusher.in.ua/a2-flashcards/?topic=life-events |
+| Saying the Time | https://app.englishpusher.in.ua/a2-flashcards/?topic=saying-the-time |
+| Places in Town | https://app.englishpusher.in.ua/a2-flashcards/?topic=places-in-town |
+| Phrasal Verbs | https://app.englishpusher.in.ua/a2-flashcards/?topic=phrasal-verbs |
+| Phoning | https://app.englishpusher.in.ua/a2-flashcards/?topic=phoning |
+| Describing Places | https://app.englishpusher.in.ua/a2-flashcards/?topic=describing-places |
+| Travel Activities | https://app.englishpusher.in.ua/a2-flashcards/?topic=travel-activities |
+| Hotels | https://app.englishpusher.in.ua/a2-flashcards/?topic=hotels |
 
 **A2 Vocabulary Trivia** (`/a2-trivia/`):
 
@@ -108,6 +130,28 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Lesson 2: Professions | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-2-professions |
 | Rooms and Furniture | https://app.englishpusher.in.ua/a2-trivia/?topic=rooms-and-furniture |
 | Lesson 1: Hello! | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-1-hello |
+| Everyday Objects | https://app.englishpusher.in.ua/a2-trivia/?topic=everyday-objects |
+| Colours | https://app.englishpusher.in.ua/a2-trivia/?topic=colours |
+| Countries and Nationalities | https://app.englishpusher.in.ua/a2-trivia/?topic=countries-and-nationalities |
+| Days of the Week | https://app.englishpusher.in.ua/a2-trivia/?topic=days-of-the-week |
+| Common Verb Phrases | https://app.englishpusher.in.ua/a2-trivia/?topic=common-verb-phrases |
+| Family | https://app.englishpusher.in.ua/a2-trivia/?topic=family |
+| Everyday Activities | https://app.englishpusher.in.ua/a2-trivia/?topic=everyday-activities |
+| Social Phrases and Excuses | https://app.englishpusher.in.ua/a2-trivia/?topic=social-phrases-and-excuses |
+| Months and Dates | https://app.englishpusher.in.ua/a2-trivia/?topic=months-and-dates |
+| Ordinal Numbers | https://app.englishpusher.in.ua/a2-trivia/?topic=ordinal-numbers |
+| Amounts | https://app.englishpusher.in.ua/a2-trivia/?topic=amounts |
+| Big Numbers | https://app.englishpusher.in.ua/a2-trivia/?topic=big-numbers |
+| Weather and Seasons | https://app.englishpusher.in.ua/a2-trivia/?topic=weather-and-seasons |
+| Time Phrases | https://app.englishpusher.in.ua/a2-trivia/?topic=time-phrases |
+| Life Events | https://app.englishpusher.in.ua/a2-trivia/?topic=life-events |
+| Saying the Time | https://app.englishpusher.in.ua/a2-trivia/?topic=saying-the-time |
+| Places in Town | https://app.englishpusher.in.ua/a2-trivia/?topic=places-in-town |
+| Phrasal Verbs | https://app.englishpusher.in.ua/a2-trivia/?topic=phrasal-verbs |
+| Phoning | https://app.englishpusher.in.ua/a2-trivia/?topic=phoning |
+| Describing Places | https://app.englishpusher.in.ua/a2-trivia/?topic=describing-places |
+| Travel Activities | https://app.englishpusher.in.ua/a2-trivia/?topic=travel-activities |
+| Hotels | https://app.englishpusher.in.ua/a2-trivia/?topic=hotels |
 
 **A2+ Vocabulary Cards** (`/a2plus-flashcards/`):
 
