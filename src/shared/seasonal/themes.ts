@@ -55,7 +55,7 @@ export function seasonFor(date: Date, seasons: Season[] = SEASONS): string {
 
 // Pages where students choose what to do get everything; practice pages (flash cards, trivia,
 // games) get the same pictures completely still, with no bats and no pop-up card.
-const FULL_PAGES = ["", "account", "a2-vocabulary", "a2plus-vocabulary", "b1-vocabulary", "c1-business"];
+const FULL_PAGES = ["", "account", "a2-vocabulary", "a2plus-vocabulary", "b1-vocabulary", "b1plus-vocabulary", "c1-business"];
 
 export function pageLevel(pathname: string): PageLevel {
   const first = pathname.replace(/index\.html$/, "").split("/").filter(Boolean)[0] ?? "";

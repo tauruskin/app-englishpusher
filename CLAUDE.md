@@ -20,6 +20,7 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 | C1 Vocabulary Trivia | https://app.englishpusher.in.ua/c1-trivia/ |
 | A2 Vocabulary (chooser page) | https://app.englishpusher.in.ua/a2-vocabulary/ |
 | A2+ Vocabulary (chooser page) | https://app.englishpusher.in.ua/a2plus-vocabulary/ |
+| B1+ Vocabulary (chooser page) | https://app.englishpusher.in.ua/b1plus-vocabulary/ |
 | My Account (login + personal page) | https://app.englishpusher.in.ua/account/ |
 | Instagram | https://www.instagram.com/teti_push_english?igsh=MWMxbGxodnJrOHI2 |
 
@@ -269,6 +270,16 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Attitudes | https://app.englishpusher.in.ua/a2plus-trivia/?topic=attitudes |
 | The Environment | https://app.englishpusher.in.ua/a2plus-trivia/?topic=the-environment |
 
+**B1+ Vocabulary Cards** (`/b1plus-flashcards/`):
+
+| Topic | Direct link |
+|---|---|
+
+**B1+ Vocabulary Trivia** (`/b1plus-trivia/`):
+
+| Topic | Direct link |
+|---|---|
+
 **How it works:** `?topic=<id>` is read on mount via `URLSearchParams`. The URL updates automatically when the user selects a topic, and clears when they go back to the topic list. The `id` field in `TOPICS` in `data.ts` is the canonical key — keep it stable, never rename it after publishing.
 
 **When adding a new topic:** add the direct link to this table immediately.
@@ -399,8 +410,8 @@ Holiday decorations switched on by date (Halloween 24 Oct – 1 Nov so far; wint
 - **Vite MPA**: `vite.config.ts` uses `build.rollupOptions.input` with one entry per app. Each builds to its own path in `dist/`. Source HTML lives in `apps/<name>/index.html`; a post-build plugin moves them to `dist/<name>/index.html` so deployed URLs stay as `/<name>/`.
 - **Dev rewrite plugin**: `configureServer` middleware rewrites `/<app>/*` → `/apps/<app>/*` in dev so local URLs match deployed URLs exactly.
 - Hub lives in a **single `Index.tsx`** — no routing, no sub-pages.
-- App cards data lives in the `ITEMS` array at the top of `Index.tsx` — easy to update. Each item has a `level: "A2" | "A2+" | "B1" | "C1"` field used by the level tabs. Tab and card order comes from `src/hub/order.ts`: A-levels with topics first, then B1/C1, then A-levels still "Coming soon" (their cards are disabled with a badge while their `TOPICS` list is empty).
-- **Level pages (A2, A2+, B1):** one shared set of pages in `src/levels/` (`VocabularyPage`, `FlashcardsPage`, `TriviaPage`), mounted per level by `src/<slug>-<page>/main.tsx` via `mountLevelPage()`. Words live in `src/<slug>-flashcards/data.ts` (`a2`, `a2plus`, `b1`); the level config is next to it in `level.ts`. C1 keeps its own separate pages. Flashcards/Trivia of a level with no topics redirect to its Vocabulary page, which shows "Coming soon".
+- App cards data lives in the `ITEMS` array at the top of `Index.tsx` — easy to update. Each item has a `level: "A2" | "A2+" | "B1" | "B1+" | "C1"` field used by the level tabs. Tab and card order comes from `src/hub/order.ts`: levels with topics first, easiest first (A2, A2+, B1, B1+, C1), then levels still "Coming soon" (their cards are disabled with a badge while their `TOPICS` list is empty).
+- **Level pages (A2, A2+, B1, B1+):** one shared set of pages in `src/levels/` (`VocabularyPage`, `FlashcardsPage`, `TriviaPage`), mounted per level by `src/<slug>-<page>/main.tsx` via `mountLevelPage()`. Words live in `src/<slug>-flashcards/data.ts` (`a2`, `a2plus`, `b1`, `b1plus`); the level config is next to it in `level.ts`. C1 keeps its own separate pages. Flashcards/Trivia of a level with no topics redirect to its Vocabulary page, which shows "Coming soon".
 - **Background colour must be set on `body` in `index.css`**, NOT on the `motion.div` wrapper — otherwise motion's transform creates a stacking context that hides any background layer behind it.
 - **WSL HMR fix**: `server: { watch: { usePolling: true } }` in `vite.config.ts` — inotify can't watch Windows filesystem from WSL.
 
@@ -431,6 +442,7 @@ Left: copyright + main site link. Right: Instagram icon + handle.
 | 1 | B1 | B1 Grammar Testing | https://grammar.englishpusher.in.ua | Live |
 | 2 | B1 | B1 Vocabulary | /b1-vocabulary/ | Live — crimson `#9f1239` card, chooser page |
 | 3 | C1 | C1 Vocabulary | /c1-business/ | Live — chooser page |
+| 6 | B1+ | B1+ Vocabulary | /b1plus-vocabulary/ | "Coming soon" until `src/b1plus-flashcards/data.ts` has a topic — fuchsia `#a21caf` card, chooser page |
 
 Hub has level tabs (All / B1 / C1) above the accordion — filters `filteredItems`.
 
@@ -494,6 +506,7 @@ Project skills auto-discovered by Claude Code (each must live at `.claude/skills
 | `add-b1-topic` | Add a new B1 vocabulary topic (feeds b1-flashcards + b1-trivia) from a teacher wordlist |
 | `add-c1-topic` | Add a new C1 vocabulary topic (feeds c1-flashcards + c1-trivia); definition or translation mode |
 | `add-a2-topic` | Add a new A2 or A2+ vocabulary topic (level is the first argument; feeds a2- or a2plus-flashcards + trivia) |
+| `add-b1plus-topic` | Add a new B1+ vocabulary topic (feeds b1plus-flashcards + trivia; Claude Code only — not connected to the Telegram bot yet) |
 | `flashcards` | Build guide for creating a NEW flash-card app from scratch |
 
 The old `SKIILS/` folder was removed (2026-07-08) — its content was migrated/superseded here.

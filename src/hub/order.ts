@@ -1,13 +1,14 @@
-export type HubLevel = "A2" | "A2+" | "B1" | "C1";
+export type HubLevel = "A2" | "A2+" | "B1" | "B1+" | "C1";
 
-const A_LEVELS = ["A2", "A2+"] as const;
+const ALL_LEVELS: HubLevel[] = ["A2", "A2+", "B1", "B1+", "C1"];
+// Levels that can still be "Coming soon"; B1 and C1 always have topics.
+type NewLevel = "A2" | "A2+" | "B1+";
 
-// Hub order (teacher's rule, 2026-10-26): A-levels with topics come first, easiest first;
-// then B1 and C1; A-levels still "Coming soon" go last.
-export function hubLevelOrder(live: Record<(typeof A_LEVELS)[number], boolean>): HubLevel[] {
-  const liveA = A_LEVELS.filter((l) => live[l]);
-  const soonA = A_LEVELS.filter((l) => !live[l]);
-  return [...liveA, "B1", "C1", ...soonA];
+// Hub order (teacher's rule, 2026-10-26; B1+ added 2026-10-29): levels with topics come first,
+// easiest first (A2, A2+, B1, B1+, C1); levels still "Coming soon" go last.
+export function hubLevelOrder(live: Record<NewLevel, boolean>): HubLevel[] {
+  const isLive = (l: HubLevel) => (l in live ? live[l as NewLevel] : true);
+  return [...ALL_LEVELS.filter(isLive), ...ALL_LEVELS.filter((l) => !isLive(l))];
 }
 
 // Stable sort by level position, so cards of one level keep their written order.

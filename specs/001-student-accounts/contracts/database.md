@@ -2,7 +2,7 @@
 
 Authoritative DDL — run once in the Supabase SQL editor (idempotent where practical). Any schema change updates this file first.
 
-Widened for A2 / A2+ on 2026-10-26 (applied 2026-10-27) — see `2026-10-26-a2-levels.sql`.
+Widened for A2 / A2+ on 2026-10-26 (applied 2026-10-27) — see `2026-10-26-a2-levels.sql`. Widened for B1+ on 2026-10-29 — see `2026-10-29-b1plus-level.sql`.
 
 ```sql
 -- ============ profiles ============
@@ -51,7 +51,7 @@ create trigger on_auth_user_created
 create table public.trivia_results (
   id            uuid primary key default gen_random_uuid(),
   user_id       uuid not null references auth.users (id) on delete cascade,
-  app           text not null check (app in ('a2-trivia', 'a2plus-trivia', 'b1-trivia', 'c1-trivia')),
+  app           text not null check (app in ('a2-trivia', 'a2plus-trivia', 'b1-trivia', 'b1plus-trivia', 'c1-trivia')),
   topic_id      text not null,
   score_pct     smallint not null check (score_pct between 0 and 100),
   correct_words text[] not null default '{}',
@@ -75,7 +75,7 @@ create table public.saved_words (
   id         uuid primary key default gen_random_uuid(),
   user_id    uuid not null references auth.users (id) on delete cascade,
   word       text not null,
-  level      text not null check (level in ('A2', 'A2+', 'B1', 'C1')),
+  level      text not null check (level in ('A2', 'A2+', 'B1', 'B1+', 'C1')),
   topic_id   text not null,
   source     text not null check (source in ('flashcards', 'trivia')),
   created_at timestamptz not null default now(),
@@ -97,7 +97,7 @@ create policy "own saved delete" on public.saved_words
 create table public.study_events (
   id         uuid primary key default gen_random_uuid(),
   user_id    uuid not null references auth.users (id) on delete cascade,
-  app        text not null check (app in ('a2-flashcards', 'a2plus-flashcards', 'b1-flashcards', 'c1-flashcards')),
+  app        text not null check (app in ('a2-flashcards', 'a2plus-flashcards', 'b1-flashcards', 'b1plus-flashcards', 'c1-flashcards')),
   topic_id   text not null,
   created_at timestamptz not null default now()
 );

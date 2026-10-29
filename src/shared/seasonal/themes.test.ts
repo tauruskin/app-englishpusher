@@ -89,7 +89,7 @@ test("every theme in SEASONS has art, words and a ground picture", () => {
 });
 
 test("hub, level pages and account get everything", () => {
-  for (const path of ["/", "/index.html", "/b1-vocabulary/", "/c1-business/", "/a2-vocabulary/", "/a2plus-vocabulary/", "/account/"]) {
+  for (const path of ["/", "/index.html", "/b1-vocabulary/", "/c1-business/", "/a2-vocabulary/", "/a2plus-vocabulary/", "/b1plus-vocabulary/", "/account/"]) {
     assert.equal(pageLevel(path), "full", path);
   }
 });
