@@ -165,6 +165,27 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Positive Adjectives | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=positive-adjectives |
 | School and University Subjects | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=school-and-university-subjects |
 | School Rules | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=school-rules |
+| Feelings | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=feelings |
+| Animals | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=animals |
+| At the Airport | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=at-the-airport |
+| Knowing and Understanding | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=knowing-and-understanding |
+| Irregular Past Participles | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=irregular-past-participles |
+| Travel | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=travel |
+| Giving Gifts | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=giving-gifts |
+| Money and Value | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=money-and-value |
+| Countable and Uncountable Nouns | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=countable-and-uncountable-nouns |
+| Common Adjectives | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=common-adjectives |
+| Sports Collocations | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=sports-collocations |
+| Physical Actions | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=physical-actions |
+| Health and Illness | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=health-and-illness |
+| The Body and Symptoms | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=the-body-and-symptoms |
+| Going Out and Staying In | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=going-out-and-staying-in |
+| Eating In | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=eating-in |
+| Containers | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=containers |
+| Permission | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=permission |
+| Technology and Change | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=technology-and-change |
+| Attitudes | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=attitudes |
+| The Environment | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=the-environment |
 
 **A2+ Vocabulary Trivia** (`/a2plus-trivia/`):
 
@@ -178,6 +199,27 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Positive Adjectives | https://app.englishpusher.in.ua/a2plus-trivia/?topic=positive-adjectives |
 | School and University Subjects | https://app.englishpusher.in.ua/a2plus-trivia/?topic=school-and-university-subjects |
 | School Rules | https://app.englishpusher.in.ua/a2plus-trivia/?topic=school-rules |
+| Feelings | https://app.englishpusher.in.ua/a2plus-trivia/?topic=feelings |
+| Animals | https://app.englishpusher.in.ua/a2plus-trivia/?topic=animals |
+| At the Airport | https://app.englishpusher.in.ua/a2plus-trivia/?topic=at-the-airport |
+| Knowing and Understanding | https://app.englishpusher.in.ua/a2plus-trivia/?topic=knowing-and-understanding |
+| Irregular Past Participles | https://app.englishpusher.in.ua/a2plus-trivia/?topic=irregular-past-participles |
+| Travel | https://app.englishpusher.in.ua/a2plus-trivia/?topic=travel |
+| Giving Gifts | https://app.englishpusher.in.ua/a2plus-trivia/?topic=giving-gifts |
+| Money and Value | https://app.englishpusher.in.ua/a2plus-trivia/?topic=money-and-value |
+| Countable and Uncountable Nouns | https://app.englishpusher.in.ua/a2plus-trivia/?topic=countable-and-uncountable-nouns |
+| Common Adjectives | https://app.englishpusher.in.ua/a2plus-trivia/?topic=common-adjectives |
+| Sports Collocations | https://app.englishpusher.in.ua/a2plus-trivia/?topic=sports-collocations |
+| Physical Actions | https://app.englishpusher.in.ua/a2plus-trivia/?topic=physical-actions |
+| Health and Illness | https://app.englishpusher.in.ua/a2plus-trivia/?topic=health-and-illness |
+| The Body and Symptoms | https://app.englishpusher.in.ua/a2plus-trivia/?topic=the-body-and-symptoms |
+| Going Out and Staying In | https://app.englishpusher.in.ua/a2plus-trivia/?topic=going-out-and-staying-in |
+| Eating In | https://app.englishpusher.in.ua/a2plus-trivia/?topic=eating-in |
+| Containers | https://app.englishpusher.in.ua/a2plus-trivia/?topic=containers |
+| Permission | https://app.englishpusher.in.ua/a2plus-trivia/?topic=permission |
+| Technology and Change | https://app.englishpusher.in.ua/a2plus-trivia/?topic=technology-and-change |
+| Attitudes | https://app.englishpusher.in.ua/a2plus-trivia/?topic=attitudes |
+| The Environment | https://app.englishpusher.in.ua/a2plus-trivia/?topic=the-environment |
 
 **How it works:** `?topic=<id>` is read on mount via `URLSearchParams`. The URL updates automatically when the user selects a topic, and clears when they go back to the topic list. The `id` field in `TOPICS` in `data.ts` is the canonical key — keep it stable, never rename it after publishing.
 
