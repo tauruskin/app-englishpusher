@@ -501,8 +501,6 @@ export const TOPICS: Topic[] = [
       { word: "Polish", translation: "польський / поляк", transcription: "/ˈpəʊlɪʃ/", example: "Piotr is from Poland, so he is ___." },
       { word: "Portugal", translation: "Португалія", transcription: "/ˈpɔːtʃəɡəl/", example: "Lisbon is the capital of ___." },
       { word: "Portuguese", translation: "португальський / португалець", transcription: "/ˌpɔːtʃəˈɡiːz/", example: "Rui is from Portugal, so he is ___." },
-      { word: "Russia", translation: "Росія", transcription: "/ˈrʌʃə/", example: "Moscow is the capital city of ___." },
-      { word: "Russian", translation: "російський / росіянин", transcription: "/ˈrʌʃən/", example: "Olga is from Russia, so she is ___." },
       { word: "Scotland", translation: "Шотландія", transcription: "/ˈskɒtlənd/", example: "Edinburgh is the capital city of ___." },
       { word: "Scottish", translation: "шотландський / шотландець", transcription: "/ˈskɒtɪʃ/", example: "Ewan is from Scotland, so he is ___." },
       { word: "South Africa", translation: "Південна Африка", transcription: "/ˌsaʊθ ˈæfrɪkə/", example: "Cape Town is a big city in ___." },
