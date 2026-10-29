@@ -15,9 +15,10 @@ import { flashcardsAppId, pageUrl, triviaAppId } from "../levels/level.ts";
 import { A2 } from "../a2-flashcards/level.ts";
 import { A2PLUS } from "../a2plus-flashcards/level.ts";
 import { B1 } from "../b1-flashcards/level.ts";
+import { B1PLUS } from "../b1plus-flashcards/level.ts";
 
 // Levels whose words carry a Ukrainian translation and share the level pages; C1 is separate.
-const TRANSLATION_LEVELS: LevelConfig[] = [A2, A2PLUS, B1];
+const TRANSLATION_LEVELS: LevelConfig[] = [A2, A2PLUS, B1, B1PLUS];
 
 function topicsForApp(app: AppId): { id: string; title: string }[] {
   const level = TRANSLATION_LEVELS.find((l) => app === flashcardsAppId(l) || app === triviaAppId(l));
@@ -34,10 +35,12 @@ const APP_LABEL: Record<AppId, string> = {
   "a2-trivia": "A2 Trivia",
   "a2plus-trivia": "A2+ Trivia",
   "b1-trivia": "B1 Trivia",
+  "b1plus-trivia": "B1+ Trivia",
   "c1-trivia": "C1 Trivia",
   "a2-flashcards": "A2 Flash Cards",
   "a2plus-flashcards": "A2+ Flash Cards",
   "b1-flashcards": "B1 Flash Cards",
+  "b1plus-flashcards": "B1+ Flash Cards",
   "c1-flashcards": "C1 Flash Cards",
 };
 
@@ -363,7 +366,7 @@ function WeakWordsList({ weakWords }: { weakWords: WeakWord[] }) {
   );
 }
 
-// Meaning shown next to a saved word: A2, A2+ and B1 words carry a Ukrainian
+// Meaning shown next to a saved word: A2, A2+, B1 and B1+ words carry a Ukrainian
 // translation; C1 words follow the definition-or-translation convention.
 function wordMeaning(level: Level, topicId: string, word: string): string | null {
   const translationLevel = TRANSLATION_LEVELS.find((l) => l.id === level);
@@ -380,9 +383,10 @@ function MyWordsSection() {
     A2: useSavedWords("A2"),
     "A2+": useSavedWords("A2+"),
     B1: useSavedWords("B1"),
+    "B1+": useSavedWords("B1+"),
     C1: useSavedWords("C1"),
   };
-  const LEVELS: Level[] = ["A2", "A2+", "B1", "C1"];
+  const LEVELS: Level[] = ["A2", "A2+", "B1", "B1+", "C1"];
 
   const rows = LEVELS.flatMap((level) =>
     saved[level].savedWords.map((s) => ({ ...s, meaning: wordMeaning(level, s.topicId, s.word) })),
