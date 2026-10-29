@@ -274,11 +274,65 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 
 | Topic | Direct link |
 |---|---|
+| Collocations | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=collocations |
+| Describing Possessions | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=describing-possessions |
+| Materials | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=materials |
+| Personal Preferences | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=personal-preferences |
+| Phrasal Verbs: Housework | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=phrasal-verbs-housework |
+| Making Changes | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=making-changes |
+| Collocations: Feelings and Be | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=collocations-feelings-and-be |
+| Pet Hates | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=pet-hates |
+| Work | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=work |
+| Personality Adjectives | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=personality-adjectives |
+| Negative Prefixes | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=negative-prefixes |
+| Truth and Lies | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=truth-and-lies |
+| Films and Film-making | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=films-and-film-making |
+| The News | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=the-news |
+| Advertising | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=advertising |
+| Money | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=money |
+| Describing Products | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=describing-products |
+| City Life and Transport | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=city-life-and-transport |
+| Challenges | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=challenges |
+| Reporting Verbs | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=reporting-verbs |
+| Ways of Speaking | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=ways-of-speaking |
+| Computers and the Internet | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=computers-and-the-internet |
+| Adverbs | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=adverbs |
+| Phrases of Advice | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=phrases-of-advice |
+| Learning | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=learning |
+| Phrasal Verbs | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=phrasal-verbs |
+| Presenting | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=presenting |
 
 **B1+ Vocabulary Trivia** (`/b1plus-trivia/`):
 
 | Topic | Direct link |
 |---|---|
+| Collocations | https://app.englishpusher.in.ua/b1plus-trivia/?topic=collocations |
+| Describing Possessions | https://app.englishpusher.in.ua/b1plus-trivia/?topic=describing-possessions |
+| Materials | https://app.englishpusher.in.ua/b1plus-trivia/?topic=materials |
+| Personal Preferences | https://app.englishpusher.in.ua/b1plus-trivia/?topic=personal-preferences |
+| Phrasal Verbs: Housework | https://app.englishpusher.in.ua/b1plus-trivia/?topic=phrasal-verbs-housework |
+| Making Changes | https://app.englishpusher.in.ua/b1plus-trivia/?topic=making-changes |
+| Collocations: Feelings and Be | https://app.englishpusher.in.ua/b1plus-trivia/?topic=collocations-feelings-and-be |
+| Pet Hates | https://app.englishpusher.in.ua/b1plus-trivia/?topic=pet-hates |
+| Work | https://app.englishpusher.in.ua/b1plus-trivia/?topic=work |
+| Personality Adjectives | https://app.englishpusher.in.ua/b1plus-trivia/?topic=personality-adjectives |
+| Negative Prefixes | https://app.englishpusher.in.ua/b1plus-trivia/?topic=negative-prefixes |
+| Truth and Lies | https://app.englishpusher.in.ua/b1plus-trivia/?topic=truth-and-lies |
+| Films and Film-making | https://app.englishpusher.in.ua/b1plus-trivia/?topic=films-and-film-making |
+| The News | https://app.englishpusher.in.ua/b1plus-trivia/?topic=the-news |
+| Advertising | https://app.englishpusher.in.ua/b1plus-trivia/?topic=advertising |
+| Money | https://app.englishpusher.in.ua/b1plus-trivia/?topic=money |
+| Describing Products | https://app.englishpusher.in.ua/b1plus-trivia/?topic=describing-products |
+| City Life and Transport | https://app.englishpusher.in.ua/b1plus-trivia/?topic=city-life-and-transport |
+| Challenges | https://app.englishpusher.in.ua/b1plus-trivia/?topic=challenges |
+| Reporting Verbs | https://app.englishpusher.in.ua/b1plus-trivia/?topic=reporting-verbs |
+| Ways of Speaking | https://app.englishpusher.in.ua/b1plus-trivia/?topic=ways-of-speaking |
+| Computers and the Internet | https://app.englishpusher.in.ua/b1plus-trivia/?topic=computers-and-the-internet |
+| Adverbs | https://app.englishpusher.in.ua/b1plus-trivia/?topic=adverbs |
+| Phrases of Advice | https://app.englishpusher.in.ua/b1plus-trivia/?topic=phrases-of-advice |
+| Learning | https://app.englishpusher.in.ua/b1plus-trivia/?topic=learning |
+| Phrasal Verbs | https://app.englishpusher.in.ua/b1plus-trivia/?topic=phrasal-verbs |
+| Presenting | https://app.englishpusher.in.ua/b1plus-trivia/?topic=presenting |
 
 **How it works:** `?topic=<id>` is read on mount via `URLSearchParams`. The URL updates automatically when the user selects a topic, and clears when they go back to the topic list. The `id` field in `TOPICS` in `data.ts` is the canonical key — keep it stable, never rename it after publishing.
 
