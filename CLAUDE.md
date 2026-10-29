@@ -40,6 +40,30 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-flashcards/?topic=collocations-get-make |
 | Lesson 18: Unit 2 Review | https://app.englishpusher.in.ua/b1-flashcards/?topic=lesson-18-review |
 | Lesson 19: Facts and Figures | https://app.englishpusher.in.ua/b1-flashcards/?topic=lesson-19-facts-figures |
+| Common Phrases | https://app.englishpusher.in.ua/b1-flashcards/?topic=common-phrases |
+| Conversation Topics | https://app.englishpusher.in.ua/b1-flashcards/?topic=conversation-topics |
+| Decisions | https://app.englishpusher.in.ua/b1-flashcards/?topic=decisions |
+| University Facilities | https://app.englishpusher.in.ua/b1-flashcards/?topic=university-facilities |
+| Places in a City | https://app.englishpusher.in.ua/b1-flashcards/?topic=places-in-a-city |
+| Success | https://app.englishpusher.in.ua/b1-flashcards/?topic=success |
+| Technology Collocations | https://app.englishpusher.in.ua/b1-flashcards/?topic=technology-collocations |
+| Word Building: Suffixes | https://app.englishpusher.in.ua/b1-flashcards/?topic=word-building-suffixes |
+| Sports and Games | https://app.englishpusher.in.ua/b1-flashcards/?topic=sports-and-games |
+| Sport: People, Places and Actions | https://app.englishpusher.in.ua/b1-flashcards/?topic=sport-people-places-actions |
+| News and Social Media | https://app.englishpusher.in.ua/b1-flashcards/?topic=news-and-social-media |
+| Social Issues and the Environment | https://app.englishpusher.in.ua/b1-flashcards/?topic=social-issues-and-the-environment |
+| Creativity: Word Building | https://app.englishpusher.in.ua/b1-flashcards/?topic=creativity-word-building |
+| Events and Occasions | https://app.englishpusher.in.ua/b1-flashcards/?topic=events-and-occasions |
+| Extreme Adjectives | https://app.englishpusher.in.ua/b1-flashcards/?topic=extreme-adjectives |
+| The Arts | https://app.englishpusher.in.ua/b1-flashcards/?topic=the-arts |
+| Travel and Tourism | https://app.englishpusher.in.ua/b1-flashcards/?topic=travel-and-tourism |
+| New Experiences | https://app.englishpusher.in.ua/b1-flashcards/?topic=new-experiences |
+| The Natural World | https://app.englishpusher.in.ua/b1-flashcards/?topic=the-natural-world |
+| Describing Places | https://app.englishpusher.in.ua/b1-flashcards/?topic=describing-places |
+| Practical Abilities | https://app.englishpusher.in.ua/b1-flashcards/?topic=practical-abilities |
+| Video Collocations | https://app.englishpusher.in.ua/b1-flashcards/?topic=video-collocations |
+| Using Technology | https://app.englishpusher.in.ua/b1-flashcards/?topic=using-technology |
+| Technical Problems | https://app.englishpusher.in.ua/b1-flashcards/?topic=technical-problems |
 
 **B1 Vocabulary Trivia** (`/b1-trivia/`):
 
@@ -54,6 +78,30 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-trivia/?topic=collocations-get-make |
 | Lesson 18: Unit 2 Review | https://app.englishpusher.in.ua/b1-trivia/?topic=lesson-18-review |
 | Lesson 19: Facts and Figures | https://app.englishpusher.in.ua/b1-trivia/?topic=lesson-19-facts-figures |
+| Common Phrases | https://app.englishpusher.in.ua/b1-trivia/?topic=common-phrases |
+| Conversation Topics | https://app.englishpusher.in.ua/b1-trivia/?topic=conversation-topics |
+| Decisions | https://app.englishpusher.in.ua/b1-trivia/?topic=decisions |
+| University Facilities | https://app.englishpusher.in.ua/b1-trivia/?topic=university-facilities |
+| Places in a City | https://app.englishpusher.in.ua/b1-trivia/?topic=places-in-a-city |
+| Success | https://app.englishpusher.in.ua/b1-trivia/?topic=success |
+| Technology Collocations | https://app.englishpusher.in.ua/b1-trivia/?topic=technology-collocations |
+| Word Building: Suffixes | https://app.englishpusher.in.ua/b1-trivia/?topic=word-building-suffixes |
+| Sports and Games | https://app.englishpusher.in.ua/b1-trivia/?topic=sports-and-games |
+| Sport: People, Places and Actions | https://app.englishpusher.in.ua/b1-trivia/?topic=sport-people-places-actions |
+| News and Social Media | https://app.englishpusher.in.ua/b1-trivia/?topic=news-and-social-media |
+| Social Issues and the Environment | https://app.englishpusher.in.ua/b1-trivia/?topic=social-issues-and-the-environment |
+| Creativity: Word Building | https://app.englishpusher.in.ua/b1-trivia/?topic=creativity-word-building |
+| Events and Occasions | https://app.englishpusher.in.ua/b1-trivia/?topic=events-and-occasions |
+| Extreme Adjectives | https://app.englishpusher.in.ua/b1-trivia/?topic=extreme-adjectives |
+| The Arts | https://app.englishpusher.in.ua/b1-trivia/?topic=the-arts |
+| Travel and Tourism | https://app.englishpusher.in.ua/b1-trivia/?topic=travel-and-tourism |
+| New Experiences | https://app.englishpusher.in.ua/b1-trivia/?topic=new-experiences |
+| The Natural World | https://app.englishpusher.in.ua/b1-trivia/?topic=the-natural-world |
+| Describing Places | https://app.englishpusher.in.ua/b1-trivia/?topic=describing-places |
+| Practical Abilities | https://app.englishpusher.in.ua/b1-trivia/?topic=practical-abilities |
+| Video Collocations | https://app.englishpusher.in.ua/b1-trivia/?topic=video-collocations |
+| Using Technology | https://app.englishpusher.in.ua/b1-trivia/?topic=using-technology |
+| Technical Problems | https://app.englishpusher.in.ua/b1-trivia/?topic=technical-problems |
 
 **C1 Flash Cards** (`/c1-flashcards/`):
 
