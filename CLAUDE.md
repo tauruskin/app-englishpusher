@@ -339,11 +339,81 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 
 | Topic | Direct link |
 |---|---|
+| Everyday Phrases | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=everyday-phrases |
+| Relationships and Friendships | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=relationships |
+| Transforming Places | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=transforming-places |
+| Idioms: Hobbies and Interests | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=hobbies-idioms |
+| The Taste of Food | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=taste-of-food |
+| Winning and Losing | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=winning-and-losing |
+| Industry Competition | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=industry-competition |
+| Business and Work Benefits | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=business-and-work-benefits |
+| Competing | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=competing |
+| Opinions and Reactions | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=opinions-and-reactions |
+| Idioms: Emotions | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=emotions-idioms |
+| Persuading and Motivating | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=persuading-and-motivating |
+| Describing Inspiring People | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=inspiring-people |
+| Rules | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=rules |
+| Photography | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=photography |
+| Advertising and Marketing | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=advertising-and-marketing |
+| Skills and Abilities | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=skills-and-abilities |
+| Decision and Indecision | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=decisions |
+| The Natural World | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=the-natural-world |
+| Social Issues | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=social-issues |
+| Environmental Issues | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=environmental-issues |
+| Habits | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=habits |
+| Algorithms | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=algorithms |
+| Mistakes, Right and Wrong | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=right-and-wrong |
+| Buildings and Homes | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=buildings-and-homes |
+| Technology | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=technology |
+| Explaining Meaning | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=explaining-meaning |
+| Trends | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=trends |
+| Food and Drink | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=food-and-drink |
+| Shopping and Clothes | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=shopping-and-clothes |
+| Memories | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=memories |
+| Dystopia and Utopia | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=dystopia-and-utopia |
+| Science and Technology | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=science-and-technology |
+| Money | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=money |
+| Machines | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=machines |
 
 **B2+ Vocabulary Trivia** (`/b2plus-trivia/`):
 
 | Topic | Direct link |
 |---|---|
+| Everyday Phrases | https://app.englishpusher.in.ua/b2plus-trivia/?topic=everyday-phrases |
+| Relationships and Friendships | https://app.englishpusher.in.ua/b2plus-trivia/?topic=relationships |
+| Transforming Places | https://app.englishpusher.in.ua/b2plus-trivia/?topic=transforming-places |
+| Idioms: Hobbies and Interests | https://app.englishpusher.in.ua/b2plus-trivia/?topic=hobbies-idioms |
+| The Taste of Food | https://app.englishpusher.in.ua/b2plus-trivia/?topic=taste-of-food |
+| Winning and Losing | https://app.englishpusher.in.ua/b2plus-trivia/?topic=winning-and-losing |
+| Industry Competition | https://app.englishpusher.in.ua/b2plus-trivia/?topic=industry-competition |
+| Business and Work Benefits | https://app.englishpusher.in.ua/b2plus-trivia/?topic=business-and-work-benefits |
+| Competing | https://app.englishpusher.in.ua/b2plus-trivia/?topic=competing |
+| Opinions and Reactions | https://app.englishpusher.in.ua/b2plus-trivia/?topic=opinions-and-reactions |
+| Idioms: Emotions | https://app.englishpusher.in.ua/b2plus-trivia/?topic=emotions-idioms |
+| Persuading and Motivating | https://app.englishpusher.in.ua/b2plus-trivia/?topic=persuading-and-motivating |
+| Describing Inspiring People | https://app.englishpusher.in.ua/b2plus-trivia/?topic=inspiring-people |
+| Rules | https://app.englishpusher.in.ua/b2plus-trivia/?topic=rules |
+| Photography | https://app.englishpusher.in.ua/b2plus-trivia/?topic=photography |
+| Advertising and Marketing | https://app.englishpusher.in.ua/b2plus-trivia/?topic=advertising-and-marketing |
+| Skills and Abilities | https://app.englishpusher.in.ua/b2plus-trivia/?topic=skills-and-abilities |
+| Decision and Indecision | https://app.englishpusher.in.ua/b2plus-trivia/?topic=decisions |
+| The Natural World | https://app.englishpusher.in.ua/b2plus-trivia/?topic=the-natural-world |
+| Social Issues | https://app.englishpusher.in.ua/b2plus-trivia/?topic=social-issues |
+| Environmental Issues | https://app.englishpusher.in.ua/b2plus-trivia/?topic=environmental-issues |
+| Habits | https://app.englishpusher.in.ua/b2plus-trivia/?topic=habits |
+| Algorithms | https://app.englishpusher.in.ua/b2plus-trivia/?topic=algorithms |
+| Mistakes, Right and Wrong | https://app.englishpusher.in.ua/b2plus-trivia/?topic=right-and-wrong |
+| Buildings and Homes | https://app.englishpusher.in.ua/b2plus-trivia/?topic=buildings-and-homes |
+| Technology | https://app.englishpusher.in.ua/b2plus-trivia/?topic=technology |
+| Explaining Meaning | https://app.englishpusher.in.ua/b2plus-trivia/?topic=explaining-meaning |
+| Trends | https://app.englishpusher.in.ua/b2plus-trivia/?topic=trends |
+| Food and Drink | https://app.englishpusher.in.ua/b2plus-trivia/?topic=food-and-drink |
+| Shopping and Clothes | https://app.englishpusher.in.ua/b2plus-trivia/?topic=shopping-and-clothes |
+| Memories | https://app.englishpusher.in.ua/b2plus-trivia/?topic=memories |
+| Dystopia and Utopia | https://app.englishpusher.in.ua/b2plus-trivia/?topic=dystopia-and-utopia |
+| Science and Technology | https://app.englishpusher.in.ua/b2plus-trivia/?topic=science-and-technology |
+| Money | https://app.englishpusher.in.ua/b2plus-trivia/?topic=money |
+| Machines | https://app.englishpusher.in.ua/b2plus-trivia/?topic=machines |
 
 **How it works:** `?topic=<id>` is read on mount via `URLSearchParams`. The URL updates automatically when the user selects a topic, and clears when they go back to the topic list. The `id` field in `TOPICS` in `data.ts` is the canonical key — keep it stable, never rename it after publishing.
 
