@@ -1,5 +1,5 @@
 -- B2+ vocabulary level (2026-10-30). Widens the allowed values only.
--- Apply to the App's Supabase project (cwtidnvbazepqkfweaed) as migration "b2plus_level".
+-- Applied to the App's Supabase project (cwtidnvbazepqkfweaed) on 2026-10-30 as migration "b2plus_level".
 alter table public.trivia_results
   drop constraint trivia_results_app_check,
   add constraint trivia_results_app_check

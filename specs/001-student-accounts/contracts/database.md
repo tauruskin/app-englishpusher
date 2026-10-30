@@ -2,7 +2,7 @@
 
 Authoritative DDL — run once in the Supabase SQL editor (idempotent where practical). Any schema change updates this file first.
 
-Widened for A2 / A2+ on 2026-10-26 (applied 2026-10-27) — see `2026-10-26-a2-levels.sql`. Widened for B1+ on 2026-10-29 (applied the same day) — see `2026-10-29-b1plus-level.sql`. Widened for B2+ on 2026-10-30 — see `2026-10-30-b2plus-level.sql`.
+Widened for A2 / A2+ on 2026-10-26 (applied 2026-10-27) — see `2026-10-26-a2-levels.sql`. Widened for B1+ on 2026-10-29 (applied the same day) — see `2026-10-29-b1plus-level.sql`. Widened for B2+ on 2026-10-30 (applied the same day) — see `2026-10-30-b2plus-level.sql`.
 
 ```sql
 -- ============ profiles ============
