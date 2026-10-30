@@ -1,0 +1,1 @@
+function t(n,r){return`/${n.slug}-${r}/`}function s(n){return`${n.slug}-flashcards`}function i(n){return`${n.slug}-trivia`}function a(n){return n.topics.length===0}export{s as f,a as i,t as p,i as t};
