@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, BookOpen, Layers, Zap, Instagram, Sprout, Leaf, Rocket, type LucideIcon } from "lucide-react";
+import { ArrowRight, BookOpen, Layers, Zap, Instagram, Sprout, Leaf, Rocket, Mountain, type LucideIcon } from "lucide-react";
 import teacherCelebrate from "./assets/teacher-celebrate.png";
 import { AccountLink } from "./shared/AppShell.tsx";
 import TrialLessonForm from "./shared/TrialLessonForm.tsx";
@@ -8,6 +8,7 @@ import { Seasonal, SeasonalGreeting } from "./shared/Seasonal.tsx";
 import { A2 } from "./a2-flashcards/level.ts";
 import { A2PLUS } from "./a2plus-flashcards/level.ts";
 import { B1PLUS } from "./b1plus-flashcards/level.ts";
+import { B2PLUS } from "./b2plus-flashcards/level.ts";
 import { isComingSoon } from "./levels/level.ts";
 import { hubLevelOrder, sortByLevel, type HubLevel } from "./hub/order.ts";
 
@@ -72,6 +73,7 @@ type Level = HubLevel;
 const A2_SOON = isComingSoon(A2);
 const A2PLUS_SOON = isComingSoon(A2PLUS);
 const B1PLUS_SOON = isComingSoon(B1PLUS);
+const B2PLUS_SOON = isComingSoon(B2PLUS);
 
 interface AppItem {
   id: number;
@@ -172,6 +174,20 @@ const ITEMS: AppItem[] = [
     disabled: B1PLUS_SOON,
     badge: B1PLUS_SOON ? "Coming soon" : undefined,
     level: "B1+",
+  },
+  {
+    id: 7,
+    label: "B2+ Vocabulary",
+    description: "Upper-intermediate vocabulary — flashcards and trivia",
+    cta: "Start practicing",
+    href: "/b2plus-vocabulary/",
+    bgFrom: "#15803d",
+    bgTo: "#052e16",
+    borderColor: "#22c55e",
+    Icon: Mountain,
+    disabled: B2PLUS_SOON,
+    badge: B2PLUS_SOON ? "Coming soon" : undefined,
+    level: "B2+",
   },
 ];
 
@@ -351,8 +367,8 @@ function AccordionPanel({
 // ---------------------------------------------------------------------------
 
 type Tab = "all" | Level;
-const LEVEL_ORDER = hubLevelOrder({ A2: !A2_SOON, "A2+": !A2PLUS_SOON, "B1+": !B1PLUS_SOON });
-const TAB_LABEL: Record<Level, string> = { A2: "A2", "A2+": "A2+", B1: "B1 General", "B1+": "B1+", C1: "C1 Business" };
+const LEVEL_ORDER = hubLevelOrder({ A2: !A2_SOON, "A2+": !A2PLUS_SOON, "B1+": !B1PLUS_SOON, "B2+": !B2PLUS_SOON });
+const TAB_LABEL: Record<Level, string> = { A2: "A2", "A2+": "A2+", B1: "B1 General", "B1+": "B1+", "B2+": "B2+", C1: "C1 Business" };
 const TABS: { id: Tab; label: string }[] = [
   { id: "all", label: "All levels" },
   ...LEVEL_ORDER.map((level) => ({ id: level, label: TAB_LABEL[level] })),

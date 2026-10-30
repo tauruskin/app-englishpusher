@@ -6,7 +6,7 @@ import { isComingSoon, pageUrl } from "./level.ts";
 
 const LevelContext = createContext<LevelConfig | null>(null);
 
-// The level the current page shows (A2, A2+, B1 or B1+). Only valid on pages started by mountLevelPage.
+// The level the current page shows (A2, A2+, B1, B1+ or B2+). Only valid on pages started by mountLevelPage.
 export function useLevel(): LevelConfig {
   const level = useContext(LevelContext);
   if (!level) throw new Error("useLevel() used outside mountLevelPage");

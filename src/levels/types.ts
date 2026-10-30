@@ -1,4 +1,4 @@
-// Vocabulary levels that share the level pages in src/levels/: A2, A2+, B1 and B1+.
+// Vocabulary levels that share the level pages in src/levels/: A2, A2+, B1, B1+ and B2+.
 // C1 keeps its own pages because its words use definitions, not translations.
 
 export interface Word {
@@ -18,8 +18,8 @@ export interface Topic {
   triviaUrl?: string; // link to corresponding trivia topic
 }
 
-export type LevelId = "A2" | "A2+" | "B1" | "B1+";
-export type LevelSlug = "a2" | "a2plus" | "b1" | "b1plus";
+export type LevelId = "A2" | "A2+" | "B1" | "B1+" | "B2+";
+export type LevelSlug = "a2" | "a2plus" | "b1" | "b1plus" | "b2plus";
 
 export interface LevelConfig {
   id: LevelId; // shown to students ("A2 Vocabulary") and stored in saved_words.level

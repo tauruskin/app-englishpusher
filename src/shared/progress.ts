@@ -11,9 +11,9 @@ import { supabase, isSupabaseConfigured } from "./supabase.ts";
 // ---------------------------------------------------------------------------
 
 export type AppId =
-  | "a2-trivia" | "a2plus-trivia" | "b1-trivia" | "b1plus-trivia" | "c1-trivia"
-  | "a2-flashcards" | "a2plus-flashcards" | "b1-flashcards" | "b1plus-flashcards" | "c1-flashcards";
-export type Level = "A2" | "A2+" | "B1" | "B1+" | "C1";
+  | "a2-trivia" | "a2plus-trivia" | "b1-trivia" | "b1plus-trivia" | "b2plus-trivia" | "c1-trivia"
+  | "a2-flashcards" | "a2plus-flashcards" | "b1-flashcards" | "b1plus-flashcards" | "b2plus-flashcards" | "c1-flashcards";
+export type Level = "A2" | "A2+" | "B1" | "B1+" | "B2+" | "C1";
 
 export interface SavedWord {
   word: string;
