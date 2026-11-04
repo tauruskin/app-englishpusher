@@ -10,7 +10,8 @@ const SOURCE_LABEL: Record<string, string> = {
 };
 
 export function sourceLabel(source: string): string {
-  return lookup(SOURCE_LABEL, source) ?? source;
+  // Unknown names (including chart series such as "answers") fall back to a capitalised form.
+  return lookup(SOURCE_LABEL, source) ?? source.charAt(0).toUpperCase() + source.slice(1);
 }
 
 export function pct(value: number | null | undefined): string {

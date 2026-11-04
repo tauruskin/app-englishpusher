@@ -29,7 +29,7 @@ export function Students({ filters, setFilters, href }: PageProps) {
   const sources = [...new Set([...data.flatMap((r) => r.sources), ...(filters.source ? [filters.source] : [])])];
   const rows = sortRows(data, GET[sort.key], sort.dir);
   const header = (key: Key, label: string, align = "text-left") => (
-    <th className={`py-2 pr-3 ${align}`} aria-sort={sort.key === key ? (sort.dir === "asc" ? "ascending" : "descending") : "none"}>
+    <th scope="col" className={`py-2 pr-3 ${align}`} aria-sort={sort.key === key ? (sort.dir === "asc" ? "ascending" : "descending") : "none"}>
       <button
         className="inline-flex items-center gap-1 font-semibold hover:text-neutral-900"
         onClick={() => setSort({ key, dir: sort.key === key && sort.dir === "asc" ? "desc" : "asc" })}
@@ -57,8 +57,8 @@ export function Students({ filters, setFilters, href }: PageProps) {
                     {header("accuracy", "Accuracy")}
                     {header("answers", "Answers", "text-right")}
                     {header("last_active", "Last active")}
-                    <th className="py-2 pr-3 text-left font-semibold">Weakest topic</th>
-                    <th className="py-2 text-left font-semibold">Uses</th>
+                    <th scope="col" className="py-2 pr-3 text-left font-semibold">Weakest topic</th>
+                    <th scope="col" className="py-2 text-left font-semibold">Uses</th>
                   </tr>
                 </thead>
                 <tbody>

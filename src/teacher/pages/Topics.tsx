@@ -59,12 +59,12 @@ export function Topics({ filters, setFilters, href }: PageProps) {
             <StateBox>No answers for these filters.</StateBox>
           ) : (
             <div className="overflow-x-auto">
-              <table className="border-separate border-spacing-[2px] font-body text-xs">
+              <table className="min-w-max border-separate border-spacing-[2px] font-body text-xs">
                 <thead>
                   <tr>
                     <th className="sticky left-0 z-10 bg-white"><span className="sr-only">Student</span></th>
                     {data.topics.map((t) => (
-                      <th key={t.topic_key} scope="col" className="h-32 w-14 align-bottom font-normal">
+                      <th key={t.topic_key} scope="col" className="h-32 w-14 min-w-[3.5rem] align-bottom font-normal">
                         <a
                           href={href({ page: "topic", topicKey: t.topic_key })}
                           className="inline-block max-h-32 -rotate-180 overflow-hidden text-ellipsis whitespace-nowrap text-neutral-700 [writing-mode:vertical-rl] hover:text-brand"
@@ -84,7 +84,7 @@ export function Topics({ filters, setFilters, href }: PageProps) {
                       return (
                         <td
                           key={t.topic_key}
-                          className="h-9 w-14 rounded-md text-center font-bold tabular-nums"
+                          className="h-9 w-14 min-w-[3.5rem] rounded-md text-center font-bold tabular-nums"
                           style={{ background: s.bg, color: s.fg }}
                           title={`${t.title}: ${pct(t.accuracy)} of ${t.answers} answers`}
                         >
@@ -97,10 +97,12 @@ export function Topics({ filters, setFilters, href }: PageProps) {
                     const name = personName(p.display_name);
                     return (
                       <tr key={p.person_id}>
-                        <th scope="row" className="sticky left-0 z-10 max-w-[10rem] truncate bg-white pr-3 text-left font-semibold">
-                          <a href={href({ page: "student", personId: p.person_id })} title={name} className="text-neutral-800 hover:text-brand hover:underline">
-                            {name}
-                          </a>
+                        <th scope="row" className="sticky left-0 z-10 bg-white pr-3 text-left font-semibold">
+                          <div className="max-w-[10rem] truncate">
+                            <a href={href({ page: "student", personId: p.person_id })} title={name} className="text-neutral-800 hover:text-brand hover:underline">
+                              {name}
+                            </a>
+                          </div>
                         </th>
                         {data.topics.map((t) => {
                           const c = cells.get(`${p.person_id}|${t.topic_key}`);
@@ -109,7 +111,7 @@ export function Topics({ filters, setFilters, href }: PageProps) {
                             ? `${name} · ${t.title}: ${pct(c.accuracy)} of ${c.answers} answers`
                             : `${name} · ${t.title}: no data`;
                           return (
-                            <td key={t.topic_key} className="h-9 w-14 rounded-md text-center tabular-nums" style={{ background: s.bg, color: s.fg }} title={tip}>
+                            <td key={t.topic_key} className="h-9 w-14 min-w-[3.5rem] rounded-md text-center tabular-nums" style={{ background: s.bg, color: s.fg }} title={tip}>
                               {c ? pct(c.accuracy) : <span className="sr-only">No data</span>}
                             </td>
                           );

@@ -23,7 +23,8 @@ test("labels for levels, sources, periods and names", () => {
   assert.equal(levelLabel("c1"), "C1");
   assert.equal(sourceLabel("bot"), "Quiz Bot");
   assert.equal(sourceLabel("app"), "App");
-  assert.equal(sourceLabel("other"), "other");
+  assert.equal(sourceLabel("other"), "Other");
+  assert.equal(sourceLabel("answers"), "Answers");
   assert.equal(periodLabel(30), "last 30 days");
   assert.equal(periodLabel(null), "all time");
   assert.equal(personName("  "), "Unnamed student");
@@ -63,8 +64,8 @@ test("pct and delta round to whole numbers and reject NaN", () => {
 });
 
 test("label lookups ignore prototype keys", () => {
-  assert.equal(sourceLabel("constructor"), "constructor");
-  assert.equal(sourceLabel("toString"), "toString");
+  assert.equal(sourceLabel("constructor"), "Constructor");
+  assert.equal(sourceLabel("toString"), "ToString");
   assert.equal(sourceLabel("__proto__"), "__proto__");
 });
 
