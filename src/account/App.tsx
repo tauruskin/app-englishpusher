@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { motion } from "motion/react";
-import { LogOut, BarChart3, Star, Clock, Eye, EyeOff } from "lucide-react";
+import { LogOut, BarChart3, Star, Clock, Eye, EyeOff, LayoutDashboard } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import { useAuth } from "../shared/auth.tsx";
 import { supabase, isSupabaseConfigured } from "../shared/supabase.ts";
@@ -9,6 +9,7 @@ import {
   type AppId, type Level, type TriviaResultRow, type WeakWord, type StudyEventRow,
 } from "../shared/progress.ts";
 import { useSavedWords } from "../shared/savedWords.tsx";
+import { api } from "../teacher/api.ts";
 import { TOPICS as C1_TOPICS } from "../c1-flashcards/data.ts";
 import type { LevelConfig } from "../levels/types.ts";
 import { flashcardsAppId, pageUrl, triviaAppId } from "../levels/level.ts";
@@ -504,6 +505,21 @@ function PersonalPage() {
     fetchProgress().then(setProgress);
   }, [user]);
 
+  // Staff (teacher/admin) get a link to the dashboard. Errors and students leave it hidden;
+  // the database enforces access either way, this only decides whether to show the link.
+  const [isStaff, setIsStaff] = useState(false);
+  useEffect(() => {
+    setIsStaff(false);
+    if (!user) return;
+    let current = true; // ignore a response that arrives after unmount or after the user changed
+    api.me().then((r) => {
+      if (current) setIsStaff(r.data?.role === "teacher" || r.data?.role === "admin");
+    });
+    return () => {
+      current = false;
+    };
+  }, [user]);
+
   const summaries = progress ? summarizeResults(progress.results) : [];
 
   return (
@@ -528,6 +544,16 @@ function PersonalPage() {
           Sign out
         </button>
       </div>
+
+      {isStaff && (
+        <a
+          href="/teacher/"
+          className="flex items-center justify-between rounded-xl border border-brand/30 bg-brand/5 px-5 py-4 font-display text-sm font-bold text-neutral-900 hover:bg-brand/10 transition-colors"
+        >
+          <span className="flex items-center gap-2"><LayoutDashboard size={16} className="text-brand" /> Teacher dashboard</span>
+          <span aria-hidden>→</span>
+        </a>
+      )}
 
       <Section icon={<BarChart3 size={16} className="text-brand" />} title="My progress">
         <ProgressSection summaries={summaries} />
