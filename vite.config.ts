@@ -74,12 +74,13 @@ function remapAppPaths() {
 // The staff-only teacher dashboard (apps/teacher) shows student names and accuracy,
 // so it must never load GTM / Clarity session recording.
 const GTM_ID = "GTM-KJVX8GRG";
+// Matches the teacher entry exactly: the absolute file, or the server path /apps/teacher[/index.html].
+// Nothing looser, so a checkout folder named "teacher" cannot strip GTM from other pages.
+const normPath = (p: string) => p.replace(/\\/g, "/").split(/[?#]/)[0];
+const TEACHER_ENTRY = normPath(resolve(__dirname, "apps/teacher/index.html")).toLowerCase();
 function isTeacherPage(ctx?: { filename?: string; path?: string }): boolean {
-  return [ctx?.filename, ctx?.path].some((p) => {
-    if (!p) return false;
-    const norm = p.replace(/\\/g, "/").split(/[?#]/)[0];
-    return /(^|\/)(apps\/)?teacher(\/(index\.html)?)?$/.test(norm);
-  });
+  if (ctx?.filename && normPath(ctx.filename).toLowerCase() === TEACHER_ENTRY) return true;
+  return ctx?.path !== undefined && /^\/apps\/teacher(\/(index\.html)?)?$/.test(normPath(ctx.path));
 }
 function injectGtm() {
   return {

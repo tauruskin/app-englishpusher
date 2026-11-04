@@ -93,11 +93,16 @@ export function layoutColumns(data: StackDatum[], series: string[], size: Size):
       const value = d.values[s];
       const h = (value / scaleTop) * plotH;
       const top = j === present.length - 1;
+      if (top) {
+        // A value > 0 is always visible: at least 1px, stacked on the segment below.
+        const height = Math.max(1, h);
+        const y = base - height;
+        base = y;
+        return { series: s, value, y, height, top };
+      }
       const yTop = base - h;
       base = yTop;
-      return top
-        ? { series: s, value, y: yTop, height: h, top }
-        : { series: s, value, y: yTop + GAP, height: Math.max(1, h - GAP), top };
+      return { series: s, value, y: yTop + GAP, height: Math.max(1, h - GAP), top };
     });
     return { key: d.key, label: d.label, total: totals[i], x, width, slotX, slotWidth: slot, segments };
   });

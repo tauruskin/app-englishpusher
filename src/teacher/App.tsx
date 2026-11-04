@@ -18,12 +18,21 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "topics", label: "Topics" },
 ];
 
+// Identifies the page being shown; filter changes keep it, so they don't scroll to top.
+function routeKey(r: Route): string {
+  return r.page === "student" ? `student:${r.personId}` : r.page === "topic" ? `topic:${r.topicKey}` : r.page;
+}
+
 function useHashState() {
   const [state, setState] = useState(() => parseHash(window.location.hash));
   useEffect(() => {
+    let shown = routeKey(parseHash(window.location.hash).route);
     const onHash = () => {
-      setState(parseHash(window.location.hash));
-      window.scrollTo(0, 0);
+      const next = parseHash(window.location.hash);
+      setState(next);
+      const key = routeKey(next.route);
+      if (key !== shown) window.scrollTo(0, 0);
+      shown = key;
     };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
@@ -41,8 +50,8 @@ function Dashboard({ userId }: { userId: string }) {
   const props = { filters, setFilters, go, href: (r: Route) => href(r) };
 
   if (me.error) return <StateBox error={me.error} onRetry={me.retry} />;
-  if (!me.data) return null;
-  if (me.data.role === "student") {
+  if (!me.data) return <StateBox>Loading…</StateBox>;
+  if (me.data.role !== "teacher" && me.data.role !== "admin") {
     return <StateBox>This page is for teachers. <a href="/account/" className="text-brand hover:underline">Go to My Account</a></StateBox>;
   }
 
@@ -80,7 +89,7 @@ export default function App() {
   let body: ReactNode;
   if (isDemo) body = <Dashboard userId="demo" />;
   else if (!isSupabaseConfigured) body = <StateBox>Analytics are not available right now.</StateBox>;
-  else if (loading) body = null;
+  else if (loading) body = <StateBox>Loading…</StateBox>;
   else if (!user) body = <StateBox>Please <a href="/account/" className="text-brand hover:underline">sign in</a> with your teacher account.</StateBox>;
   else body = <Dashboard userId={user.id} />;
 

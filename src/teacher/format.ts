@@ -74,6 +74,7 @@ export function attentionText(a: Attention): string {
 }
 
 const SESSION_CODES = new Set(["PGRST301", "PGRST302", "PGRST303"]);
+export const SESSION_EXPIRED = "Your session has expired. Please sign in again.";
 
 export function friendlyError(error: { code?: string; message?: string; status?: number }): string {
   if (error.code === "42501") return "You don't have access to this page.";
@@ -82,7 +83,7 @@ export function friendlyError(error: { code?: string; message?: string; status?:
     error.status === 401 ||
     /\bJWT\b/i.test(error.message ?? "")
   ) {
-    return "Your session has expired. Please sign in again.";
+    return SESSION_EXPIRED;
   }
   if (error.code === "22023") return "That student or topic doesn't exist.";
   return "Couldn't load the data. Check your connection and try again.";

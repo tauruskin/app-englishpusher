@@ -2,7 +2,7 @@ import { lookup } from "./lookup.ts";
 import type { ReactNode } from "react";
 import { AlertCircle, ArrowDownRight, ArrowUpRight, Minus } from "lucide-react";
 import { BAND_STYLE, band } from "./heat.ts";
-import { delta, MASTERY_LABEL, periodLabel, pct, sourceLabel } from "./format.ts";
+import { delta, MASTERY_LABEL, periodLabel, pct, SESSION_EXPIRED, sourceLabel } from "./format.ts";
 import { DAY_OPTIONS, type Filters } from "./route.ts";
 import { INK, orderSources, sourceColor } from "./theme.ts";
 import type { Mastery } from "./types.ts";
@@ -48,7 +48,11 @@ export function StateBox({ error, onRetry, children }: { error?: string | null; 
     return (
       <div role="alert" className="flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 font-body text-sm text-red-700">
         <span className="flex items-center gap-2"><AlertCircle size={16} aria-hidden /> {error}</span>
-        {onRetry && <button onClick={onRetry} className="rounded-md border border-red-300 px-2 py-1 text-xs hover:bg-red-100">Retry</button>}
+        {error === SESSION_EXPIRED ? (
+          <a href="/account/" className="rounded-md border border-red-300 px-2 py-1 text-xs hover:bg-red-100">Sign in</a>
+        ) : (
+          onRetry && <button onClick={onRetry} className="rounded-md border border-red-300 px-2 py-1 text-xs hover:bg-red-100">Retry</button>
+        )}
       </div>
     );
   }

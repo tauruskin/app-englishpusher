@@ -85,6 +85,25 @@ test("layoutColumns copes with no data", () => {
   assert.deepEqual(layout.ticks.map((t) => t.value), [0, 1]);
 });
 
+test("a tiny top segment keeps at least 1px and sits on the stack", () => {
+  const layout = layoutColumns(
+    [{ key: "d1", label: "1 Nov", values: { bot: 1000, app: 1 } }],
+    ["bot", "app"],
+    { width: 136, height: 124, left: 36, bottom: 24, top: 0 },
+  );
+  const [bot, app] = layout.columns[0].segments;
+  assert.equal(app.top, true);
+  assert.equal(app.height, 1);
+  assert.ok(app.y + app.height <= bot.y + 1e-9); // top segment ends where the one below begins
+  const solo = layoutColumns(
+    [{ key: "d1", label: "1 Nov", values: { bot: 1, app: 0 } }, { key: "d2", label: "2 Nov", values: { bot: 1000 } }],
+    ["bot", "app"],
+    { width: 136, height: 124, left: 36, bottom: 24, top: 0 },
+  );
+  assert.equal(solo.columns[0].segments[0].height, 1);
+  assert.equal(solo.columns[0].segments[0].y, 99); // base 100 - 1
+});
+
 test("a tiny non-top segment keeps at least 1px", () => {
   const layout = layoutColumns(
     [{ key: "d1", label: "1 Nov", values: { bot: 1, app: 1000 } }],

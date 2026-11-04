@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { friendlyError } from "./format.ts";
 import type { Result } from "./types.ts";
 
 export interface DataState<T> {
@@ -34,13 +35,21 @@ export function useData<T>(load: () => Promise<Result<T>>, key: string, entityKe
     let current = true;
     setReloading(true);
     setFailure(null);
-    load().then((r) => {
+    const settle = (r: Result<T>) => {
       if (!current) return;
       if (r.error === null) setGood({ entity: entityKey, data: r.data });
       else setFailure({ key, message: r.error });
       setSettledKey(key);
       setReloading(false);
-    });
+    };
+    // A loader that throws or rejects must still settle, or `reloading` would stick.
+    let pending: Promise<Result<T>>;
+    try {
+      pending = load();
+    } catch {
+      pending = Promise.reject(new Error("load failed"));
+    }
+    pending.then(settle, () => settle({ data: null, error: friendlyError({}) }));
     return () => {
       current = false;
     };
