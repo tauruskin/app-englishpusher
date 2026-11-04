@@ -1,0 +1,46 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { parseRoute, routeHash } from "./route.ts";
+
+test("empty, unknown or incomplete hash is home", () => {
+  assert.deepEqual(parseRoute(""), { page: "home" });
+  assert.deepEqual(parseRoute("#/"), { page: "home" });
+  assert.deepEqual(parseRoute("#/nonsense"), { page: "home" });
+  assert.deepEqual(parseRoute("#/topic/"), { page: "home" });
+});
+
+test("topic route decodes its key", () => {
+  assert.deepEqual(parseRoute("#/topic/b1%3Agrammar%3Amodifiers"), { page: "topic", topicKey: "b1:grammar:modifiers" });
+});
+
+test("a trailing slash is not part of the topic key", () => {
+  assert.deepEqual(parseRoute("#/topic/x/"), { page: "topic", topicKey: "x" });
+  assert.deepEqual(parseRoute("#/topic/b1%3Agrammar%3Amodifiers/"), { page: "topic", topicKey: "b1:grammar:modifiers" });
+  assert.deepEqual(parseRoute("#/topic//"), { page: "home" });
+});
+
+test("topics and activity tabs parse, with or without a trailing slash", () => {
+  assert.deepEqual(parseRoute("#/topics"), { page: "topics" });
+  assert.deepEqual(parseRoute("#/topics/"), { page: "topics" });
+  assert.deepEqual(parseRoute("#/activity"), { page: "activity" });
+  assert.deepEqual(parseRoute("#/activity/"), { page: "activity" });
+  assert.deepEqual(parseRoute("#/activity?x=1"), { page: "activity" });
+});
+
+test("tab routes round-trip through routeHash", () => {
+  assert.equal(routeHash({ page: "topics" }), "#/topics");
+  assert.equal(routeHash({ page: "activity" }), "#/activity");
+  for (const page of ["home", "topics", "activity"] as const) {
+    assert.deepEqual(parseRoute(routeHash({ page })), { page });
+  }
+});
+
+test("a malformed % does not throw", () => {
+  assert.deepEqual(parseRoute("#/topic/%"), { page: "topic", topicKey: "%" });
+});
+
+test("routeHash round-trips, including / ? & in keys", () => {
+  const r = { page: "topic" as const, topicKey: "b1:vocab:jobs & work/2?x" };
+  assert.deepEqual(parseRoute(routeHash(r)), r);
+  assert.equal(routeHash({ page: "home" }), "#/");
+});
