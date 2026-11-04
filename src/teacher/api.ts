@@ -11,9 +11,14 @@ async function call<T>(fn: string, args: Record<string, unknown>, demo: T): Prom
   if (isDemo) return { data: demo, error: null };
   if (!isSupabaseConfigured) return { data: null, error: "Analytics are not available right now." };
   // .rpc() sends POST: these functions may create the caller's person row on first use.
-  const { data, error } = await supabase.rpc(fn, args);
-  if (error) return { data: null, error: friendlyError(error) };
-  return { data: data as T, error: null };
+  try {
+    const { data, error, status } = await supabase.rpc(fn, args);
+    if (error) return { data: null, error: friendlyError({ code: error.code, message: error.message, status }) };
+    if (data === null || data === undefined) return { data: null, error: friendlyError({}) };
+    return { data: data as T, error: null };
+  } catch (e) {
+    return { data: null, error: friendlyError({ message: e instanceof Error ? e.message : undefined }) };
+  }
 }
 
 const period = (f: Filters) => ({ p_days: f.days, p_source: f.source });

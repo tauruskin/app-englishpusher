@@ -46,7 +46,7 @@ export function StatTile({ label, value, now, before, hint }: { label: string; v
 export function StateBox({ error, onRetry, children }: { error?: string | null; onRetry?: () => void; children?: ReactNode }) {
   if (error) {
     return (
-      <div className="flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 font-body text-sm text-red-700">
+      <div role="alert" className="flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 font-body text-sm text-red-700">
         <span className="flex items-center gap-2"><AlertCircle size={16} aria-hidden /> {error}</span>
         {onRetry && <button onClick={onRetry} className="rounded-md border border-red-300 px-2 py-1 text-xs hover:bg-red-100">Retry</button>}
       </div>
@@ -101,8 +101,10 @@ export function AccuracyCell({ accuracy, answers }: { accuracy: number | null; a
 
 // Horizontal bar: 4px rounded end, square at the start, <= 24px thick, value at the tip.
 export function BarRow({ label, value, max, href, note }: { label: string; value: number | null; max: number; href?: string; note?: string }) {
-  const w = value === null || max <= 0 ? 0 : Math.max(1, (value / max) * 100);
-  const name = href ? <a href={href} className="truncate hover:text-brand hover:underline">{label}</a> : <span className="truncate">{label}</span>;
+  const w = value === null || max <= 0 || !Number.isFinite(value) ? 0 : Math.min(100, Math.max(1, (value / max) * 100));
+  const name = href
+    ? <a href={href} title={label} className="truncate hover:text-brand hover:underline">{label}</a>
+    : <span title={label} className="truncate">{label}</span>;
   return (
     <div className="grid grid-cols-[8rem_1fr_auto] items-center gap-3 py-1.5 font-body text-sm text-neutral-800">
       {name}

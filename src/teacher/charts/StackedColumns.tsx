@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
 import { layoutColumns, roundedTopPath, type StackDatum } from "./columns.ts";
 import { INK, orderSources, sourceColor } from "../theme.ts";
 import { sourceLabel } from "../format.ts";
@@ -14,6 +14,8 @@ export function StackedColumns({ data, series, height = 220, unit, label, color 
   const ref = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(640);
   const [hover, setHover] = useState<number | null>(null);
+  const [roving, setRoving] = useState<number | null>(null);
+  const rects = useRef<(SVGRectElement | null)[]>([]);
   const ordered = orderSources(series);
 
   useLayoutEffect(() => {
@@ -29,10 +31,25 @@ export function StackedColumns({ data, series, height = 220, unit, label, color 
   const every = Math.max(1, Math.ceil(data.length / 6));
   const hovered = hover === null ? null : layout.columns[hover];
 
+  // Roving tabindex: one tab stop (the column last focused, else the latest day with data); arrows move between columns.
+  const lastWithData = layout.columns.reduce((acc, c, i) => (c.total > 0 ? i : acc), layout.columns.length - 1);
+  const tabStop = roving !== null && roving < layout.columns.length ? roving : lastWithData;
+  const onKey = (e: KeyboardEvent<SVGRectElement>, i: number) => {
+    const last = layout.columns.length - 1;
+    const next = e.key === "ArrowRight" ? Math.min(last, i + 1)
+      : e.key === "ArrowLeft" ? Math.max(0, i - 1)
+      : e.key === "Home" ? 0
+      : e.key === "End" ? last
+      : null;
+    if (next === null) return;
+    e.preventDefault();
+    rects.current[next]?.focus(); // onFocus updates the tooltip and the tab stop
+  };
+
   return (
     <div>
       <div ref={ref} className="relative">
-        <svg width={width} height={height} role="img" aria-label={label}>
+        <svg width={width} height={height} role="group" aria-label={label}>
           {layout.ticks.map((t) => (
             <g key={t.value}>
               <line x1={SIZE.left} x2={width} y1={t.y} y2={t.y} stroke={t.value === 0 ? INK.axis : INK.grid} strokeWidth={1} />
@@ -55,9 +72,10 @@ export function StackedColumns({ data, series, height = 220, unit, label, color 
               )}
               <rect
                 x={c.slotX} y={layout.plotTop} width={c.slotWidth} height={layout.plotBottom - layout.plotTop}
-                fill="transparent" tabIndex={0} aria-label={`${c.label}: ${c.total} ${unit}`}
+                fill="transparent" role="img" aria-label={`${c.label}: ${c.total} ${unit}`}
+                ref={(el) => { rects.current[i] = el; }} tabIndex={i === tabStop ? 0 : -1} onKeyDown={(e) => onKey(e, i)}
                 onPointerEnter={() => setHover(i)} onPointerLeave={() => setHover(null)}
-                onFocus={() => setHover(i)} onBlur={() => setHover(null)}
+                onFocus={() => { setHover(i); setRoving(i); }} onBlur={() => setHover(null)}
               />
             </g>
           ))}

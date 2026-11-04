@@ -90,3 +90,15 @@ test("attentionText never prints null or NaN", () => {
   for (const t of texts) assert.doesNotMatch(t, /null|NaN|undefined/);
   assert.equal(texts[0], "Nelpy hasn't practised recently");
 });
+
+test("friendlyError asks for a new sign-in on expired or missing sessions", () => {
+  const msg = "Your session has expired. Please sign in again.";
+  assert.equal(friendlyError({ code: "PGRST301" }), msg);
+  assert.equal(friendlyError({ code: "PGRST303" }), msg);
+  assert.equal(friendlyError({ message: "JWT expired" }), msg);
+  assert.equal(friendlyError({ message: "invalid JWT" }), msg);
+  assert.equal(friendlyError({ status: 401 }), msg);
+  // not-staff keeps its own message even when a 4xx status is attached
+  assert.equal(friendlyError({ code: "42501", status: 403 }), "You don't have access to this page.");
+  assert.equal(friendlyError({ message: "boom", status: 500 }), "Couldn't load the data. Check your connection and try again.");
+});
