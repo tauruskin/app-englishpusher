@@ -63,7 +63,7 @@ export function Overview({ filters, setFilters, href }: PageProps) {
                   const link = attentionHref(a, href);
                   const text = attentionText(a);
                   return (
-                    <li key={`${a.type}:${a.person_id ?? ""}:${a.topic_key ?? ""}`}className="flex items-center gap-3 py-2.5 font-body text-sm text-neutral-800">
+                    <li key={`${a.type}:${a.person_id ?? ""}:${a.topic_key ?? ""}`} className="flex items-center gap-3 py-2.5 font-body text-sm text-neutral-800">
                       <Icon size={16} className="shrink-0 text-red-600" aria-hidden />
                       <span className="sr-only">{lookup(ICON_LABEL, a.type) ?? "Attention"}:</span>
                       {link ? <a href={link} className="hover:text-brand hover:underline">{text}</a> : <span>{text}</span>}

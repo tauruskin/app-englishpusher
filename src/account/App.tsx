@@ -508,17 +508,20 @@ function PersonalPage() {
   // Staff (teacher/admin) get a link to the dashboard. Errors and students leave it hidden;
   // the database enforces access either way, this only decides whether to show the link.
   const [isStaff, setIsStaff] = useState(false);
+  // Keyed on the user id, not the user object: token refreshes hand out a new object for the
+  // same person, which must not re-query or make the link flicker.
+  const userId = user?.id;
   useEffect(() => {
-    setIsStaff(false);
-    if (!user) return;
+    if (!userId) return;
     let current = true; // ignore a response that arrives after unmount or after the user changed
     api.me().then((r) => {
       if (current) setIsStaff(r.data?.role === "teacher" || r.data?.role === "admin");
     });
     return () => {
       current = false;
+      setIsStaff(false);
     };
-  }, [user]);
+  }, [userId]);
 
   const summaries = progress ? summarizeResults(progress.results) : [];
 
