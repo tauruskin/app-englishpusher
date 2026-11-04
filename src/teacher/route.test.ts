@@ -33,3 +33,8 @@ test("toHash writes only non-default filters", () => {
   assert.equal(toHash({ page: "students" }, DEFAULT_FILTERS), "#/students");
   assert.equal(toHash({ page: "students" }, { days: null, source: "app" }), "#/students?days=all&source=app");
 });
+
+test("a malformed % escape in the hash does not throw", () => {
+  assert.deepEqual(parseHash("#/topic/%").route, { page: "topic", topicKey: "%" });
+  assert.deepEqual(parseHash("#/student/%E0%A4%A").route, { page: "student", personId: "%E0%A4%A" });
+});

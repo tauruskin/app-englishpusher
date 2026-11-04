@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { addDays, dayLabel, fillDays, layoutColumns, niceStep, roundedTopPath } from "./columns.ts";
+import { addDays, dayLabel, fillDays, kyivToday, layoutColumns, niceStep, roundedTopPath } from "./columns.ts";
 
 test("addDays and dayLabel work on plain ISO dates", () => {
   assert.equal(addDays("2026-10-31", 1), "2026-11-01");
@@ -59,4 +59,39 @@ test("roundedTopPath rounds only the top corners", () => {
   assert.equal(roundedTopPath(0, 0, 10, 20, 4), "M0,20V4Q0,0 4,0H6Q10,0 10,4V20Z");
   // radius never exceeds half the width or the height
   assert.equal(roundedTopPath(0, 0, 4, 1, 4), "M0,1V1Q0,0 1,0H3Q4,0 4,1V1Z");
+});
+
+test("kyivToday follows Kyiv calendar days around DST changes", () => {
+  assert.equal(kyivToday(new Date("2026-11-03T22:30:00Z")), "2026-11-04"); // winter, UTC+2
+  assert.equal(kyivToday(new Date("2026-03-28T22:30:00Z")), "2026-03-29"); // day of the spring change
+  assert.equal(kyivToday(new Date("2026-03-29T21:30:00Z")), "2026-03-30"); // summer, UTC+3
+  assert.equal(kyivToday(new Date("2026-10-24T20:59:00Z")), "2026-10-24");
+});
+
+test("fillDays rejects bad dates and caps the range at 1000 days", () => {
+  assert.deepEqual(fillDays([], "garbage", 7), []);
+  assert.deepEqual(fillDays([], "2026-13-45", 7), []);
+  assert.equal(fillDays([], "2026-11-04", 5000).length, 1001);
+  assert.equal(fillDays([], "2026-11-04", 0).length, 1);
+  assert.equal(fillDays([], "2026-11-04", 2).length, 3);
+  const old = fillDays([{ day: "2000-01-01", by_source: { app: 1 } }], "2026-11-04", null);
+  assert.equal(old.length, 1001);
+  assert.equal(fillDays([{ day: "nonsense", by_source: {} }], "2026-11-04", null).length, 1);
+});
+
+test("layoutColumns copes with no data", () => {
+  const layout = layoutColumns([], ["bot"], { width: 136, height: 124, left: 36, bottom: 24, top: 0 });
+  assert.deepEqual(layout.columns, []);
+  assert.deepEqual(layout.ticks.map((t) => t.value), [0, 1]);
+});
+
+test("a tiny non-top segment keeps at least 1px", () => {
+  const layout = layoutColumns(
+    [{ key: "d1", label: "1 Nov", values: { bot: 1, app: 1000 } }],
+    ["bot", "app"],
+    { width: 136, height: 124, left: 36, bottom: 24, top: 0 },
+  );
+  const [bot, app] = layout.columns[0].segments;
+  assert.equal(bot.height, 1);
+  assert.equal(app.top, true);
 });

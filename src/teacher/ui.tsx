@@ -1,3 +1,4 @@
+import { lookup } from "./lookup.ts";
 import type { ReactNode } from "react";
 import { AlertCircle, ArrowDownRight, ArrowUpRight, Minus } from "lucide-react";
 import { BAND_STYLE, band } from "./heat.ts";
@@ -77,10 +78,10 @@ const MASTERY_BAND: Record<Mastery, keyof typeof BAND_STYLE> = {
 };
 
 export function MasteryBadge({ mastery }: { mastery: Mastery }) {
-  const s = BAND_STYLE[MASTERY_BAND[mastery]];
+  const s = BAND_STYLE[lookup(MASTERY_BAND, mastery) ?? "none"];
   return (
     <span className="inline-block rounded-full px-2 py-0.5 font-body text-xs font-semibold" style={{ background: s.bg, color: s.fg }}>
-      {MASTERY_LABEL[mastery]}
+      {lookup(MASTERY_LABEL, mastery) ?? mastery}
     </span>
   );
 }

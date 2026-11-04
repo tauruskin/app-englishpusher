@@ -8,3 +8,9 @@ test("sources keep a fixed order and fixed colors", () => {
   assert.equal(sourceColor("app"), "#eb6834");
   assert.equal(sourceColor("unknown"), "#898781");
 });
+
+test("prototype keys are not treated as known sources", () => {
+  assert.equal(sourceColor("constructor"), "#898781");
+  assert.equal(sourceColor("toString"), "#898781");
+  assert.deepEqual(orderSources([]), []);
+});

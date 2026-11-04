@@ -26,3 +26,7 @@ test("cellIndex finds a cell by person and topic", () => {
   assert.equal(idx.get("p1|t1")?.accuracy, 67);
   assert.equal(idx.get("p1|t2"), undefined);
 });
+
+test("cellIndex of no cells is empty", () => {
+  assert.equal(cellIndex([]).size, 0);
+});

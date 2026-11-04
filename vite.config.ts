@@ -71,12 +71,22 @@ function remapAppPaths() {
 
 // Inject the Google Tag Manager container (GA4 + Clarity live inside it) into
 // every HTML entry point. Build-only, so local dev visits are not tracked.
+// The staff-only teacher dashboard (apps/teacher) shows student names and accuracy,
+// so it must never load GTM / Clarity session recording.
 const GTM_ID = "GTM-KJVX8GRG";
+function isTeacherPage(ctx?: { filename?: string; path?: string }): boolean {
+  return [ctx?.filename, ctx?.path].some((p) => {
+    if (!p) return false;
+    const norm = p.replace(/\\/g, "/").split(/[?#]/)[0];
+    return /(^|\/)(apps\/)?teacher(\/(index\.html)?)?$/.test(norm);
+  });
+}
 function injectGtm() {
   return {
     name: "inject-gtm",
     apply: "build" as const,
-    transformIndexHtml() {
+    transformIndexHtml(_html: string, ctx?: { filename?: string; path?: string }) {
+      if (isTeacherPage(ctx)) return [];
       return [
         {
           tag: "script",

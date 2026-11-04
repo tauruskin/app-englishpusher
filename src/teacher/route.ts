@@ -15,6 +15,15 @@ export const DEFAULT_FILTERS: Filters = { days: 30, source: null };
 export const DAY_OPTIONS: (number | null)[] = [7, 30, 90, null];
 const TABS: Tab[] = ["overview", "students", "topics"];
 
+// A malformed % escape must not white-screen the page: fall back to the raw text.
+function safeDecode(s: string): string {
+  try {
+    return decodeURIComponent(s);
+  } catch {
+    return s;
+  }
+}
+
 function parseFilters(params: URLSearchParams): Filters {
   const d = params.get("days");
   let days = DEFAULT_FILTERS.days;
@@ -32,8 +41,8 @@ export function parseHash(hash: string): { route: Route; filters: Filters } {
   const filters = parseFilters(new URLSearchParams(query));
   let route: Route = { page: "overview" };
   if (TABS.includes(parts[0] as Tab)) route = { page: parts[0] as Tab };
-  else if (parts[0] === "student" && parts[1]) route = { page: "student", personId: decodeURIComponent(parts[1]) };
-  else if (parts[0] === "topic" && parts[1]) route = { page: "topic", topicKey: decodeURIComponent(parts[1]) };
+  else if (parts[0] === "student" && parts[1]) route = { page: "student", personId: safeDecode(parts[1]) };
+  else if (parts[0] === "topic" && parts[1]) route = { page: "topic", topicKey: safeDecode(parts[1]) };
   return { route, filters };
 }
 

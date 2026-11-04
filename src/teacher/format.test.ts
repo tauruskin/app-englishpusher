@@ -53,3 +53,40 @@ test("RPC errors become friendly messages", () => {
   assert.equal(friendlyError({ code: "22023" }), "That student or topic doesn't exist.");
   assert.equal(friendlyError({ message: "fetch failed" }), "Couldn't load the data. Check your connection and try again.");
 });
+
+test("pct and delta round to whole numbers and reject NaN", () => {
+  assert.equal(pct(75.6), "76%");
+  assert.equal(pct(Number.NaN), "–");
+  assert.deepEqual(delta(75.4, 80.2), { text: "−5 pts", direction: "down" });
+  assert.deepEqual(delta(70.2, 70.4), { text: "±0", direction: "flat" });
+  assert.equal(delta(Number.NaN, 70), null);
+});
+
+test("label lookups ignore prototype keys", () => {
+  assert.equal(sourceLabel("constructor"), "constructor");
+  assert.equal(sourceLabel("toString"), "toString");
+  assert.equal(sourceLabel("__proto__"), "__proto__");
+});
+
+test("daysAgo counts Kyiv calendar days and survives bad input", () => {
+  // 1 hour apart but across Kyiv midnight (winter time, UTC+2)
+  assert.equal(daysAgo("2026-11-03T21:30:00Z", Date.parse("2026-11-03T22:30:00Z")), "yesterday");
+  // 22:30Z is already the next Kyiv day in winter, so 20:30Z..21:59Z is still "today"
+  assert.equal(daysAgo("2026-11-03T22:10:00Z", Date.parse("2026-11-04T08:00:00Z")), "today");
+  assert.equal(daysAgo("not a date", Date.parse("2026-11-04T08:00:00Z")), "unknown");
+  assert.equal(daysAgo("2026-11-05T08:00:00Z", Date.parse("2026-11-04T08:00:00Z")), "today");
+  assert.equal(daysAgo("2026-11-04T08:00:00Z", Number.NaN), "unknown");
+});
+
+test("attentionText never prints null or NaN", () => {
+  const base = { person_id: "p", display_name: "Nelpy", topic_key: null, title: null, value: null, value2: null };
+  const texts = [
+    attentionText({ ...base, type: "inactive" }),
+    attentionText({ ...base, type: "dropping" }),
+    attentionText({ ...base, type: "dropping", value: 70 }),
+    attentionText({ ...base, type: "hard_topic", display_name: null }),
+    attentionText({ ...base, type: "hard_topic", value: Number.NaN, value2: Number.NaN }),
+  ];
+  for (const t of texts) assert.doesNotMatch(t, /null|NaN|undefined/);
+  assert.equal(texts[0], "Nelpy hasn't practised recently");
+});

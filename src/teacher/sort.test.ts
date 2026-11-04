@@ -18,3 +18,7 @@ test("text sorts case-insensitively and does not mutate the input", () => {
   assert.deepEqual(sortRows(rows, (r) => r.name, "asc").map((r) => r.name), ["anna", "Bohdan", "Olena"]);
   assert.deepEqual(rows, copy);
 });
+
+test("an empty list sorts to an empty list", () => {
+  assert.deepEqual(sortRows([] as { acc: number }[], (r) => r.acc, "asc"), []);
+});

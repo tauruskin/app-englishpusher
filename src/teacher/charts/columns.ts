@@ -27,12 +27,30 @@ export function kyivToday(now: Date = new Date()): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Kyiv", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
 }
 
+export const MAX_DAYS = 1000;
+const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
+
+function isIsoDay(s: string): boolean {
+  if (!ISO_DAY.test(s)) return false;
+  const d = new Date(`${s}T00:00:00Z`);
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === s;
+}
+
 // One datum per Kyiv day from (today - days) to today; all time starts at the first day with data.
+// Invalid `today` gives no data; the range is capped at MAX_DAYS days back.
 export function fillDays(daily: DailyRow[], today: string, days: number | null): StackDatum[] {
+  if (!isIsoDay(today)) return [];
   const byDay = new Map(daily.map((r) => [r.day, r.by_source]));
-  const first = days === null
-    ? (daily.length ? [...daily.map((r) => r.day)].sort()[0] : today)
-    : addDays(today, -days);
+  const earliest = addDays(today, -MAX_DAYS);
+  let first: string;
+  if (days === null) {
+    const valid = daily.map((r) => r.day).filter(isIsoDay).sort();
+    first = valid.length ? valid[0] : today;
+  } else {
+    first = addDays(today, -Math.max(0, Math.floor(Number.isFinite(days) ? days : 0)));
+  }
+  if (first < earliest) first = earliest;
+  if (first > today) first = today;
   const out: StackDatum[] = [];
   for (let d = first; d <= today; d = addDays(d, 1)) {
     out.push({ key: d, label: dayLabel(d), values: byDay.get(d) ?? {} });
@@ -79,7 +97,7 @@ export function layoutColumns(data: StackDatum[], series: string[], size: Size):
       base = yTop;
       return top
         ? { series: s, value, y: yTop, height: h, top }
-        : { series: s, value, y: yTop + GAP, height: Math.max(0, h - GAP), top };
+        : { series: s, value, y: yTop + GAP, height: Math.max(1, h - GAP), top };
     });
     return { key: d.key, label: d.label, total: totals[i], x, width, slotX, slotWidth: slot, segments };
   });

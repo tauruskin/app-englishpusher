@@ -1,3 +1,5 @@
+import { lookup } from "./lookup.ts";
+
 // Colors follow the entity, never its rank (dataviz). Slots 1-4 of the reference palette.
 const SOURCE_ORDER = ["bot", "app", "moodle", "grammar"];
 const SOURCE_COLOR: Record<string, string> = {
@@ -19,7 +21,7 @@ export const INK = {
 };
 
 export function sourceColor(source: string): string {
-  return SOURCE_COLOR[source] ?? INK.muted;
+  return lookup(SOURCE_COLOR, source) ?? INK.muted;
 }
 
 export function orderSources(sources: string[]): string[] {
