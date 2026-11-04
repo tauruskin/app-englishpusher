@@ -64,7 +64,7 @@ function ProgressPages({ userId }: { userId: string }) {
               key={t.page}
               href={routeHash({ page: t.page })}
               aria-current={activeTab === t.page ? "page" : undefined}
-              className={`-mb-px whitespace-nowrap border-b-2 px-4 py-2 font-display text-sm font-semibold transition-colors ${
+              className={`-mb-px flex min-h-[44px] items-center whitespace-nowrap rounded-t-md border-b-2 px-4 font-display focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand text-sm font-semibold transition-colors ${
                 activeTab === t.page ? "border-brand text-neutral-900" : "border-transparent text-neutral-500 hover:text-neutral-800"
               }`}
             >
