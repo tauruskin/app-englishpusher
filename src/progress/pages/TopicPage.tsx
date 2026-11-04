@@ -14,7 +14,7 @@ export function TopicPage({ userId, topicKey }: { userId: string; topicKey: stri
     `topic:${userId}:${topicKey}`,
     `topic:${topicKey}`,
   );
-  const back = <a href={routeHash({ page: "home" })} className="font-body text-sm text-neutral-500 hover:text-brand">← My progress</a>;
+  const back = <a href={routeHash({ page: "topics" })} className="font-body text-sm text-neutral-500 hover:text-brand">← Topics</a>;
 
   if (!data) {
     return (

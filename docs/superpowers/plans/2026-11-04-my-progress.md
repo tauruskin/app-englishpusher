@@ -4,6 +4,8 @@
 
 **Goal:** A `/progress/` page in the Englishpusher App where every signed-in student sees their own progress across the Quiz Bot and the App. The page has three parts: Coach, Mastery map and Activity. Each topic also has its own page.
 
+> **Layout change (2026-11-04, owner request):** the single long home page is split into three tabs. `#/` is Overview (greeting, three tiles, weak topics, accuracy per week), `#/topics` is Topics (the Mastery map) and `#/activity` is Activity (calendar, tiles, "Where you practise"). `#/topic/<key>` stays a separate page, its back link is "← Topics" and the Topics tab shows as active there. The shell (`App.tsx`) loads `progressApi.me()` once for all tabs. The task code blocks below show the original single-page `Home.tsx`; the code that shipped is split as in the File map.
+
 **Architecture:** A new MPA entry `apps/progress/index.html` → `src/progress/`. It uses hash routes: `#/` for the home page and `#/topic/<key>` for one topic. All numbers come from two live RPCs from plan 1: `analytics_student()` (the caller's own data) and `analytics_student_topic(p_topic_key)`. The page only formats and draws. It reuses the teacher dashboard's modules from `src/teacher/` (formatting, colours, `useData`, UI pieces, column helpers). Two parts are extracted into `src/teacher/rpc.ts` so both pages share them: the RPC call itself and the dev-only demo switch. New pure logic (routes, greeting, grouping, calendar grid, line layout) lives in small `.ts` modules with `node --test` tests. Plan 4 will open the same URL as a Telegram Mini App, so all data access goes through one small `progressApi`.
 
 **Tech Stack:** React 18, TypeScript (strict), Tailwind 3, Vite 6 MPA, `@supabase/supabase-js` RPC, `lucide-react` icons, `node --test` (Node 22, runs `.ts` directly).
@@ -96,7 +98,10 @@ So in this plan the button opens the bot (`https://t.me/Englishpusher_quiz_bot`)
 | `src/progress/charts/LineChart.tsx` | SVG line + readout + table |
 | `src/progress/charts/MonthCalendar.tsx` | month calendar with month switcher and legend |
 | `src/progress/App.tsx` | auth states, hash routing, page frame |
-| `src/progress/pages/Home.tsx` | Coach, Mastery map, Activity; get-started state |
+| `src/progress/pages/Overview.tsx` | Overview tab: greeting, tiles, weak topics, accuracy per week |
+| `src/progress/pages/Topics.tsx` | `TopicsTab`: Mastery map |
+| `src/progress/pages/Activity.tsx` | Activity tab: calendar, tiles, where you practise |
+| `src/progress/pages/GetStarted.tsx` | get-started state (no activity yet) |
 | `src/progress/pages/TopicPage.tsx` | one topic: accuracy over 12 weeks, recent mistakes |
 | `src/account/App.tsx` | "All my progress" link for every signed-in user |
 

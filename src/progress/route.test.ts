@@ -19,6 +19,22 @@ test("a trailing slash is not part of the topic key", () => {
   assert.deepEqual(parseRoute("#/topic//"), { page: "home" });
 });
 
+test("topics and activity tabs parse, with or without a trailing slash", () => {
+  assert.deepEqual(parseRoute("#/topics"), { page: "topics" });
+  assert.deepEqual(parseRoute("#/topics/"), { page: "topics" });
+  assert.deepEqual(parseRoute("#/activity"), { page: "activity" });
+  assert.deepEqual(parseRoute("#/activity/"), { page: "activity" });
+  assert.deepEqual(parseRoute("#/activity?x=1"), { page: "activity" });
+});
+
+test("tab routes round-trip through routeHash", () => {
+  assert.equal(routeHash({ page: "topics" }), "#/topics");
+  assert.equal(routeHash({ page: "activity" }), "#/activity");
+  for (const page of ["home", "topics", "activity"] as const) {
+    assert.deepEqual(parseRoute(routeHash({ page })), { page });
+  }
+});
+
 test("a malformed % does not throw", () => {
   assert.deepEqual(parseRoute("#/topic/%"), { page: "topic", topicKey: "%" });
 });
