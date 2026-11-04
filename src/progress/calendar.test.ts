@@ -1,8 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { intensity, monthGrid, monthLabel, monthStats, recentMonths } from "./calendar.ts";
+import type { CalendarDay } from "./types.ts";
 
-const cal = [
+const cal: CalendarDay[] = [
   { day: "2026-11-04", events: 6, by_source: { bot: 6 } },
   { day: "2026-11-01", events: 1, by_source: { app: 1 } },
   { day: "2026-10-31", events: 12, by_source: { bot: 12 } },

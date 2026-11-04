@@ -75,6 +75,7 @@ function remapAppPaths() {
 // Private pages show a person's results (teacher dashboard: student names and accuracy;
 // progress: the student's own results), so they must never load GTM / Clarity session recording.
 const GTM_ID = "GTM-KJVX8GRG";
+// Keep in sync with PRIVATE_PAGES in scripts/check-private-pages.mjs (the build asserts these pages have no GTM).
 const PRIVATE_APPS = ["teacher", "progress"];
 // Matches a private entry exactly: the absolute file, or the server path /apps/<name>[/index.html].
 // Nothing looser, so a checkout folder named "teacher" cannot strip GTM from other pages.
