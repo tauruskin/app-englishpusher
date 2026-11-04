@@ -1333,7 +1333,7 @@ const BUTTON = "inline-flex items-center gap-2 rounded-lg px-4 py-2.5 font-displ
 function GetStarted({ name }: { name: string | null }) {
   return (
     <Card>
-      <h1 className="font-display text-2xl font-bold text-neutral-900">Hi, {firstName(name)}! 👋</h1>
+      <h2 className="font-display text-2xl font-bold text-neutral-900">Hi, {firstName(name)}! 👋</h2>
       <p className="mt-2 font-body text-sm text-neutral-600">
         Your progress appears here after your first answers. Practise in the App or in the Quiz Bot: both count.
       </p>
@@ -1370,9 +1370,9 @@ export function Home({ userId }: { userId: string }) {
       <Dimmed when={loading || !!error}>
         <div className="space-y-5">
           {/* 1. Coach */}
-          <h1 className="font-display text-2xl font-bold text-neutral-900">
+          <h2 className="font-display text-2xl font-bold text-neutral-900">
             {greeting(kyivHour())}, {firstName(data.person?.display_name)}! 👋
-          </h1>
+          </h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             <div className="col-span-2 sm:col-span-1">
               <StatTile label="Accuracy (30 days)" value={pct(s.accuracy)} now={s.accuracy} before={s.accuracy_prev} />
@@ -1552,7 +1552,7 @@ export function TopicPage({ userId, topicKey }: { userId: string; topicKey: stri
     <div className="space-y-5">
       <div>
         {back}
-        <h1 className="mt-1 font-display text-2xl font-bold text-neutral-900">{data.title || "Topic"}</h1>
+        <h2 className="mt-1 font-display text-2xl font-bold text-neutral-900">{data.title || "Topic"}</h2>
         <p className="mt-1 font-body text-sm text-neutral-500">
           {answered} {answered === 1 ? "answer" : "answers"} in the last 12 weeks
         </p>
