@@ -56,7 +56,7 @@ export function StateBox({ error, onRetry, children }: { error?: string | null; 
       </div>
     );
   }
-  return <p className="font-body text-sm text-neutral-400">{children}</p>;
+  return <p role="status" className="font-body text-sm text-neutral-400">{children}</p>;
 }
 
 // While reloading, keep the previous render at reduced opacity (no skeleton, no jump).

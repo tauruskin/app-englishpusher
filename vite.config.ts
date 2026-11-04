@@ -76,11 +76,12 @@ function remapAppPaths() {
 const GTM_ID = "GTM-KJVX8GRG";
 // Matches the teacher entry exactly: the absolute file, or the server path /apps/teacher[/index.html].
 // Nothing looser, so a checkout folder named "teacher" cannot strip GTM from other pages.
-const normPath = (p: string) => p.replace(/\\/g, "/").split(/[?#]/)[0];
+// Only the server path (ctx.path) can carry a query/hash; a file name may legally contain '#'.
+const normPath = (p: string) => p.replace(/\\/g, "/");
 const TEACHER_ENTRY = normPath(resolve(__dirname, "apps/teacher/index.html")).toLowerCase();
 function isTeacherPage(ctx?: { filename?: string; path?: string }): boolean {
   if (ctx?.filename && normPath(ctx.filename).toLowerCase() === TEACHER_ENTRY) return true;
-  return ctx?.path !== undefined && /^\/apps\/teacher(\/(index\.html)?)?$/.test(normPath(ctx.path));
+  return ctx?.path !== undefined && /^\/apps\/teacher(\/(index\.html)?)?$/.test(normPath(ctx.path).split(/[?#]/)[0]);
 }
 function injectGtm() {
   return {

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { api } from "../api.ts";
 import { daysAgo, delta, personName } from "../format.ts";
@@ -22,14 +22,11 @@ const GET: Record<Key, (r: RosterRow) => string | number | null> = {
 export function Students({ filters, setFilters, href }: PageProps) {
   const { data, error, loading, retry } = useData(() => api.students(filters), JSON.stringify(filters));
   const [sort, setSort] = useState<{ key: Key; dir: SortDir }>({ key: "accuracy", dir: "asc" });
-  // The roster has no separate source list. Remember every source seen so the source
-  // filter stays available after choosing one (a filtered roster only lists that source).
-  const seen = useRef(new Set<string>());
   if (!data) return error ? <StateBox error={error} onRetry={retry} /> : <StateBox>Loading…</StateBox>;
 
-  for (const r of data) for (const s of r.sources) seen.current.add(s);
-  if (filters.source) seen.current.add(filters.source);
-  const sources = [...seen.current];
+  // Each student's `sources` covers all their events (not filtered by the source filter), and the roster
+  // lists every student in scope, so the rows always show every source. The active one is kept for safety.
+  const sources = [...new Set([...data.flatMap((r) => r.sources), ...(filters.source ? [filters.source] : [])])];
   const rows = sortRows(data, GET[sort.key], sort.dir);
   const header = (key: Key, label: string, align = "text-left") => (
     <th className={`py-2 pr-3 ${align}`} aria-sort={sort.key === key ? (sort.dir === "asc" ? "ascending" : "descending") : "none"}>
@@ -47,7 +44,7 @@ export function Students({ filters, setFilters, href }: PageProps) {
     <div className="space-y-5">
       <FiltersRow filters={filters} sources={sources} onChange={setFilters} />
       {error && <StateBox error={error} onRetry={retry} />}
-      <Dimmed when={loading}>
+      <Dimmed when={loading || !!error}>
         <Card title="Students" subtitle="Accuracy and answers for the chosen period; weakest topic over each student's last answers">
           {data.length === 0 ? (
             <StateBox>No students yet.</StateBox>

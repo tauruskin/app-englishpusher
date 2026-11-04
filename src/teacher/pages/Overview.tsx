@@ -23,11 +23,13 @@ export function Overview({ filters, setFilters, href }: PageProps) {
   if (!data) return error ? <StateBox error={error} onRetry={retry} /> : <StateBox>Loading…</StateBox>;
 
   const sources = filters.source ? [filters.source] : data.sources;
+  const days = fillDays(data.daily, kyivToday(), filters.days);
+  const hasActivity = days.some((d) => Object.values(d.values).some((v) => v > 0));
   return (
     <div className="space-y-5">
       <FiltersRow filters={filters} sources={data.sources} onChange={setFilters} />
       {error && <StateBox error={error} onRetry={retry} />}
-      <Dimmed when={loading}>
+      <Dimmed when={loading || !!error}>
         <div className="space-y-5">
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             <StatTile label="Active students (7 days)" value={`${data.active_students}`} hint={`of ${data.total_students}`} />
@@ -39,9 +41,11 @@ export function Overview({ filters, setFilters, href }: PageProps) {
           <Card title="Activity per day" subtitle="Answers and study sessions, by where they happened">
             {data.total_students === 0 ? (
               <StateBox>No students yet.</StateBox>
+            ) : !hasActivity ? (
+              <StateBox>No activity in this period.</StateBox>
             ) : (
               <StackedColumns
-                data={fillDays(data.daily, kyivToday(), filters.days)}
+                data={days}
                 series={sources}
                 unit="activities"
                 label="Activity per day by source"
@@ -54,12 +58,12 @@ export function Overview({ filters, setFilters, href }: PageProps) {
               <StateBox>Nothing needs attention right now.</StateBox>
             ) : (
               <ul className="divide-y divide-neutral-100">
-                {data.needs_attention.map((a, i) => {
+                {data.needs_attention.map((a) => {
                   const Icon = lookup(ICON, a.type) ?? AlertTriangle;
                   const link = attentionHref(a, href);
                   const text = attentionText(a);
                   return (
-                    <li key={i} className="flex items-center gap-3 py-2.5 font-body text-sm text-neutral-800">
+                    <li key={`${a.type}:${a.person_id ?? ""}:${a.topic_key ?? ""}`}className="flex items-center gap-3 py-2.5 font-body text-sm text-neutral-800">
                       <Icon size={16} className="shrink-0 text-red-600" aria-hidden />
                       <span className="sr-only">{lookup(ICON_LABEL, a.type) ?? "Attention"}:</span>
                       {link ? <a href={link} className="hover:text-brand hover:underline">{text}</a> : <span>{text}</span>}
