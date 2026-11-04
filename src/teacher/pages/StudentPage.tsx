@@ -8,8 +8,8 @@ import { AccuracyCell, Card, Dimmed, MasteryBadge, SourceDots, StatTile, StateBo
 import type { PageProps } from "./types.ts";
 
 const KIND_LABEL: Record<string, string> = { grammar: "Grammar", vocab: "Vocab" };
-// One series (all platforms together): its own color, no legend. Same blue as the reference palette slot 1.
-const SERIES_BLUE = "#2a78d6";
+// One series (all platforms together): neutral ink, no legend. Source colors belong to single platforms.
+const SERIES_INK = "#4b5563";
 
 export function StudentPage({ href, personId }: PageProps & { personId: string }) {
   // Entity page: entityKey keeps student A's numbers from showing under student B.
@@ -29,7 +29,8 @@ export function StudentPage({ href, personId }: PageProps & { personId: string }
   const s = data.summary;
   const weeks = data.trend.map((w) => ({
     key: w.week,
-    label: `${dayLabel(w.week)}–${dayLabel(addDays(w.week, 6))}`,
+    label: `${dayLabel(w.week)}–${dayLabel(addDays(w.week, 6))}`, // tooltip and table
+    axisLabel: dayLabel(w.week), // short week-start label on the x-axis
     values: { answers: w.answers },
   }));
   const hasWeeks = weeks.some((w) => w.values.answers > 0);
@@ -50,7 +51,7 @@ export function StudentPage({ href, personId }: PageProps & { personId: string }
             <StatTile label="Accuracy (30 days)" value={pct(s.accuracy)} now={s.accuracy} before={s.accuracy_prev} />
             <StatTile label="Streak" value={`🔥 ${s.streak}`} hint={s.streak === 1 ? "day" : "days"} />
             <StatTile label="Words learned" value={`${s.words_learned}`} />
-            <StatTile label="Answers (30 days)" value={`${s.answers}`} hint={`${s.active_days_month} active days this month`} />
+            <StatTile label="Answers (30 days)" value={`${s.answers}`} hint={`${s.active_days_month} active ${s.active_days_month === 1 ? "day" : "days"} this month`} />
           </div>
           <Card title="Answers per week" subtitle="Last 8 weeks, every platform">
             {hasWeeks ? (
@@ -60,7 +61,7 @@ export function StudentPage({ href, personId }: PageProps & { personId: string }
                 height={180}
                 unit="answers"
                 label="Answers per week"
-                color={() => SERIES_BLUE}
+                color={() => SERIES_INK}
               />
             ) : (
               <StateBox>No activity in the last 8 weeks.</StateBox>
@@ -105,8 +106,10 @@ export function StudentPage({ href, personId }: PageProps & { personId: string }
               <ul className="divide-y divide-neutral-100">
                 {data.recent_mistakes.map((m, i) => (
                   <li key={`${m.occurred_at}:${m.item ?? ""}:${i}`} className="flex flex-wrap items-baseline justify-between gap-2 py-2 font-body text-sm">
-                    <span className="text-neutral-800">{m.item_label ?? m.item ?? "–"}</span>
-                    <span className="text-xs text-neutral-500">{m.title} · {sourceLabel(m.source)} · {daysAgo(m.occurred_at)}</span>
+                    <span className="min-w-0 break-words text-neutral-800">{m.item_label ?? m.item ?? "–"}</span>
+                    <span className="min-w-0 break-words text-xs text-neutral-500">
+                      {m.title} · {m.source ? sourceLabel(m.source) : "unknown source"} · {daysAgo(m.occurred_at)}
+                    </span>
                   </li>
                 ))}
               </ul>

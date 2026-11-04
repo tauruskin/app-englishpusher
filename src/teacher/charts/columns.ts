@@ -1,6 +1,6 @@
 import type { BySource, DailyRow } from "../types.ts";
 
-export interface StackDatum { key: string; label: string; values: BySource }
+export interface StackDatum { key: string; label: string; axisLabel?: string; values: BySource }
 export interface Segment { series: string; value: number; y: number; height: number; top: boolean }
 export interface Column {
   key: string; label: string; total: number;
@@ -114,4 +114,14 @@ export function layoutColumns(data: StackDatum[], series: string[], size: Size):
 export function roundedTopPath(x: number, y: number, w: number, h: number, r: number): string {
   const rr = Math.min(r, w / 2, h);
   return `M${x},${y + h}V${y + rr}Q${x},${y} ${x + rr},${y}H${x + w - rr}Q${x + w},${y} ${x + w},${y + rr}V${y + h}Z`;
+}
+
+const CHAR_W = 6; // rough width of one character at 11px; deterministic, no DOM measuring
+
+// Centre an axis label on its column, but pin it to the edge (start/end anchored) when it would be clipped.
+export function axisLabelPlacement(centerX: number, text: string, chartWidth: number): { x: number; anchor: "start" | "middle" | "end" } {
+  const half = (text.length * CHAR_W) / 2;
+  if (centerX - half < 0) return { x: 0, anchor: "start" };
+  if (centerX + half > chartWidth) return { x: chartWidth, anchor: "end" };
+  return { x: centerX, anchor: "middle" };
 }

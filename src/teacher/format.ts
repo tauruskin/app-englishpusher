@@ -86,7 +86,7 @@ export function friendlyError(error: { code?: string; message?: string; status?:
   ) {
     return SESSION_EXPIRED;
   }
-  if (error.code === "22023") return "That student or topic doesn't exist.";
+  if (error.code === "22023" || error.code === "22P02") return "That student or topic doesn't exist.";
   return "Couldn't load the data. Check your connection and try again.";
 }
 

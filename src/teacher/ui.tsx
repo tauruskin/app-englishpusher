@@ -34,8 +34,11 @@ export function StatTile({ label, value, now, before, hint }: { label: string; v
       <p className="font-body text-xs text-neutral-500">{label}</p>
       <p className="mt-1 font-body text-2xl font-semibold text-neutral-900">{value}</p>
       {d && (
-        <p className="mt-0.5 flex items-center gap-1 font-body text-xs" style={{ color }}>
-          <Icon size={12} aria-hidden /> {d.text} <span className="text-neutral-400">vs previous period</span>
+        <p className="mt-0.5 font-body text-xs" style={{ color }}>
+          <span className="whitespace-nowrap">
+            <Icon size={12} aria-hidden className="mr-1 inline align-[-1px]" />{d.text}
+          </span>{" "}
+          <span className="text-neutral-400">vs previous period</span>
         </p>
       )}
       {hint && <p className="mt-0.5 font-body text-xs text-neutral-400">{hint}</p>}

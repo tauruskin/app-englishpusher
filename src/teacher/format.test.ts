@@ -52,6 +52,7 @@ test("needs-attention sentences", () => {
 test("RPC errors become friendly messages", () => {
   assert.equal(friendlyError({ code: "42501" }), "You don't have access to this page.");
   assert.equal(friendlyError({ code: "22023" }), "That student or topic doesn't exist.");
+  assert.equal(friendlyError({ code: "22P02" }), "That student or topic doesn't exist.");
   assert.equal(friendlyError({ message: "fetch failed" }), "Couldn't load the data. Check your connection and try again.");
 });
 

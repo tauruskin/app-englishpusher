@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
-import { layoutColumns, roundedTopPath, type StackDatum } from "./columns.ts";
+import { axisLabelPlacement, layoutColumns, roundedTopPath, type StackDatum } from "./columns.ts";
 import { INK, orderSources, sourceColor } from "../theme.ts";
 import { sourceLabel } from "../format.ts";
 
@@ -67,9 +67,11 @@ export function StackedColumns({ data, series, height = 220, unit, label, color 
                   <rect key={s.series} x={c.x} y={s.y} width={c.width} height={s.height} fill={color(s.series)} />
                 ),
               )}
-              {i % every === 0 && (
-                <text x={c.x + c.width / 2} y={height - 6} textAnchor="middle" fontSize={11} fill={INK.muted}>{c.label}</text>
-              )}
+              {i % every === 0 && (() => {
+                const text = data[i].axisLabel ?? c.label;
+                const place = axisLabelPlacement(c.x + c.width / 2, text, width);
+                return <text x={place.x} y={height - 6} textAnchor={place.anchor} fontSize={11} fill={INK.muted}>{text}</text>;
+              })()}
               <rect
                 x={c.slotX} y={layout.plotTop} width={c.slotWidth} height={layout.plotBottom - layout.plotTop}
                 fill="transparent" role="img" aria-label={`${c.label}: ${c.total} ${unit}`}

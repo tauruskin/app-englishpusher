@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { addDays, dayLabel, fillDays, kyivToday, layoutColumns, niceStep, roundedTopPath } from "./columns.ts";
+import { addDays, axisLabelPlacement, dayLabel, fillDays, kyivToday, layoutColumns, niceStep, roundedTopPath } from "./columns.ts";
 
 test("addDays and dayLabel work on plain ISO dates", () => {
   assert.equal(addDays("2026-10-31", 1), "2026-11-01");
@@ -113,4 +113,13 @@ test("a tiny non-top segment keeps at least 1px", () => {
   const [bot, app] = layout.columns[0].segments;
   assert.equal(bot.height, 1);
   assert.equal(app.top, true);
+});
+
+test("axisLabelPlacement keeps edge labels inside the chart", () => {
+  // "4 Nov" is about 30px wide at 11px; chart is 300px wide
+  assert.deepEqual(axisLabelPlacement(150, "4 Nov", 300), { x: 150, anchor: "middle" });
+  assert.deepEqual(axisLabelPlacement(296, "4 Nov", 300), { x: 300, anchor: "end" });
+  assert.deepEqual(axisLabelPlacement(4, "4 Nov", 300), { x: 0, anchor: "start" });
+  // exactly fitting stays centred
+  assert.deepEqual(axisLabelPlacement(15, "4 Nov", 300), { x: 15, anchor: "middle" });
 });

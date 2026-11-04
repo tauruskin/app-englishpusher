@@ -61,7 +61,7 @@ export interface TopicDetail {
   answers: number;
   accuracy: number | null;
   students: { person_id: string; display_name: string | null; answers: number; accuracy: number | null }[];
-  most_missed: { item: string; label: string | null; wrong: number; answers: number }[];
+  most_missed: { item: string | null; label: string | null; wrong: number; answers: number }[];
   sources: string[];
 }
 
@@ -83,7 +83,7 @@ export interface StudentDetail {
   sources: BySource;
   recent_mistakes: {
     topic_key: string; title: string; item: string | null; item_label: string | null;
-    source: string; activity: string; occurred_at: string;
+    source: string | null; activity: string; occurred_at: string;
   }[];
 }
 
