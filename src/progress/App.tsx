@@ -34,9 +34,15 @@ export default function App() {
   const { user, loading } = useAuth();
   let body: ReactNode;
   if (isDemo) body = <ProgressPages userId="demo" />;
-  else if (!isSupabaseConfigured) body = <StateBox>Progress is not available right now.</StateBox>;
+  else if (!isSupabaseConfigured) body = <p className="font-body text-sm text-neutral-700">Progress is not available right now.</p>;
   else if (loading) body = <StateBox>Loading…</StateBox>;
-  else if (!user) body = <StateBox>Please <a href="/account/" className="text-brand hover:underline">sign in</a> to see your progress.</StateBox>;
+  else if (!user) {
+    body = (
+      <p className="font-body text-sm text-neutral-700">
+        Please <a href="/account/" className="text-brand hover:underline">sign in</a> to see your progress.
+      </p>
+    );
+  }
   else body = <ProgressPages userId={user.id} />;
 
   return (

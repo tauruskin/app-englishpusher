@@ -8,21 +8,21 @@ import { progressApi } from "../api.ts";
 import { LineChart } from "../charts/LineChart.tsx";
 import { MonthCalendar } from "../charts/MonthCalendar.tsx";
 import { routeHash } from "../route.ts";
-import { firstName, greeting, groupTopics, hasActivity, kyivHour, PRACTICE_URL, sourceShares } from "../shape.ts";
+import { greetingLine, groupTopics, hasActivity, hiLine, kyivHour, PRACTICE_URL, sourceShares } from "../shape.ts";
 
 const BUTTON = "inline-flex items-center gap-2 rounded-lg px-4 py-2.5 font-display text-sm font-bold transition-colors";
 
 function GetStarted({ name }: { name: string | null }) {
   return (
     <Card>
-      <h1 className="font-display text-2xl font-bold text-neutral-900">Hi, {firstName(name)}! 👋</h1>
+      <h2 className="font-display text-2xl font-bold text-neutral-900">{hiLine(name)} 👋</h2>
       <p className="mt-2 font-body text-sm text-neutral-600">
         Your progress appears here after your first answers. Practise in the App or in the Quiz Bot: both count.
       </p>
       <div className="mt-4 flex flex-wrap gap-3">
         <a href="/" className={`${BUTTON} bg-brand text-white hover:bg-brand/90`}>Practise in the App</a>
         <a href={PRACTICE_URL} target="_blank" rel="noopener noreferrer" className={`${BUTTON} border border-neutral-300 text-neutral-800 hover:border-neutral-400`}>
-          <Send size={16} aria-hidden /> Open the Quiz Bot
+          <Send size={16} aria-hidden /> Open the Quiz Bot<span className="sr-only"> (opens Telegram)</span>
         </a>
       </div>
     </Card>
@@ -32,7 +32,14 @@ function GetStarted({ name }: { name: string | null }) {
 export function Home({ userId }: { userId: string }) {
   const { data, error, loading, retry } = useData(() => progressApi.me(), `progress:${userId}`, `progress:${userId}`);
   if (!data) return error ? <StateBox error={error} onRetry={retry} /> : <StateBox>Loading…</StateBox>;
-  if (!hasActivity(data)) return <GetStarted name={data.person?.display_name ?? null} />;
+  if (!hasActivity(data)) {
+    return (
+      <div className="space-y-5">
+        {error && <StateBox error={error} onRetry={retry} />}
+        <GetStarted name={data.person?.display_name ?? null} />
+      </div>
+    );
+  }
 
   const s = data.summary;
   const today = kyivToday();
@@ -52,9 +59,9 @@ export function Home({ userId }: { userId: string }) {
       <Dimmed when={loading || !!error}>
         <div className="space-y-5">
           {/* 1. Coach */}
-          <h1 className="font-display text-2xl font-bold text-neutral-900">
-            {greeting(kyivHour())}, {firstName(data.person?.display_name)}! 👋
-          </h1>
+          <h2 className="font-display text-2xl font-bold text-neutral-900">
+            {greetingLine(kyivHour(), data.person?.display_name)} 👋
+          </h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             <div className="col-span-2 sm:col-span-1">
               <StatTile label="Accuracy (30 days)" value={pct(s.accuracy)} now={s.accuracy} before={s.accuracy_prev} />
@@ -81,10 +88,11 @@ export function Home({ userId }: { userId: string }) {
               </div>
             )}
             <a href={PRACTICE_URL} target="_blank" rel="noopener noreferrer" className={`${BUTTON} mt-4 bg-brand text-white hover:bg-brand/90`}>
-              <Send size={16} aria-hidden /> Practise weak topics
+              <Send size={16} aria-hidden /> {data.weak_topics.length === 0 ? "Open the Quiz Bot" : "Practise weak topics"}
+              <span className="sr-only"> (opens Telegram)</span>
             </a>
             <p className="mt-2 font-body text-xs text-neutral-500">
-              Opens the Quiz Bot in Telegram. Send <span className="font-semibold">/practice</span> there for 5 questions on your weakest topic.
+              Opens the Quiz Bot in Telegram. Send <span className="font-semibold">/practice</span> there for 5 questions on your weakest grammar topic.
             </p>
           </Card>
 
@@ -109,7 +117,7 @@ export function Home({ userId }: { userId: string }) {
                         className="flex items-center justify-between gap-3 rounded-md py-2 font-body text-sm hover:bg-neutral-50"
                       >
                         <span className="min-w-0">
-                          <span className="block truncate text-neutral-900">{t.title}</span>
+                          <span className="block truncate text-neutral-900" title={t.title}>{t.title}</span>
                           <span className="text-xs text-neutral-500">
                             {levelLabel(t.level)} · {t.answers} {t.answers === 1 ? "answer" : "answers"}
                           </span>

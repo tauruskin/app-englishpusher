@@ -46,7 +46,7 @@ export function TopicPage({ userId, topicKey }: { userId: string; topicKey: stri
     <div className="space-y-5">
       <div>
         {back}
-        <h1 className="mt-1 font-display text-2xl font-bold text-neutral-900">{data.title || "Topic"}</h1>
+        <h2 className="mt-1 font-display text-2xl font-bold text-neutral-900">{data.title || "Topic"}</h2>
         <p className="mt-1 font-body text-sm text-neutral-500">
           {answered} {answered === 1 ? "answer" : "answers"} in the last 12 weeks
         </p>

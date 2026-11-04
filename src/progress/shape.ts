@@ -20,6 +20,20 @@ export function greeting(hour: number): string {
   return "Good evening";
 }
 
+const usableName = (name: string | null | undefined): string | null => name?.trim().split(/\s+/)[0] || null;
+
+// "Good evening, Anna!", or "Good evening!" when there is no usable display name.
+export function greetingLine(hour: number, name: string | null | undefined): string {
+  const n = usableName(name);
+  return n ? `${greeting(hour)}, ${n}!` : `${greeting(hour)}!`;
+}
+
+// "Hi, Anna!", or "Hi!" when there is no usable display name.
+export function hiLine(name: string | null | undefined): string {
+  const n = usableName(name);
+  return n ? `Hi, ${n}!` : "Hi!";
+}
+
 const LEVEL_ORDER = ["a2", "a2plus", "b1", "b1plus", "b2", "b2plus", "c1"];
 const KIND_ORDER = ["grammar", "vocab"];
 const KIND_GROUP: Record<string, string> = { grammar: "Grammar", vocab: "Vocabulary" };

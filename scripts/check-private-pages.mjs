@@ -3,10 +3,12 @@
 // Keep PRIVATE_PAGES in sync with PRIVATE_APPS in vite.config.ts.
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const PRIVATE_PAGES = ["teacher", "progress"];
-const MARKER = "googletagmanager";
-const dist = resolve(import.meta.dirname, "..", "dist");
+const MARKER = "googletagmanager"; // what the public home page must contain (sanity check)
+const FORBIDDEN = [MARKER, "clarity.ms", "GTM-KJVX8GRG"]; // none of these may appear on a private page
+const dist = resolve(fileURLToPath(new URL("..", import.meta.url)), "dist");
 
 const read = (file) => (existsSync(file) ? readFileSync(file, "utf8") : null);
 const problems = [];
@@ -19,7 +21,11 @@ else if (!home.includes(MARKER)) problems.push(`dist/index.html does not contain
 for (const app of PRIVATE_PAGES) {
   const html = read(resolve(dist, app, "index.html"));
   if (html === null) problems.push(`dist/${app}/index.html is missing`);
-  else if (html.includes(MARKER)) problems.push(`dist/${app}/index.html loads Google Tag Manager, but it is a private page`);
+  else {
+    for (const bad of FORBIDDEN) {
+      if (html.includes(bad)) problems.push(`dist/${app}/index.html contains "${bad}" (tracking), but it is a private page`);
+    }
+  }
 }
 
 if (problems.length > 0) {
@@ -27,4 +33,4 @@ if (problems.length > 0) {
   for (const p of problems) console.error(`  - ${p}`);
   process.exit(1);
 }
-console.log(`Private page check OK: ${PRIVATE_PAGES.join(", ")} have no ${MARKER}; the public home page does.`);
+console.log(`Private page check OK: ${PRIVATE_PAGES.join(", ")} have none of ${FORBIDDEN.join(", ")}; the public home page does.`);

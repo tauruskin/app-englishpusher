@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { StudentTopic } from "../teacher/types.ts";
 import type { Progress, TopicProgress } from "./types.ts";
-import { firstName, greeting, groupTopics, hasActivity, kyivHour, sourceShares, topicExists } from "./shape.ts";
+import { firstName, greeting, greetingLine, groupTopics, hiLine, hasActivity, kyivHour, sourceShares, topicExists } from "./shape.ts";
 
 const topic = (topic_key: string, kind: string, level: string, title: string): StudentTopic => ({
   topic_key, kind, level, title, answers: 5, accuracy: 70, mastery: "learning", last_at: null,
@@ -26,6 +26,17 @@ test("greeting follows the hour", () => {
   assert.equal(greeting(17), "Good afternoon");
   assert.equal(greeting(18), "Good evening");
   assert.equal(greeting(3), "Good evening");
+});
+
+test("greetingLine and hiLine drop the name when there is none", () => {
+  assert.equal(greetingLine(19, "Anna Petrenko"), "Good evening, Anna!");
+  assert.equal(greetingLine(8, "Anna"), "Good morning, Anna!");
+  assert.equal(greetingLine(19, null), "Good evening!");
+  assert.equal(greetingLine(13, "   "), "Good afternoon!");
+  assert.equal(greetingLine(13, undefined), "Good afternoon!");
+  assert.equal(hiLine("Anna Petrenko"), "Hi, Anna!");
+  assert.equal(hiLine(null), "Hi!");
+  assert.equal(hiLine("  "), "Hi!");
 });
 
 test("kyivHour uses Europe/Kyiv, including summer time", () => {
