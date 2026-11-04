@@ -11,7 +11,7 @@ function safeDecode(s: string): string {
 // "#/" → home; "#/topic/<encoded key>" → one topic. Anything else → home.
 export function parseRoute(hash: string): Route {
   const path = hash.replace(/^#/, "").split("?")[0];
-  const m = /^\/topic\/(.+)$/.exec(path);
+  const m = /^\/topic\/(.*?)\/*$/.exec(path); // a trailing "/" is not part of the key
   if (m) {
     const topicKey = safeDecode(m[1]);
     if (topicKey) return { page: "topic", topicKey };

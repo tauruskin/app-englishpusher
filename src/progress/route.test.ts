@@ -13,6 +13,12 @@ test("topic route decodes its key", () => {
   assert.deepEqual(parseRoute("#/topic/b1%3Agrammar%3Amodifiers"), { page: "topic", topicKey: "b1:grammar:modifiers" });
 });
 
+test("a trailing slash is not part of the topic key", () => {
+  assert.deepEqual(parseRoute("#/topic/x/"), { page: "topic", topicKey: "x" });
+  assert.deepEqual(parseRoute("#/topic/b1%3Agrammar%3Amodifiers/"), { page: "topic", topicKey: "b1:grammar:modifiers" });
+  assert.deepEqual(parseRoute("#/topic//"), { page: "home" });
+});
+
 test("a malformed % does not throw", () => {
   assert.deepEqual(parseRoute("#/topic/%"), { page: "topic", topicKey: "%" });
 });

@@ -24,16 +24,24 @@ const topics: StudentTopic[] = [
   { topic_key: "b1plus:vocab:feelings", kind: "vocab", level: "b1plus", title: "Feelings and Emotions", answers: 3, accuracy: 67, mastery: "not_enough_data", last_at: iso(9) },
 ];
 
+// Every 7th day (counting back from the 4th) is empty; today is always active.
 const calendar = Array.from({ length: 90 }, (_, i) => {
-  const events = i % 3 === 1 ? 0 : (i * 7) % 23;
+  const events = i % 7 === 3 ? 0 : ((i * 7) % 23) + 1;
   const bot = Math.ceil(events * 0.7);
   return { day: day(i), events, by_source: { bot, app: events - bot } };
 }).filter((d) => d.events > 0);
 
+// Summary numbers derived from the calendar above, so the demo page agrees with itself.
+const activeDays = new Set(calendar.map((d) => d.day));
+const activeDaysMonth = calendar.filter((d) => d.day.slice(0, 7) === day(0).slice(0, 7)).length;
+// Consecutive active days ending today (or yesterday, if today is still empty).
+let streak = 0;
+for (let i = activeDays.has(day(0)) ? 0 : 1; activeDays.has(day(i)); i++) streak++;
+
 export const PROGRESS_DEMO = {
   progress: {
     person: { id: "demo-student", display_name: "Demo Student", role: "student" },
-    summary: { accuracy: 78, accuracy_prev: 71, answers: 164, streak: 4, words_learned: 96, active_days_month: 3, last_active: iso(0) },
+    summary: { accuracy: 78, accuracy_prev: 71, answers: 164, streak, words_learned: 96, active_days_month: activeDaysMonth, last_active: iso(0) },
     weak_topics: topics
       .filter((t) => t.answers >= 5)
       .sort((a, b) => (a.accuracy ?? 0) - (b.accuracy ?? 0))
@@ -55,6 +63,8 @@ export const PROGRESS_DEMO = {
       recent_mistakes: [
         { topic_key: topicKey, title, item: "q40", item_label: "It was ___ cold that we stayed inside.", source: "bot", activity: "quiz", occurred_at: iso(1) },
         { topic_key: topicKey, title, item: "q12", item_label: "She speaks English ___ well.", source: "app", activity: "trivia", occurred_at: iso(3) },
+        // Exercises the fallbacks for rows without an item, a label or a source.
+        { topic_key: topicKey, title, item: null, item_label: null, source: null, activity: "quiz", occurred_at: iso(6) },
       ],
     };
   },

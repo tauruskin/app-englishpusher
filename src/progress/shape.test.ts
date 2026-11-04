@@ -31,6 +31,7 @@ test("greeting follows the hour", () => {
 test("kyivHour uses Europe/Kyiv, including summer time", () => {
   assert.equal(kyivHour(new Date("2026-11-04T06:30:00Z")), 8);  // UTC+2
   assert.equal(kyivHour(new Date("2026-07-01T16:30:00Z")), 19); // UTC+3
+  assert.equal(kyivHour(new Date("2026-11-04T22:30:00Z")), 0);  // midnight hour is 0, never 24
 });
 
 test("groupTopics: grammar first, then vocabulary; levels in course order, then title", () => {
@@ -49,19 +50,46 @@ test("groupTopics: empty list gives no groups", () => {
   assert.deepEqual(groupTopics([]), []);
 });
 
+test("groupTopics: titles sort by number, so Lesson 2 comes before Lesson 10", () => {
+  const groups = groupTopics([
+    topic("b1:vocab:10", "vocab", "b1", "Lesson 10: Y"),
+    topic("b1:vocab:2", "vocab", "b1", "Lesson 2: X"),
+  ]);
+  assert.deepEqual(groups[0].topics.map((t) => t.title), ["Lesson 2: X", "Lesson 10: Y"]);
+});
+
 test("sourceShares: known order, whole percentages, zero sources hidden", () => {
   assert.deepEqual(sourceShares({ app: 1, bot: 3 }), [
-    { source: "bot", count: 3, share: 75 },
-    { source: "app", count: 1, share: 25 },
+    { source: "bot", count: 3, share: 75, tiny: false },
+    { source: "app", count: 1, share: 25, tiny: false },
   ]);
-  assert.deepEqual(sourceShares({ bot: 5, app: 0 }), [{ source: "bot", count: 5, share: 100 }]);
+  assert.deepEqual(sourceShares({ bot: 5, app: 0 }), [{ source: "bot", count: 5, share: 100, tiny: false }]);
   assert.deepEqual(sourceShares({}), []);
+});
+
+test("sourceShares: shares always add up to 100 (largest remainder)", () => {
+  const sum = (s: Record<string, number>) => sourceShares(s).reduce((n, r) => n + r.share, 0);
+  assert.deepEqual(sourceShares({ bot: 1, app: 7 }).map((r) => r.share), [12, 88]);
+  assert.equal(sum({ bot: 1, app: 7 }), 100);
+  assert.deepEqual(sourceShares({ bot: 1, app: 1, zeta: 1 }).map((r) => r.share), [34, 33, 33]);
+  assert.equal(sum({ bot: 1, app: 1, zeta: 1 }), 100);
+  assert.equal(sum({ bot: 5, app: 11, zeta: 13, other: 2 }), 100);
+});
+
+test("sourceShares: a used source that rounds to 0% is flagged tiny", () => {
+  assert.deepEqual(sourceShares({ bot: 1000, app: 1 }), [
+    { source: "bot", count: 1000, share: 100, tiny: false },
+    { source: "app", count: 1, share: 0, tiny: true },
+  ]);
 });
 
 test("hasActivity is false only when there is nothing at all", () => {
   assert.equal(hasActivity(empty), false);
   assert.equal(hasActivity({ ...empty, topics: [topic("b1:vocab:a", "vocab", "b1", "A")] }), true);
   assert.equal(hasActivity({ ...empty, calendar: [{ day: "2026-11-04", events: 2, by_source: { app: 2 } }] }), true);
+  assert.equal(hasActivity({ ...empty, summary: { ...empty.summary, answers: 3 } }), true);
+  assert.equal(hasActivity({ ...empty, sources: { bot: 4 } }), true);
+  assert.equal(hasActivity({ ...empty, sources: { bot: 0 } }), false);
 });
 
 test("topicExists: unknown keys come back with an empty title and no data", () => {

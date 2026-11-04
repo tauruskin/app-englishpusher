@@ -38,24 +38,40 @@ export function groupTopics(topics: StudentTopic[]): TopicGroup[] {
     label: lookup(KIND_GROUP, kind) ?? kind.charAt(0).toUpperCase() + kind.slice(1),
     topics: topics
       .filter((t) => t.kind === kind)
-      .sort((a, b) => rank(LEVEL_ORDER, a.level) - rank(LEVEL_ORDER, b.level) || a.title.localeCompare(b.title)),
+      .sort((a, b) => rank(LEVEL_ORDER, a.level) - rank(LEVEL_ORDER, b.level) || a.title.localeCompare(b.title, undefined, { numeric: true })),
   }));
 }
 
-export interface Share { source: string; count: number; share: number }
+// tiny: the source was used, but its share rounds to 0% (show "<1%", not "0%").
+export interface Share { source: string; count: number; share: number; tiny: boolean }
 
-// Share of all activity per source; sources with no activity are left out.
+// Share of all activity per source, in whole percent that always add up to 100
+// (largest-remainder rounding; ties go to the bigger source, then to the earlier one).
+// Sources with no activity are left out.
 export function sourceShares(sources: BySource): Share[] {
   const rows = orderSources(Object.keys(sources))
     .map((source) => ({ source, count: sources[source] ?? 0 }))
     .filter((r) => r.count > 0);
   const total = rows.reduce((n, r) => n + r.count, 0);
-  return total === 0 ? [] : rows.map((r) => ({ ...r, share: Math.round((r.count / total) * 100) }));
+  if (total === 0) return [];
+  const exact = rows.map((r) => (r.count / total) * 100);
+  const shares = exact.map(Math.floor);
+  const order = rows
+    .map((_, i) => i)
+    .sort((a, b) => exact[b] - shares[b] - (exact[a] - shares[a]) || rows[b].count - rows[a].count || a - b);
+  const missing = 100 - shares.reduce((n, s) => n + s, 0);
+  for (let k = 0; k < missing; k++) shares[order[k]] += 1;
+  return rows.map((r, i) => ({ ...r, share: shares[i], tiny: shares[i] === 0 }));
 }
 
 // False for a brand-new student: show "get started" instead of empty charts.
 export function hasActivity(p: Progress): boolean {
-  return p.topics.length > 0 || p.summary.answers > 0 || p.calendar.some((d) => d.events > 0);
+  return (
+    p.topics.length > 0 ||
+    p.summary.answers > 0 ||
+    p.calendar.some((d) => d.events > 0) ||
+    Object.values(p.sources).some((n) => n > 0)
+  );
 }
 
 // analytics_student_topic raises no error for an unknown key; it returns an empty title and no data.

@@ -142,7 +142,7 @@ export function Home({ userId }: { userId: string }) {
                     <div className="h-3 rounded-r bg-neutral-100" aria-hidden>
                       <div className="h-3 rounded-r" style={{ width: `${Math.max(1, r.share)}%`, background: sourceColor(r.source) }} />
                     </div>
-                    <span className="text-right tabular-nums text-neutral-600">{r.share}%</span>
+                    <span className="text-right tabular-nums text-neutral-600">{r.tiny ? "<1%" : `${r.share}%`}</span>
                   </div>
                 ))}
               </div>
