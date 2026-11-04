@@ -6,6 +6,7 @@ import { copyFileSync, mkdirSync, rmSync, existsSync } from "fs";
 
 const APPS = [
   "account",
+  "teacher",
   "a2-flashcards",
   "a2-trivia",
   "a2-vocabulary",
@@ -70,12 +71,24 @@ function remapAppPaths() {
 
 // Inject the Google Tag Manager container (GA4 + Clarity live inside it) into
 // every HTML entry point. Build-only, so local dev visits are not tracked.
+// The staff-only teacher dashboard (apps/teacher) shows student names and accuracy,
+// so it must never load GTM / Clarity session recording.
 const GTM_ID = "GTM-KJVX8GRG";
+// Matches the teacher entry exactly: the absolute file, or the server path /apps/teacher[/index.html].
+// Nothing looser, so a checkout folder named "teacher" cannot strip GTM from other pages.
+// Only the server path (ctx.path) can carry a query/hash; a file name may legally contain '#'.
+const normPath = (p: string) => p.replace(/\\/g, "/");
+const TEACHER_ENTRY = normPath(resolve(__dirname, "apps/teacher/index.html")).toLowerCase();
+function isTeacherPage(ctx?: { filename?: string; path?: string }): boolean {
+  if (ctx?.filename && normPath(ctx.filename).toLowerCase() === TEACHER_ENTRY) return true;
+  return ctx?.path !== undefined && /^\/apps\/teacher(\/(index\.html)?)?$/.test(normPath(ctx.path).split(/[?#]/)[0]);
+}
 function injectGtm() {
   return {
     name: "inject-gtm",
     apply: "build" as const,
-    transformIndexHtml() {
+    transformIndexHtml(_html: string, ctx?: { filename?: string; path?: string }) {
+      if (isTeacherPage(ctx)) return [];
       return [
         {
           tag: "script",
@@ -100,6 +113,7 @@ export default defineConfig({
       input: {
         main:            resolve(__dirname, "index.html"),
         account:         resolve(__dirname, "apps/account/index.html"),
+        teacher:         resolve(__dirname, "apps/teacher/index.html"),
         wordConnections: resolve(__dirname, "apps/word-connections/index.html"),
         c1Trivia:        resolve(__dirname, "apps/c1-trivia/index.html"),
         c1Business:      resolve(__dirname, "apps/c1-business/index.html"),
