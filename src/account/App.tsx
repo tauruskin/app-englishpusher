@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { motion } from "motion/react";
-import { LogOut, BarChart3, Star, Clock, Eye, EyeOff, LayoutDashboard } from "lucide-react";
+import { LogOut, BarChart3, Star, Clock, Eye, EyeOff, LayoutDashboard, TrendingUp } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import { useAuth } from "../shared/auth.tsx";
 import { supabase, isSupabaseConfigured } from "../shared/supabase.ts";
@@ -547,6 +547,14 @@ function PersonalPage() {
           Sign out
         </button>
       </div>
+
+      <a
+        href="/progress/"
+        className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-5 py-4 font-display text-sm font-bold text-neutral-900 hover:border-brand/40 transition-colors"
+      >
+        <span className="flex items-center gap-2"><TrendingUp size={16} className="text-brand" /> All my progress (Quiz Bot + App)</span>
+        <span aria-hidden>→</span>
+      </a>
 
       {isStaff && (
         <a
