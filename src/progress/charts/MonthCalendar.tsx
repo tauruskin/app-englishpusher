@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { dayLabel } from "../../teacher/charts/columns.ts";
-import { INTENSITY, intensity, monthGrid, monthLabel, monthStats, recentMonths } from "../calendar.ts";
+import { INTENSITY, intensity, monthGrid, monthLabel, monthStats, recentMonths, windowStart } from "../calendar.ts";
 import type { CalendarDay } from "../types.ts";
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -10,12 +10,12 @@ export function MonthCalendar({ calendar, today }: { calendar: CalendarDay[]; to
   const months = recentMonths(today, 3);
   const [index, setIndex] = useState(0);
   const key = months[index];
-  const weeks = monthGrid(key, calendar, today);
+  const weeks = monthGrid(key, calendar, today, windowStart(today));
   const stats = monthStats(key, calendar);
   const title = monthLabel(key);
 
   return (
-    <div>
+    <div className="mx-auto w-full max-w-xs">
       <div className="mb-2 flex items-center justify-between">
         <button
           type="button"
@@ -50,8 +50,9 @@ export function MonthCalendar({ calendar, today }: { calendar: CalendarDay[]; to
             <tr key={w}>
               {week.map((cell, i) => {
                 if (!cell) return <td key={i} />;
-                const text = cell.future ? "" : `${dayLabel(cell.day)}: ${cell.events} ${cell.events === 1 ? "activity" : "activities"}`;
-                const style = INTENSITY[cell.future ? 0 : intensity(cell.events)];
+                // Outside the data window (or after today) there is no count: not "0 activities".
+                const text = cell.outside ? "" : `${dayLabel(cell.day)}: ${cell.events} ${cell.events === 1 ? "activity" : "activities"}`;
+                const style = INTENSITY[intensity(cell.events)];
                 return (
                   <td key={i} className="p-0">
                     <div
@@ -59,7 +60,7 @@ export function MonthCalendar({ calendar, today }: { calendar: CalendarDay[]; to
                       className={`flex aspect-square items-center justify-center rounded-md font-body text-xs tabular-nums ${
                         cell.day === today ? "ring-2 ring-brand" : ""
                       }`}
-                      style={cell.future ? { color: "#c3c2b7" } : { background: style.bg, color: style.fg }}
+                      style={cell.outside ? { color: "#c3c2b7" } : { background: style.bg, color: style.fg }}
                     >
                       <span aria-hidden>{cell.date}</span>
                       {text && <span className="sr-only">{text}</span>}

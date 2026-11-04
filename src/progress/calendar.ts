@@ -14,10 +14,16 @@ export function monthLabel(key: string): string {
   return new Date(Date.UTC(y, m - 1, 1)).toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
 }
 
-export interface DayCell { day: string; date: number; events: number; future: boolean }
+// First day of the data window: `days` days ending today ("2026-11-04", 90 → "2026-08-07").
+export function windowStart(today: string, days = 90): string {
+  return new Date(Date.parse(today) - (days - 1) * DAY_MS).toISOString().slice(0, 10);
+}
+
+// outside: no data exists for this day (before the data window or after today), so it is not "0 activities".
+export interface DayCell { day: string; date: number; events: number; future: boolean; outside: boolean }
 
 // Weeks of 7 cells, Monday first; null pads the first and last week.
-export function monthGrid(key: string, calendar: CalendarDay[], today: string): (DayCell | null)[][] {
+export function monthGrid(key: string, calendar: CalendarDay[], today: string, firstDay: string = windowStart(today)): (DayCell | null)[][] {
   const [y, m] = key.split("-").map(Number);
   const first = Date.UTC(y, m - 1, 1);
   const length = new Date(Date.UTC(y, m, 0)).getUTCDate();
@@ -26,7 +32,7 @@ export function monthGrid(key: string, calendar: CalendarDay[], today: string): 
   const cells: (DayCell | null)[] = Array.from({ length: offset }, () => null);
   for (let d = 1; d <= length; d++) {
     const day = new Date(first + (d - 1) * DAY_MS).toISOString().slice(0, 10);
-    cells.push({ day, date: d, events: events.get(day) ?? 0, future: day > today });
+    cells.push({ day, date: d, events: events.get(day) ?? 0, future: day > today, outside: day < firstDay || day > today });
   }
   while (cells.length % 7 !== 0) cells.push(null);
   const weeks: (DayCell | null)[][] = [];
