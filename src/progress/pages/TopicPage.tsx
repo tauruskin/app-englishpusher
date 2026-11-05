@@ -1,7 +1,7 @@
 import { addDays, dayLabel } from "../../teacher/charts/columns.ts";
 import { daysAgo, sourceLabel } from "../../teacher/format.ts";
 import { useData } from "../../teacher/useData.ts";
-import { Card, Dimmed, StateBox } from "../../teacher/ui.tsx";
+import { Card, Dimmed, MistakeAnswers, StateBox } from "../../teacher/ui.tsx";
 import { progressApi } from "../api.ts";
 import { LineChart } from "../charts/LineChart.tsx";
 import { routeHash } from "../route.ts";
@@ -68,7 +68,10 @@ export function TopicPage({ userId, topicKey }: { userId: string; topicKey: stri
               <ul className="divide-y divide-neutral-100">
                 {data.recent_mistakes.map((m, i) => (
                   <li key={`${m.occurred_at}:${m.item ?? ""}:${i}`} className="flex flex-wrap items-baseline justify-between gap-2 py-2 font-body text-sm">
-                    <span className="min-w-0 break-words text-neutral-800">{m.item_label ?? m.item ?? "(no label)"}</span>
+                    <div className="min-w-0">
+                      <span className="break-words text-neutral-800">{m.item_label ?? m.item ?? "(no label)"}</span>
+                      <MistakeAnswers yours={m.your_answer} correct={m.correct_answer} />
+                    </div>
                     <span className="min-w-0 break-words text-xs text-neutral-500">
                       {m.source ? sourceLabel(m.source) : "unknown source"} · {daysAgo(m.occurred_at)}
                     </span>

@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  attentionText, daysAgo, delta, friendlyError, levelLabel, pct, periodLabel, personName, sourceLabel,
+  attentionText, daysAgo, delta, friendlyError, levelLabel, pct, periodLabel, personName, shorten, sourceLabel,
 } from "./format.ts";
 
 test("pct shows a dash for no data", () => {
@@ -103,4 +103,19 @@ test("friendlyError asks for a new sign-in on expired or missing sessions", () =
   // not-staff keeps its own message even when a 4xx status is attached
   assert.equal(friendlyError({ code: "42501", status: 403 }), "You don't have access to this page.");
   assert.equal(friendlyError({ message: "boom", status: 500 }), "Couldn't load the data. Check your connection and try again.");
+});
+
+test("shorten keeps short text and collapses whitespace", () => {
+  assert.equal(shorten("  went \n home "), "went home");
+});
+
+test("shorten cuts long text with an ellipsis, max length included", () => {
+  const out = shorten("a".repeat(100), 20);
+  assert.equal(out.length, 20);
+  assert.ok(out.endsWith("…"));
+});
+
+test("shorten default max is 80", () => {
+  assert.equal(shorten("b".repeat(80)), "b".repeat(80));
+  assert.equal(shorten("b".repeat(81)).length, 80);
 });

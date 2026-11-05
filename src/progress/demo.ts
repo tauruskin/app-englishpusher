@@ -61,8 +61,10 @@ export const PROGRESS_DEMO = {
       title,
       trend: weeks(12, [0, 0, 4, 6, 0, 5, 8, 3, 6, 7, 4, 5], [null, null, 50, 50, null, 60, 63, 67, 50, 71, 75, 60]),
       recent_mistakes: [
-        { topic_key: topicKey, title, item: "q40", item_label: "It was ___ cold that we stayed inside.", source: "bot", activity: "quiz", occurred_at: iso(1) },
-        { topic_key: topicKey, title, item: "q12", item_label: "She speaks English ___ well.", source: "app", activity: "trivia", occurred_at: iso(3) },
+        { topic_key: topicKey, title, item: "q40", item_label: "It was ___ cold that we stayed inside.", source: "bot", activity: "quiz", occurred_at: iso(1), correct_answer: "so", your_answer: "such" },
+        { topic_key: topicKey, title, item: "q12", item_label: "She speaks English ___ well.", source: "app", activity: "trivia", occurred_at: iso(3), correct_answer: "very" },
+        // Long answers are cut with "…" (full text in the tooltip).
+        { topic_key: topicKey, title, item: "q77", item_label: "Choose the sentence that is correct.", source: "bot", activity: "quiz", occurred_at: iso(4), correct_answer: "If I had known about the delay, I would have taken an earlier train to the station.", your_answer: "If I would have known about the delay, I would have taken an earlier train to the station." },
         // Exercises the fallbacks for rows without an item, a label or a source.
         { topic_key: topicKey, title, item: null, item_label: null, source: null, activity: "quiz", occurred_at: iso(6) },
       ],

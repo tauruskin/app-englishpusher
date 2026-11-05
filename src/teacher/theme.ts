@@ -20,6 +20,9 @@ export const INK = {
   bad: "#d03b3b",
 };
 
+/** "Recent mistakes": the student's answer (red) and the correct one (green). */
+export const ANSWER_COLORS = { wrong: "#d03b3b", right: "#087a08" } as const;
+
 export function sourceColor(source: string): string {
   return lookup(SOURCE_COLOR, source) ?? INK.muted;
 }
