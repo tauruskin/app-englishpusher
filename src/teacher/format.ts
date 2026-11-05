@@ -1,4 +1,4 @@
-import type { Attention } from "./types.ts";
+import type { Attention, WrongAnswer } from "./types.ts";
 import { kyivToday } from "./charts/columns.ts";
 import { lookup } from "./lookup.ts";
 
@@ -18,6 +18,12 @@ export function sourceLabel(source: string): string {
 export function shorten(text: string, max = 80): string {
   const t = text.replace(/\s+/g, " ").trim();
   return t.length <= max ? t : t.slice(0, max - 1).trimEnd() + "…";
+}
+
+/** "flied (2), flown (1)" for the teacher's "Most missed" list, or null when nothing was saved. */
+export function wrongAnswersText(list: WrongAnswer[] | null | undefined): string | null {
+  const parts = (list ?? []).filter((w) => w.answer.trim() !== "").map((w) => `${w.answer.trim()} (${w.count})`);
+  return parts.length ? parts.join(", ") : null;
 }
 
 export function pct(value: number | null | undefined): string {

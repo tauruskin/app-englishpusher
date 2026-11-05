@@ -1,9 +1,9 @@
 import { api } from "../api.ts";
-import { levelLabel, pct, personName } from "../format.ts";
+import { levelLabel, pct, personName, wrongAnswersText } from "../format.ts";
 import { lookup } from "../lookup.ts";
 import { sortRows } from "../sort.ts";
 import { useData } from "../useData.ts";
-import { BarRow, Card, Dimmed, FiltersRow, StatTile, StateBox } from "../ui.tsx";
+import { BarRow, Card, Dimmed, FiltersRow, MistakeAnswers, StatTile, StateBox } from "../ui.tsx";
 import type { PageProps } from "./types.ts";
 
 const KIND_LABEL: Record<string, string> = { grammar: "Grammar", vocab: "Vocabulary" };
@@ -95,7 +95,10 @@ export function TopicPage({ filters, setFilters, href, topicKey }: PageProps & {
                   <tbody>
                     {data.most_missed.map((m, i) => (
                       <tr key={m.item ?? `row-${i}`} className="border-b border-neutral-100">
-                        <td className="min-w-0 py-2 pr-3 text-neutral-800 [overflow-wrap:anywhere]">{m.label ?? m.item ?? "(no label)"}</td>
+                        <td className="min-w-0 py-2 pr-3 text-neutral-800 [overflow-wrap:anywhere]">
+                          {m.label ?? m.item ?? "(no label)"}
+                          <MistakeAnswers yours={wrongAnswersText(m.wrong_answers)} correct={m.correct_answer} yoursLabel="Wrong answers" />
+                        </td>
                         <td className="whitespace-nowrap py-2 text-right tabular-nums text-neutral-600">{m.wrong} of {m.answers}</td>
                       </tr>
                     ))}
