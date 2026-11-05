@@ -5,6 +5,7 @@ import { BarRow, Card, StateBox, StatTile } from "../../teacher/ui.tsx";
 import { LineChart } from "../charts/LineChart.tsx";
 import { routeHash } from "../route.ts";
 import { greetingLine, kyivHour, PRACTICE_URL } from "../shape.ts";
+import { onTelegramLinkClick } from "../telegram.ts";
 import type { Progress } from "../types.ts";
 import { BUTTON } from "./GetStarted.tsx";
 
@@ -48,12 +49,12 @@ export function Overview({ data }: { data: Progress }) {
             ))}
           </div>
         )}
-        <a href={PRACTICE_URL} target="_blank" rel="noopener noreferrer" className={`${BUTTON} mt-4 bg-brand text-white hover:bg-brand/90`}>
+        <a href={PRACTICE_URL} onClick={onTelegramLinkClick} target="_blank" rel="noopener noreferrer" className={`${BUTTON} mt-4 bg-brand text-white hover:bg-brand/90`}>
           <Send size={16} aria-hidden /> {data.weak_topics.length === 0 ? "Open the Quiz Bot" : "Practise weak topics"}
           <span className="sr-only"> (opens Telegram)</span>
         </a>
         <p className="mt-2 font-body text-xs text-neutral-500">
-          Opens the Quiz Bot in Telegram. Send <span className="font-semibold">/practice</span> there for 5 questions on your weakest grammar topic.
+          Opens the Quiz Bot in Telegram and starts 5 questions on your weakest grammar topic.
         </p>
       </Card>
 

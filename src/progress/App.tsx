@@ -13,6 +13,7 @@ import { GetStarted } from "./pages/GetStarted.tsx";
 import { Overview } from "./pages/Overview.tsx";
 import { TopicPage } from "./pages/TopicPage.tsx";
 import { TopicsTab } from "./pages/Topics.tsx";
+import { telegramInitData } from "./telegram.ts";
 
 function useRoute(): Route {
   const [route, setRoute] = useState(() => parseRoute(window.location.hash));
@@ -89,9 +90,11 @@ function ProgressPages({ userId }: { userId: string }) {
 
 export default function App() {
   const { user, loading } = useAuth();
+  const inTelegram = telegramInitData() !== null;
   let body: ReactNode;
   if (isDemo) body = <ProgressPages userId="demo" />;
   else if (!isSupabaseConfigured) body = <p className="font-body text-sm text-neutral-700">Progress is not available right now.</p>;
+  else if (inTelegram) body = <ProgressPages userId="telegram" />;
   else if (loading) body = <StateBox>Loading…</StateBox>;
   else if (!user) {
     body = (
