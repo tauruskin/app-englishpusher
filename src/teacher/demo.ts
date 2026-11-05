@@ -59,8 +59,10 @@ export const DEMO = {
       { person_id: "d1", display_name: "Anna", answers: 20, accuracy: 75 },
     ],
     most_missed: [
-      { item: "b12", label: "Yesterday I ___ (go) to the cinema with my friends.", wrong: 9, answers: 14 },
-      { item: "b15", label: "She has ___ (write) three books so far.", wrong: 6, answers: 12 },
+      { item: "b12", label: "Yesterday I ___ (go) to the cinema with my friends.", wrong: 9, answers: 14,
+        correct_answer: "went", wrong_answers: [{ answer: "goed", count: 5 }, { answer: "gone", count: 3 }] },
+      { item: "b15", label: "She has ___ (write) three books so far.", wrong: 6, answers: 12,
+        correct_answer: "written", wrong_answers: [] },
     ],
     sources: ["app", "bot"],
   } as TopicDetail,

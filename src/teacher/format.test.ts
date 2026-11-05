@@ -1,8 +1,19 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  attentionText, daysAgo, delta, friendlyError, levelLabel, pct, periodLabel, personName, shorten, sourceLabel,
+  attentionText, daysAgo, delta, friendlyError, levelLabel, pct, periodLabel, personName, shorten, sourceLabel, wrongAnswersText,
 } from "./format.ts";
+
+test("wrongAnswersText joins answers with counts, most frequent first as given", () => {
+  assert.equal(wrongAnswersText([{ answer: "flied", count: 2 }, { answer: "flown", count: 1 }]), "flied (2), flown (1)");
+});
+test("wrongAnswersText is null for an empty or missing list", () => {
+  assert.equal(wrongAnswersText([]), null);
+  assert.equal(wrongAnswersText(undefined), null);
+});
+test("wrongAnswersText skips blank answers", () => {
+  assert.equal(wrongAnswersText([{ answer: "  ", count: 3 }, { answer: "go", count: 1 }]), "go (1)");
+});
 
 test("pct shows a dash for no data", () => {
   assert.equal(pct(76), "76%");

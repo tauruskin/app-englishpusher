@@ -4,6 +4,8 @@
 export type Role = "student" | "teacher" | "admin";
 export type Mastery = "not_enough_data" | "needs_work" | "learning" | "strong" | "mastered";
 export type BySource = Record<string, number>;
+/** A wrong answer students chose for one question, with how many times (topic "Most missed"). */
+export interface WrongAnswer { answer: string; count: number }
 
 export interface Me {
   person_id: string;
@@ -61,7 +63,10 @@ export interface TopicDetail {
   answers: number;
   accuracy: number | null;
   students: { person_id: string; display_name: string | null; answers: number; accuracy: number | null }[];
-  most_missed: { item: string | null; label: string | null; wrong: number; answers: number }[];
+  most_missed: {
+    item: string | null; label: string | null; wrong: number; answers: number;
+    correct_answer?: string | null; wrong_answers?: WrongAnswer[];
+  }[];
   sources: string[];
 }
 
