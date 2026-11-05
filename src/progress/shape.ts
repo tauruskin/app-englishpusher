@@ -3,8 +3,8 @@ import { orderSources } from "../teacher/theme.ts";
 import type { BySource, StudentTopic } from "../teacher/types.ts";
 import type { Progress, TopicProgress } from "./types.ts";
 
-// Opens the Quiz Bot. Plan 4 adds a `practice` start payload to the bot and changes only this line.
-export const PRACTICE_URL = "https://t.me/Englishpusher_quiz_bot";
+// Opens the Quiz Bot and starts /practice (the bot maps "/start practice" to /practice, never to subscribe).
+export const PRACTICE_URL = "https://t.me/Englishpusher_quiz_bot?start=practice";
 
 export function firstName(name: string | null | undefined): string {
   return name?.trim().split(/\s+/)[0] || "there";

@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { StudentTopic } from "../teacher/types.ts";
 import type { Progress, TopicProgress } from "./types.ts";
-import { firstName, greeting, greetingLine, groupTopics, hiLine, hasActivity, kyivHour, sourceShares, topicExists } from "./shape.ts";
+import { firstName, greeting, greetingLine, groupTopics, hiLine, hasActivity, kyivHour, PRACTICE_URL, sourceShares, topicExists } from "./shape.ts";
 
 const topic = (topic_key: string, kind: string, level: string, title: string): StudentTopic => ({
   topic_key, kind, level, title, answers: 5, accuracy: 70, mastery: "learning", last_at: null,
@@ -107,4 +107,8 @@ test("topicExists: unknown keys come back with an empty title and no data", () =
   const unknown: TopicProgress = { topic_key: "x", title: "", trend: [{ week: "2026-11-02", answers: 0, accuracy: null }], recent_mistakes: [] };
   assert.equal(topicExists(unknown), false);
   assert.equal(topicExists({ ...unknown, title: "Modifiers" }), true);
+});
+
+test("Practise opens the bot with the practice start payload", () => {
+  assert.equal(PRACTICE_URL, "https://t.me/Englishpusher_quiz_bot?start=practice");
 });

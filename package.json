@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit && vite build && node scripts/check-private-pages.mjs",
+    "build": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit && tsc -p tsconfig.functions.json --noEmit && vite build && node scripts/check-private-pages.mjs",
     "preview": "vite preview",
-    "test": "node --test \"src/**/*.test.ts\"",
+    "test": "node --test \"src/**/*.test.ts\" \"supabase/**/*.test.ts\"",
     "predeploy": "cross-env VITE_BASE_PATH=/ npm run build",
     "deploy": "gh-pages -d dist --cname app.englishpusher.in.ua"
   },
