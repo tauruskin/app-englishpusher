@@ -168,15 +168,15 @@ export function BandLegend() {
 export function MistakeAnswers({ yours, correct, yoursLabel = "Your answer" }: {
   yours?: string | null; correct?: string | null; yoursLabel?: string;
 }) {
-  if (!yours && !correct) return null;
+  if (!yours?.trim() && !correct?.trim()) return null;
   return (
-    <div className="mt-0.5 space-y-0.5 text-xs">
-      {yours ? (
+    <div className="mt-0.5 space-y-0.5 break-words text-xs">
+      {yours?.trim() ? (
         <div style={{ color: ANSWER_COLORS.wrong }} title={yours}>
           <span aria-hidden>❌ </span>{yoursLabel}: <span className="font-medium">{shorten(yours)}</span>
         </div>
       ) : null}
-      {correct ? (
+      {correct?.trim() ? (
         <div style={{ color: ANSWER_COLORS.right }} title={correct}>
           <span aria-hidden>✅ </span>Correct: <span className="font-medium">{shorten(correct)}</span>
         </div>

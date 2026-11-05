@@ -17,6 +17,6 @@ test("prototype keys are not treated as known sources", () => {
 });
 
 test("answer colours reuse the heat-map red and a darker heat-map green", () => {
-  assert.equal(ANSWER_COLORS.wrong, BAND_STYLE.low.bg); // #d03b3b, 4.9:1 on white
+  assert.equal(ANSWER_COLORS.wrong, BAND_STYLE.low.bg); // #d03b3b, 4.8:1 on white
   assert.equal(ANSWER_COLORS.right, "#087a08"); // #0ca30c is 3.3:1 on white, too light for small text
 });
