@@ -43,6 +43,7 @@ export async function verifyInitData(
   nowSeconds: number,
   maxAgeSeconds: number = MAX_AGE_SECONDS,
 ): Promise<VerifyResult> {
+  if (!botToken) return { ok: false, reason: "malformed" }; // an empty key would let anyone forge data
   const params = new URLSearchParams(initData);
   const keys = [...params.keys()];
   const hash = params.get("hash");

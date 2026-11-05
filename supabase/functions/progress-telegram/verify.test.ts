@@ -76,6 +76,11 @@ test("signed but without a usable user", async () => {
   assert.deepEqual(await verifyInitData(notJson, TOKEN, NOW), { ok: false, reason: "no_user" });
 });
 
+test("an empty bot token never verifies, even data signed with an empty key", async () => {
+  const forged = sign(fields(), "");
+  assert.deepEqual(await verifyInitData(forged, "", NOW), { ok: false, reason: "malformed" });
+});
+
 test("a user without first_name gets an empty name", async () => {
   const r = await verifyInitData(sign(fields({ user: JSON.stringify({ id: 42 }) })), TOKEN, NOW);
   assert.deepEqual(r, { ok: true, user: { id: 42, first_name: "" }, authDate: NOW - 60 });

@@ -66,6 +66,12 @@ test("unknown origin gets no CORS allow header", async () => {
   assert.equal(res.headers.get("Access-Control-Allow-Origin"), null);
 });
 
+test("preflight from an unknown origin is 204 without an allow-origin header", async () => {
+  const res = await handle(new Request("https://x/f", { method: "OPTIONS", headers: { Origin: "https://evil.example" } }), deps().d);
+  assert.equal(res.status, 204);
+  assert.equal(res.headers.get("Access-Control-Allow-Origin"), null);
+});
+
 test("bad signature is 401 invalid and touches no data", async () => {
   const { d, calls } = deps();
   const res = await handle(post({ init_data: signed().replace(/hash=[0-9a-f]{64}/, `hash=${"0".repeat(64)}`) }), d);
@@ -81,7 +87,7 @@ test("old initData is 401 expired", async () => {
 });
 
 test("bad requests", async () => {
-  for (const body of ["not json", {}, { init_data: "" }, { init_data: 5 }, { init_data: "x".repeat(4097) },
+  for (const body of ["not json", "null", "[]", "\"str\"", "5", {},{ init_data: "" }, { init_data: 5 }, { init_data: "x".repeat(4097) },
                       { init_data: signed(), topic_key: "" }, { init_data: signed(), topic_key: 7 },
                       { init_data: signed(), topic_key: "k".repeat(201) }]) {
     const res = await handle(post(body), deps().d);
