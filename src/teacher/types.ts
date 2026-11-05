@@ -84,6 +84,8 @@ export interface StudentDetail {
   recent_mistakes: {
     topic_key: string; title: string; item: string | null; item_label: string | null;
     source: string | null; activity: string; occurred_at: string;
+    // Present only after the database RPC returns them; either may be null.
+    correct_answer?: string | null; your_answer?: string | null;
   }[];
 }
 

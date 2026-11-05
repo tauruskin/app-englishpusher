@@ -2,9 +2,9 @@ import { lookup } from "./lookup.ts";
 import type { ReactNode } from "react";
 import { AlertCircle, ArrowDownRight, ArrowUpRight, Minus } from "lucide-react";
 import { BAND_STYLE, band } from "./heat.ts";
-import { delta, MASTERY_LABEL, periodLabel, pct, SESSION_EXPIRED, sourceLabel } from "./format.ts";
+import { delta, MASTERY_LABEL, periodLabel, pct, SESSION_EXPIRED, shorten, sourceLabel } from "./format.ts";
 import { DAY_OPTIONS, type Filters } from "./route.ts";
-import { INK, orderSources, sourceColor } from "./theme.ts";
+import { ANSWER_COLORS, INK, orderSources, sourceColor } from "./theme.ts";
 import type { Mastery } from "./types.ts";
 
 export function Card({ title, subtitle, children, right }: { title?: string; subtitle?: string; children: ReactNode; right?: ReactNode }) {
@@ -161,6 +161,26 @@ export function BandLegend() {
           {BAND_STYLE[b].label}
         </span>
       ))}
+    </div>
+  );
+}
+
+export function MistakeAnswers({ yours, correct, yoursLabel = "Your answer" }: {
+  yours?: string | null; correct?: string | null; yoursLabel?: string;
+}) {
+  if (!yours && !correct) return null;
+  return (
+    <div className="mt-0.5 space-y-0.5 text-xs">
+      {yours ? (
+        <div style={{ color: ANSWER_COLORS.wrong }} title={yours}>
+          <span aria-hidden>❌ </span>{yoursLabel}: <span className="font-medium">{shorten(yours)}</span>
+        </div>
+      ) : null}
+      {correct ? (
+        <div style={{ color: ANSWER_COLORS.right }} title={correct}>
+          <span aria-hidden>✅ </span>Correct: <span className="font-medium">{shorten(correct)}</span>
+        </div>
+      ) : null}
     </div>
   );
 }

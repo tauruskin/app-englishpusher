@@ -4,7 +4,7 @@ import { StackedColumns } from "../charts/StackedColumns.tsx";
 import { daysAgo, levelLabel, pct, personName, sourceLabel } from "../format.ts";
 import { lookup } from "../lookup.ts";
 import { useData } from "../useData.ts";
-import { AccuracyCell, Card, Dimmed, MasteryBadge, SourceDots, StatTile, StateBox } from "../ui.tsx";
+import { AccuracyCell, Card, Dimmed, MasteryBadge, MistakeAnswers, SourceDots, StatTile, StateBox } from "../ui.tsx";
 import type { PageProps } from "./types.ts";
 
 const KIND_LABEL: Record<string, string> = { grammar: "Grammar", vocab: "Vocab" };
@@ -106,7 +106,10 @@ export function StudentPage({ href, personId }: PageProps & { personId: string }
               <ul className="divide-y divide-neutral-100">
                 {data.recent_mistakes.map((m, i) => (
                   <li key={`${m.occurred_at}:${m.item ?? ""}:${i}`} className="flex flex-wrap items-baseline justify-between gap-2 py-2 font-body text-sm">
-                    <span className="min-w-0 break-words text-neutral-800">{m.item_label ?? m.item ?? "–"}</span>
+                    <div className="min-w-0">
+                      <span className="break-words text-neutral-800">{m.item_label ?? m.item ?? "–"}</span>
+                      <MistakeAnswers yours={m.your_answer} correct={m.correct_answer} yoursLabel="Student's answer" />
+                    </div>
                     <span className="min-w-0 break-words text-xs text-neutral-500">
                       {m.title} · {m.source ? sourceLabel(m.source) : "unknown source"} · {daysAgo(m.occurred_at)}
                     </span>

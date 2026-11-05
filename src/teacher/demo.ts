@@ -78,8 +78,10 @@ export const DEMO = {
     calendar: [],
     sources: { bot: 100, app: 20 },
     recent_mistakes: [
-      { topic_key: "b1:grammar:modifiers", title: "Modifiers", item: "b40", item_label: "It was ___ cold that we stayed inside.", source: "bot", activity: "quiz", occurred_at: iso(1) },
-      { topic_key: "b1:vocab:jobs", title: "Lesson 6: Jobs & Work", item: "w:plumber", item_label: "plumber", source: "app", activity: "trivia", occurred_at: iso(2) },
+      { topic_key: "b1:grammar:modifiers", title: "Modifiers", item: "b40", item_label: "It was ___ cold that we stayed inside.", source: "bot", activity: "quiz", occurred_at: iso(1), correct_answer: "so", your_answer: "such" },
+      { topic_key: "b1:vocab:jobs", title: "Lesson 6: Jobs & Work", item: "w:plumber", item_label: "plumber", source: "app", activity: "trivia", occurred_at: iso(2), correct_answer: null, your_answer: null },
+      // Long answers are cut with "…" (full text in the tooltip).
+      { topic_key: "b1:grammar:modifiers", title: "Modifiers", item: "b77", item_label: "Choose the sentence that is correct.", source: "bot", activity: "quiz", occurred_at: iso(3), correct_answer: "If I had known about the delay, I would have taken an earlier train to the station.", your_answer: "If I would have known about the delay, I would have taken an earlier train to the station." },
     ],
   } as StudentDetail,
 };

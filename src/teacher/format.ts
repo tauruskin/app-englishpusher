@@ -14,6 +14,12 @@ export function sourceLabel(source: string): string {
   return lookup(SOURCE_LABEL, source) ?? source.charAt(0).toUpperCase() + source.slice(1);
 }
 
+/** One-line text, cut to `max` characters with "…" (the full text goes in a title tooltip). */
+export function shorten(text: string, max = 80): string {
+  const t = text.replace(/\s+/g, " ").trim();
+  return t.length <= max ? t : t.slice(0, max - 1).trimEnd() + "…";
+}
+
 export function pct(value: number | null | undefined): string {
   return value === null || value === undefined || !Number.isFinite(value) ? "–" : `${Math.round(value)}%`;
 }
