@@ -87,7 +87,7 @@ test("old initData is 401 expired", async () => {
 });
 
 test("bad requests", async () => {
-  for (const body of ["not json", "null", "[]", "\"str\"", "5", {},{ init_data: "" }, { init_data: 5 }, { init_data: "x".repeat(4097) },
+  for (const body of ["not json", "null", "[]", "\"str\"", "5", {}, { init_data: "" }, { init_data: 5 }, { init_data: "x".repeat(4097) },
                       { init_data: signed(), topic_key: "" }, { init_data: signed(), topic_key: 7 },
                       { init_data: signed(), topic_key: "k".repeat(201) }]) {
     const res = await handle(post(body), deps().d);
