@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { motion } from "motion/react";
 import { LogOut, BarChart3, Star, Clock, Eye, EyeOff, LayoutDashboard, TrendingUp } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
@@ -10,6 +10,8 @@ import {
 } from "../shared/progress.ts";
 import { useSavedWords } from "../shared/savedWords.tsx";
 import { api } from "../teacher/api.ts";
+import type { Me } from "../teacher/types.ts";
+import TelegramSync from "./TelegramSync.tsx";
 import { TOPICS as C1_TOPICS } from "../c1-flashcards/data.ts";
 import type { LevelConfig } from "../levels/types.ts";
 import { flashcardsAppId, pageUrl, triviaAppId } from "../levels/level.ts";
@@ -507,21 +509,40 @@ function PersonalPage() {
 
   // Staff (teacher/admin) get a link to the dashboard. Errors and students leave it hidden;
   // the database enforces access either way, this only decides whether to show the link.
-  const [isStaff, setIsStaff] = useState(false);
+  // The same call tells us whether Telegram is linked; it is repeated when the student comes back
+  // to this tab (e.g. from the Quiz Bot) so the card flips to "connected" without a reload.
+  const [me, setMe] = useState<Me | null>(null);
+  const recheckMe = useRef<() => void>(() => {});
   // Keyed on the user id, not the user object: token refreshes hand out a new object for the
   // same person, which must not re-query or make the link flicker.
   const userId = user?.id;
   useEffect(() => {
     if (!userId) return;
     let current = true; // ignore a response that arrives after unmount or after the user changed
-    api.me().then((r) => {
-      if (current) setIsStaff(r.data?.role === "teacher" || r.data?.role === "admin");
-    });
+    let inFlight = false;
+    const load = () => {
+      if (inFlight) return;
+      inFlight = true;
+      api.me().then((r) => {
+        inFlight = false;
+        if (current && r.data) setMe(r.data);
+      });
+    };
+    recheckMe.current = load;
+    load();
+    const onVisible = () => {
+      if (document.visibilityState === "visible") load();
+    };
+    window.addEventListener("focus", load);
+    document.addEventListener("visibilitychange", onVisible);
     return () => {
       current = false;
-      setIsStaff(false);
+      window.removeEventListener("focus", load);
+      document.removeEventListener("visibilitychange", onVisible);
+      setMe(null);
     };
   }, [userId]);
+  const isStaff = me?.role === "teacher" || me?.role === "admin";
 
   const summaries = progress ? summarizeResults(progress.results) : [];
 
@@ -555,6 +576,8 @@ function PersonalPage() {
         <span className="flex items-center gap-2"><TrendingUp size={16} className="text-brand" /> All my progress (Quiz Bot + App)</span>
         <span aria-hidden>→</span>
       </a>
+
+      <TelegramSync linked={me ? me.telegram_linked : null} onRecheck={() => recheckMe.current()} />
 
       {isStaff && (
         <a
