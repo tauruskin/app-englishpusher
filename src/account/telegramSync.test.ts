@@ -19,5 +19,6 @@ test("parseLinkCode: refuses a url that is not the Quiz Bot", () => {
 
 test("linkError", () => {
   assert.equal(linkError({ code: "42501" }), "Please sign in again to connect Telegram.");
-  assert.equal(linkError({}), "Couldn't create the link. Check your connection and try again.");
+  assert.equal(linkError({ status: 401 }), "Please sign in again to connect Telegram.");
+  assert.equal(linkError({}),"Couldn't create the link. Check your connection and try again.");
 });

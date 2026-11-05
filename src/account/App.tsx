@@ -537,6 +537,7 @@ function PersonalPage() {
     document.addEventListener("visibilitychange", onVisible);
     return () => {
       current = false;
+      recheckMe.current = () => {};
       window.removeEventListener("focus", load);
       document.removeEventListener("visibilitychange", onVisible);
       setMe(null);

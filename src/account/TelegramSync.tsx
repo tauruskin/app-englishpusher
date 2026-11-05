@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Send } from "lucide-react";
 import { createLinkCode } from "./telegramSyncApi.ts";
 import type { LinkCode } from "./telegramSync.ts";
@@ -12,6 +12,22 @@ const buttonCls =
 export default function TelegramSync({ linked, onRecheck }: { linked: boolean | null; onRecheck: () => void }) {
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<LinkCode | null>(null);
+  const linkRef = useRef<HTMLAnchorElement>(null);
+  const ready = result?.kind === "ready" ? result : null;
+
+  // The button the student pressed is replaced by the link: hand the keyboard focus over to it.
+  useEffect(() => {
+    if (ready) linkRef.current?.focus();
+  }, [ready]);
+
+  // An expired link no longer works: go back to the idle card so the student can ask for a new one.
+  useEffect(() => {
+    if (!ready) return;
+    const expiresAt = Date.parse(ready.expiresAt);
+    if (Number.isNaN(expiresAt)) return;
+    const timer = setTimeout(() => setResult(null), Math.max(0, expiresAt - Date.now()));
+    return () => clearTimeout(timer);
+  }, [ready]);
 
   if (linked === null) return null;
 
@@ -48,12 +64,21 @@ export default function TelegramSync({ linked, onRecheck }: { linked: boolean | 
         Link the Quiz Bot to your App account, so all your progress counts together. This does not subscribe you to daily questions.
       </p>
 
-      {result?.kind === "ready" ? (
+      {ready ? (
         <div>
-          <a href={result.url} target="_blank" rel="noopener noreferrer" className={buttonCls}>
+          {/* data-clarity-mask: the href carries a one-time code */}
+          <a ref={linkRef} href={ready.url} target="_blank" rel="noopener noreferrer" data-clarity-mask="true" className={buttonCls}>
             Open the Quiz Bot and tap Start
           </a>
-          <p className="mt-2 font-body text-xs text-neutral-400">The link works for 15 minutes.</p>
+          <p className="mt-2 font-body text-xs text-neutral-500">The link works for 15 minutes.</p>
+          <button
+            type="button"
+            onClick={connect}
+            disabled={busy}
+            className="mt-2 rounded font-body text-xs font-semibold text-brand hover:underline disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
+          >
+            {busy ? "Creating link…" : "Get a new link"}
+          </button>
         </div>
       ) : (
         <div>

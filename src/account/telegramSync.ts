@@ -10,7 +10,7 @@ export type LinkCode =
   | { kind: "error"; message: string };
 
 export function linkError(e: RpcError): string {
-  if (e.code === "42501") return "Please sign in again to connect Telegram.";
+  if (e.code === "42501" || e.status === 401) return "Please sign in again to connect Telegram.";
   return "Couldn't create the link. Check your connection and try again.";
 }
 
