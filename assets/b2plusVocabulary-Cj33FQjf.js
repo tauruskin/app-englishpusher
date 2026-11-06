@@ -1,0 +1,1 @@
+import"./AppShell-CypetdhR.js";import{V as o}from"./VocabularyPage-DJ5yXiBA.js";import{m}from"./mount-B9pWBZmm.js";import{B as r}from"./level-C9XpXiDH.js";import"./teacher-celebrate-0ANAOa2E.js";import"./level-DYSd0PpU.js";import"./proxy-CIDxMJyf.js";import"./arrow-right-2iE0AZRn.js";import"./trophy-CsKgngmR.js";/* empty css                  */m(o,r,{needsTopics:!1});
