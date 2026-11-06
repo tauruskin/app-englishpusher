@@ -1,4 +1,4 @@
-import type { ArchivedRow, ArchiveResult, Me, MoodleAttempt, Overview, RosterRow, StudentDetail, TopicDetail, TopicMatrix } from "./types.ts";
+import type { ArchivedRow, ArchiveResult, Me, MergeCandidates, MergeCard, MergeResult, MoodleAttempt, Overview, RosterRow, StudentDetail, TopicDetail, TopicMatrix } from "./types.ts";
 
 // Used only when the dev server runs with ?demo in the URL (see api.ts).
 const today = new Date();
@@ -133,6 +133,17 @@ const BASE = {
   archiveResult: (personId: string, archived: boolean): ArchiveResult => ({
     person_id: personId, archived, archived_at: archived ? iso(0) : null,
   }),
+  // Demo does not remember a merge either: the candidates stay as they are.
+  mergeCandidates: (personId: string): MergeCandidates => ({
+    person: { person_id: personId, display_name: "Anna", accounts: ["telegram", "app"], events: 412, last_active: iso(0), archived_at: null, created_at: iso(70) },
+    candidates: [
+      { person_id: "d2", display_name: "Bohdan", accounts: ["telegram"], events: 96, last_active: iso(3), archived_at: null, created_at: iso(60) },
+      { person_id: "d7", display_name: "Anna Kovalenko", accounts: ["moodle"], events: 14, last_active: iso(1), archived_at: null, created_at: iso(0) },
+      { person_id: "d6", display_name: "Ihor", accounts: ["telegram", "app"], events: 33, last_active: iso(75), archived_at: iso(40), created_at: iso(120) },
+      { person_id: "d8", display_name: null, accounts: ["moodle"], events: 0, last_active: null, archived_at: null, created_at: iso(0) },
+    ] as MergeCard[],
+  }),
+  mergeResult: (keepId: string, dropId: string): MergeResult => ({ merge_id: 1, kept_id: keepId, dropped_id: dropId, accounts_moved: 1 }),
   moodleAttempts: [
     { attempt_id: 3, occurred_at: iso(0), hvp_id: 571, title: "Lesson 7. Modifiers", section_name: "Lesson 7. MODIFIERS", topic_key: "b1:grammar:modifiers", topic_title: "Modifiers", raw_score: 9, max_score: 10, pct: 90, before_tracking: false, is_first_try: false },
     { attempt_id: 2, occurred_at: iso(0), hvp_id: 571, title: "Lesson 7. Modifiers", section_name: "Lesson 7. MODIFIERS", topic_key: "b1:grammar:modifiers", topic_title: "Modifiers", raw_score: 5, max_score: 10, pct: 50, before_tracking: false, is_first_try: true },

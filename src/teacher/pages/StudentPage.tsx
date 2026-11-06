@@ -7,6 +7,7 @@ import { lookup } from "../lookup.ts";
 import { INK } from "../theme.ts";
 import { useData } from "../useData.ts";
 import { AccuracyCell, Card, Dimmed, MasteryBadge, MistakeAnswers, MoodleRange, SECONDARY_BUTTON, SourceDots, StatTile, StateBox } from "../ui.tsx";
+import { MergePanel } from "./MergePanel.tsx";
 import type { PageProps } from "./types.ts";
 
 const KIND_LABEL: Record<string, string> = { grammar: "Grammar", vocab: "Vocab" };
@@ -68,6 +69,8 @@ function StudentView({ href, personId }: PageProps & { personId: string }) {
     personId, data?.person?.display_name ?? null, data?.archived_at ?? null,
     () => { window.location.hash = href({ page: "students" }); }, retry,
   );
+  const [merging, setMerging] = useState(false);
+  const [mergedNote, setMergedNote] = useState<string | null>(null);
   const back = (
     <a href={href({ page: "students" })} className="font-body text-sm text-neutral-500 hover:text-brand">← Students</a>
   );
@@ -104,10 +107,20 @@ function StudentView({ href, personId }: PageProps & { personId: string }) {
               Last active {daysAgo(s.last_active)} <SourceDots sources={Object.keys(data.sources)} />
             </p>
           </div>
-          {isStudent && !archive.archived && (
-            <button type="button" className={SECONDARY_BUTTON} disabled={archive.saving} onClick={() => void archive.save(true)}>
-              {archive.saving ? "Saving…" : "Archive"}
-            </button>
+          {isStudent && (
+            <div className="flex flex-wrap gap-2">
+              {!merging && (
+                <button type="button" className={SECONDARY_BUTTON} disabled={archive.saving}
+                  onClick={() => { setMergedNote(null); setMerging(true); }}>
+                  Merge…
+                </button>
+              )}
+              {!archive.archived && (
+                <button type="button" className={SECONDARY_BUTTON} disabled={archive.saving} onClick={() => void archive.save(true)}>
+                  {archive.saving ? "Saving…" : "Archive"}
+                </button>
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -118,6 +131,20 @@ function StudentView({ href, personId }: PageProps & { personId: string }) {
             {archive.saving ? "Saving…" : "Unarchive"}
           </button>
         </div>
+      )}
+      {isStudent && merging && (
+        <MergePanel
+          personId={personId}
+          onCancel={() => setMerging(false)}
+          onMerged={(r, droppedName) => {
+            setMerging(false);
+            setMergedNote(`Merged ${droppedName} into this student (${r.accounts_moved} ${r.accounts_moved === 1 ? "account" : "accounts"} moved). Their history is now part of this page.`);
+            retry();
+          }}
+        />
+      )}
+      {mergedNote && (
+        <p role="status" className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 font-body text-sm text-green-900">{mergedNote}</p>
       )}
       {archive.failure && <StateBox error={archive.failure} />}
       {error && <StateBox error={error} onRetry={retry} />}

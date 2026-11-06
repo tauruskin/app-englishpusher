@@ -150,6 +150,44 @@ export function archiveError(error: { code?: string; message?: string; status?: 
   return generic === SESSION_EXPIRED ? generic : "Couldn't save the change. Check your connection and try again.";
 }
 
+// Account sources (analytics.accounts.source) on the merge screen, in this order.
+const ACCOUNT_LABEL: Record<string, string> = { telegram: "Quiz Bot", app: "App", moodle: "Moodle" };
+const ACCOUNT_ORDER = ["telegram", "app", "moodle"];
+
+/** "Quiz Bot, App, Moodle" for a person's accounts; "No accounts" when there are none. */
+export function accountsText(accounts: string[]): string {
+  if (accounts.length === 0) return "No accounts";
+  const rank = (s: string) => (ACCOUNT_ORDER.includes(s) ? ACCOUNT_ORDER.indexOf(s) : ACCOUNT_ORDER.length);
+  return [...accounts]
+    .sort((a, b) => rank(a) - rank(b))
+    .map((s) => lookup(ACCOUNT_LABEL, s) ?? s.charAt(0).toUpperCase() + s.slice(1))
+    .join(", ");
+}
+
+/** Candidates whose shown name contains the query (any case). An empty query keeps everyone. */
+export function filterCandidates<T extends { display_name: string | null }>(list: T[], query: string): T[] {
+  const q = query.trim().toLowerCase();
+  if (q === "") return list;
+  return list.filter((c) => personName(c.display_name).toLowerCase().includes(q));
+}
+
+/** The warning above the Merge button: the second student moves into the first. */
+export function mergeWarning(keepName: string | null | undefined, dropName: string | null | undefined): string {
+  const keep = personName(keepName);
+  const drop = personName(dropName);
+  return `${drop}'s accounts and history will move to ${keep}, and ${drop} will disappear from the lists. Only Oleksandr can undo this.`;
+}
+
+/** Like archiveError, worded for a failed merge. */
+export function mergeError(error: { code?: string; message?: string; status?: number }): string {
+  if (error.code === "42501") return "You're not allowed to merge these students.";
+  if (error.code === "22023" || error.code === "22P02") {
+    return "These two can't be merged (one of them may already be merged, or isn't a student). Reload the page and try again.";
+  }
+  const generic = friendlyError(error);
+  return generic === SESSION_EXPIRED ? generic : "Couldn't save the change. Check your connection and try again.";
+}
+
 export const MASTERY_LABEL: Record<string, string> = {
   not_enough_data: "Not enough data",
   needs_work: "Needs work",

@@ -143,4 +143,29 @@ export interface ArchiveResult {
   archived_at: string | null;
 }
 
+/** One person on the merge screen (`analytics_merge_candidates`). `accounts` are account sources
+ *  (telegram, app, moodle); `events` = every answer and Moodle lesson attempt ever. */
+export interface MergeCard {
+  person_id: string;
+  display_name: string | null;
+  accounts: string[];
+  events: number;
+  last_active: string | null;
+  archived_at: string | null;
+  created_at: string;
+}
+
+export interface MergeCandidates {
+  person: MergeCard;
+  /** The other students of the same teacher, archived ones too, sorted by name. */
+  candidates: MergeCard[];
+}
+
+export interface MergeResult {
+  merge_id: number;
+  kept_id: string;
+  dropped_id: string;
+  accounts_moved: number;
+}
+
 export type Result<T> = { data: T; error: null } | { data: null; error: string };

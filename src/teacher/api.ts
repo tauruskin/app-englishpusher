@@ -1,8 +1,8 @@
 import { rpc, type RpcError } from "./rpc.ts";
-import { archiveError } from "./format.ts";
+import { archiveError, mergeError } from "./format.ts";
 import type { Filters } from "./route.ts";
 import type {
-  ArchivedRow, ArchiveResult, Me, MoodleAttempt, Overview, RosterRow, StudentDetail, TopicDetail, TopicMatrix,
+  ArchivedRow, ArchiveResult, Me, MergeCandidates, MergeResult, MoodleAttempt, Overview, RosterRow, StudentDetail, TopicDetail, TopicMatrix,
 } from "./types.ts";
 
 export { isDemo } from "./rpc.ts";
@@ -33,6 +33,12 @@ export const api = {
   setArchived: (personId: string, archived: boolean) =>
     call<ArchiveResult>(
       "analytics_set_archived", { p_person: personId, p_archived: archived }, (d) => d.archiveResult(personId, archived), archiveError,
+    ),
+  mergeCandidates: (personId: string) =>
+    call<MergeCandidates>("analytics_merge_candidates", { p_person: personId }, (d) => d.mergeCandidates(personId)),
+  mergeStudents: (keepId: string, dropId: string) =>
+    call<MergeResult>(
+      "analytics_merge_students", { p_keep: keepId, p_drop: dropId }, (d) => d.mergeResult(keepId, dropId), mergeError,
     ),
   studentMoodleAttempts: (personId: string) =>
     call<MoodleAttempt[]>("analytics_student_moodle_attempts", { p_person: personId }, (d) => d.moodleAttempts),
