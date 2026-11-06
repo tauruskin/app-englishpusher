@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { api } from "../api.ts";
-import { levelLabel, pct, personName } from "../format.ts";
+import { attemptsText, levelLabel, pct, personName } from "../format.ts";
 import { BAND_STYLE, band, cellIndex } from "../heat.ts";
+import { matrixColumns } from "../moodle.ts";
+import { sourceColor } from "../theme.ts";
 import { useData } from "../useData.ts";
 import { BandLegend, Card, Dimmed, FiltersRow, StateBox } from "../ui.tsx";
 import type { PageProps } from "./types.ts";
@@ -23,6 +25,8 @@ export function Topics({ filters, setFilters, href }: PageProps) {
   );
   if (!data) return error ? <StateBox error={error} onRetry={retry} /> : <StateBox>Loading…</StateBox>;
   const cells = cellIndex(data.cells);
+  const cols = matrixColumns(data.topics, data.moodle);
+  const moodleCells = new Map((data.moodle?.cells ?? []).map((c) => [`${c.person_id}|${c.topic_key}`, c]));
 
   return (
     <div className="space-y-5">
@@ -54,8 +58,8 @@ export function Topics({ filters, setFilters, href }: PageProps) {
       </div>
       {error && <StateBox error={error} onRetry={retry} />}
       <Dimmed when={loading || !!error}>
-        <Card title="Topics × students" subtitle="Accuracy per student and topic; hardest topics first" right={<BandLegend />}>
-          {data.topics.length === 0 ? (
+        <Card title="Topics × students" subtitle={data.moodle ? "Accuracy per student and topic (Bot + App); Moodle row = lesson first-try average" : "Accuracy per student and topic; hardest topics first"} right={<BandLegend />}>
+          {cols.length === 0 ? (
             <StateBox>No answers for these filters.</StateBox>
           ) : (
             <div className="overflow-x-auto">
@@ -63,7 +67,7 @@ export function Topics({ filters, setFilters, href }: PageProps) {
                 <thead>
                   <tr>
                     <th className="sticky left-0 z-10 bg-white"><span className="sr-only">Student</span></th>
-                    {data.topics.map((t) => (
+                    {cols.map((t) => (
                       <th key={t.topic_key} scope="col" className="h-32 w-14 min-w-[3.5rem] align-bottom font-normal">
                         <a
                           href={href({ page: "topic", topicKey: t.topic_key })}
@@ -79,20 +83,42 @@ export function Topics({ filters, setFilters, href }: PageProps) {
                 <tbody>
                   <tr>
                     <th scope="row" className="sticky left-0 z-10 bg-white pr-3 text-left font-display text-sm font-bold text-neutral-900">Group</th>
-                    {data.topics.map((t) => {
+                    {cols.map((t) => {
                       const s = BAND_STYLE[band(t.accuracy)];
                       return (
                         <td
                           key={t.topic_key}
                           className="h-9 w-14 min-w-[3.5rem] rounded-md text-center font-bold tabular-nums"
                           style={{ background: s.bg, color: s.fg }}
-                          title={`${t.title}: ${pct(t.accuracy)} of ${t.answers} answers`}
+                          title={t.answers === null ? `${t.title}: no Bot or App data` : `${t.title}: ${pct(t.accuracy)} of ${t.answers ?? 0} answers`}
                         >
-                          {pct(t.accuracy)}
+                          {t.answers === null ? <span className="sr-only">No Bot or App data</span> : pct(t.accuracy)}
                         </td>
                       );
                     })}
                   </tr>
+                  {data.moodle && (
+                    <tr>
+                      <th scope="row" className="sticky left-0 z-10 bg-white pr-3 text-left font-display text-sm font-bold text-neutral-900">
+                        <span className="inline-flex items-center gap-1.5">
+                          <span className="inline-block h-2 w-2 rounded-full" style={{ background: sourceColor("moodle") }} aria-hidden />
+                          Moodle · first try
+                        </span>
+                      </th>
+                      {cols.map((t) => {
+                        const m = t.moodle;
+                        const s = BAND_STYLE[band(m?.first_try ?? null)];
+                        const tip = m
+                          ? `${t.title} · Moodle lessons: first try ${pct(m.first_try)}, latest ${pct(m.latest)}, ${attemptsText(m.attempts)} attempts per student, ${m.students} students`
+                          : `${t.title}: no Moodle lessons`;
+                        return (
+                          <td key={t.topic_key} className="h-9 w-14 min-w-[3.5rem] rounded-md text-center font-bold tabular-nums" style={{ background: s.bg, color: s.fg }} title={tip}>
+                            {m ? pct(m.first_try) : <span className="sr-only">No Moodle data</span>}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  )}
                   {data.students.map((p) => {
                     const name = personName(p.display_name);
                     return (
@@ -104,12 +130,14 @@ export function Topics({ filters, setFilters, href }: PageProps) {
                             </a>
                           </div>
                         </th>
-                        {data.topics.map((t) => {
-                          const c = cells.get(`${p.person_id}|${t.topic_key}`);
+                        {cols.map((t) => {
+                          const c = t.answers === null ? undefined : cells.get(`${p.person_id}|${t.topic_key}`);
                           const s = BAND_STYLE[band(c?.accuracy ?? null)];
-                          const tip = c
+                          const mc = moodleCells.get(`${p.person_id}|${t.topic_key}`);
+                          const moodleTip = mc ? ` · Moodle first try ${pct(mc.first_try)} → latest ${pct(mc.latest)}` : "";
+                          const tip = (c
                             ? `${name} · ${t.title}: ${pct(c.accuracy)} of ${c.answers} answers`
-                            : `${name} · ${t.title}: no data`;
+                            : `${name} · ${t.title}: no data`) + moodleTip;
                           return (
                             <td key={t.topic_key} className="h-9 w-14 min-w-[3.5rem] rounded-md text-center tabular-nums" style={{ background: s.bg, color: s.fg }} title={tip}>
                               {c ? pct(c.accuracy) : <span className="sr-only">No data</span>}
