@@ -11,6 +11,7 @@ import { Students } from "./pages/Students.tsx";
 import { Topics } from "./pages/Topics.tsx";
 import { TopicPage } from "./pages/TopicPage.tsx";
 import { StudentPage } from "./pages/StudentPage.tsx";
+import { Archived } from "./pages/Archived.tsx";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "overview", label: "Overview" },
@@ -60,9 +61,11 @@ function Dashboard({ userId }: { userId: string }) {
   else if (route.page === "topics") page = <Topics {...props} />;
   else if (route.page === "topic") page = <TopicPage {...props} topicKey={route.topicKey} />;
   else if (route.page === "student") page = <StudentPage {...props} personId={route.personId} />;
+  else if (route.page === "archived") page = <Archived {...props} />;
   else page = <Overview {...props} />;
 
-  const activeTab = route.page === "student" ? "students" : route.page === "topic" ? "topics" : route.page;
+  const activeTab: Tab =
+    route.page === "student" || route.page === "archived" ? "students" : route.page === "topic" ? "topics" : route.page;
   return (
     <div className="w-full max-w-5xl space-y-5">
       <nav className="flex gap-1 border-b border-neutral-200" aria-label="Dashboard sections">
