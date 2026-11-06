@@ -63,12 +63,12 @@ export function TopicPage({ filters, setFilters, href, topicKey }: PageProps & {
             <StatTile label="Students" value={`${data.students.length}`} />
           </div>
           {data.moodle && (
-            <Card title="Moodle lessons on this topic" subtitle="H5P lesson scores. First try = the first attempt we saw. They never change the accuracy above.">
+            <Card title="Moodle lessons on this topic" subtitle="H5P lesson scores. First try = the first attempt we saw. Moodle never changes the Bot and App accuracy.">
               <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
                 <StatTile label="First try" value={pct(data.moodle.first_try)} />
                 <StatTile label="Latest" value={pct(data.moodle.latest)} />
                 <StatTile label="Attempts" value={attemptsText(data.moodle.attempts)} hint="per student per lesson" />
-                <StatTile label="Students" value={`${data.moodle.students}`} />
+                <StatTile label="Students (Moodle)" value={`${data.moodle.students}`} />
               </div>
               <table className="w-full font-body text-sm">
                 <thead className="text-xs text-neutral-500">
@@ -79,7 +79,7 @@ export function TopicPage({ filters, setFilters, href, topicKey }: PageProps & {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.moodle.lessons.map((l) => (
+                  {(data.moodle.lessons ?? []).map((l) => (
                     <tr key={l.hvp_id} className="border-b border-neutral-100">
                       <td className="py-2 pr-3 text-neutral-800">{l.title}{l.section_name && <span className="block text-xs text-neutral-400">{l.section_name}</span>}</td>
                       <td className="py-2 pr-3"><MoodleRange first={l.first_try} latest={l.latest} /></td>
@@ -90,7 +90,7 @@ export function TopicPage({ filters, setFilters, href, topicKey }: PageProps & {
               </table>
               <h3 className="mb-1 mt-5 font-display text-sm font-semibold text-neutral-700">Students</h3>
               <ul className="divide-y divide-neutral-100">
-                {data.moodle.by_student.map((s) => (
+                {(data.moodle.by_student ?? []).map((s) => (
                   <li key={s.person_id} className="flex items-center justify-between gap-3 py-2 font-body text-sm">
                     <a href={href({ page: "student", personId: s.person_id })} className="truncate hover:text-brand hover:underline">{personName(s.display_name)}</a>
                     <span className="flex items-center gap-3">

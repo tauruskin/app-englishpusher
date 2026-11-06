@@ -3,6 +3,7 @@ import { addDays, dayLabel } from "../charts/columns.ts";
 import { StackedColumns } from "../charts/StackedColumns.tsx";
 import { daysAgo, levelLabel, pct, personName, scoreText, sourceLabel } from "../format.ts";
 import { lookup } from "../lookup.ts";
+import { INK } from "../theme.ts";
 import { useData } from "../useData.ts";
 import { AccuracyCell, Card, Dimmed, MasteryBadge, MistakeAnswers, MoodleRange, SourceDots, StatTile, StateBox } from "../ui.tsx";
 import type { PageProps } from "./types.ts";
@@ -26,8 +27,8 @@ function MoodleAttempts({ personId }: { personId: string }) {
           </span>
           <span className="flex items-center gap-2 tabular-nums">
             {scoreText(a.raw_score, a.max_score)}
-            {a.before_tracking && <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs text-neutral-500">before tracking</span>}
-            {a.is_first_try && <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600">first try</span>}
+            {a.before_tracking && <span title="Made before we started reading Moodle results; never counted as the first try" className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs text-neutral-500">before tracking</span>}
+            {a.is_first_try && <span title="The first attempt we saw for this lesson" className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600">first try</span>}
           </span>
         </li>
       ))}
@@ -57,6 +58,9 @@ export function StudentPage({ href, personId }: PageProps & { personId: string }
     axisLabel: dayLabel(w.week), // short week-start label on the x-axis
     values: { answers: w.answers },
   }));
+  const mf = data.moodle?.first_try ?? null;
+  const ml = data.moodle?.latest ?? null;
+  const moodleTrend = mf !== null && ml !== null && ml !== mf ? (ml > mf ? "up" : "down") : null; // same colouring as MoodleRange
   const hasWeeks = weeks.some((w) => w.values.answers > 0);
 
   return (
@@ -126,8 +130,14 @@ export function StudentPage({ href, personId }: PageProps & { personId: string }
           {data.moodle && (
             <Card title="Moodle lessons" subtitle="H5P lesson scores. Not part of accuracy or mastery.">
               <p className="mb-3 font-body text-sm text-neutral-700">
-                {data.moodle.lessons} {data.moodle.lessons === 1 ? "lesson" : "lessons"} · first try → latest{" "}
-                <MoodleRange first={data.moodle.first_try} latest={data.moodle.latest} />
+                {data.moodle.lessons} {data.moodle.lessons === 1 ? "lesson" : "lessons"} · first try {pct(data.moodle.first_try)} →{" "}
+                <span className="sr-only">then </span>latest{" "}
+                <span
+                  style={{ color: moodleTrend === "up" ? INK.good : moodleTrend === "down" ? INK.bad : undefined }}
+                  className={moodleTrend ? "font-semibold" : undefined}
+                >
+                  {pct(data.moodle.latest)}
+                </span>
               </p>
               {data.moodle.topics.length > 0 && (
                 <ul className="divide-y divide-neutral-100">
@@ -157,7 +167,7 @@ export function StudentPage({ href, personId }: PageProps & { personId: string }
                 </>
               )}
               <h3 className="mb-1 mt-4 font-display text-sm font-semibold text-neutral-700">Attempts</h3>
-              <p className="mb-1 font-body text-xs text-neutral-400">Results are read every 15 minutes; two retries less than 15 minutes apart may show as one.</p>
+              <p className="mb-1 font-body text-xs text-neutral-400">Latest 100 attempts. Results are read every 15 minutes; two retries less than 15 minutes apart may show as one.</p>
               <MoodleAttempts personId={personId} />
             </Card>
           )}

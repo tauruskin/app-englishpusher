@@ -90,7 +90,7 @@ export function Topics({ filters, setFilters, href }: PageProps) {
                           key={t.topic_key}
                           className="h-9 w-14 min-w-[3.5rem] rounded-md text-center font-bold tabular-nums"
                           style={{ background: s.bg, color: s.fg }}
-                          title={t.answers === null ? `${t.title}: no Bot or App data` : `${t.title}: ${pct(t.accuracy)} of ${t.answers ?? 0} answers`}
+                          title={t.answers === null ? `${t.title}: no Bot or App data` : `${t.title}: ${pct(t.accuracy)} of ${t.answers} answers`}
                         >
                           {t.answers === null ? <span className="sr-only">No Bot or App data</span> : pct(t.accuracy)}
                         </td>
@@ -135,9 +135,10 @@ export function Topics({ filters, setFilters, href }: PageProps) {
                           const s = BAND_STYLE[band(c?.accuracy ?? null)];
                           const mc = moodleCells.get(`${p.person_id}|${t.topic_key}`);
                           const moodleTip = mc ? ` · Moodle first try ${pct(mc.first_try)} → latest ${pct(mc.latest)}` : "";
-                          const tip = (c
+                          const base = c
                             ? `${name} · ${t.title}: ${pct(c.accuracy)} of ${c.answers} answers`
-                            : `${name} · ${t.title}: no data`) + moodleTip;
+                            : `${name} · ${t.title}: ${t.answers === null ? "no Bot or App data" : "no data"}`;
+                          const tip = base + moodleTip;
                           return (
                             <td key={t.topic_key} className="h-9 w-14 min-w-[3.5rem] rounded-md text-center tabular-nums" style={{ background: s.bg, color: s.fg }} title={tip}>
                               {c ? pct(c.accuracy) : <span className="sr-only">No data</span>}
