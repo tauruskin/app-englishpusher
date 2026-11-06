@@ -1,9 +1,9 @@
 import { api } from "../api.ts";
-import { levelLabel, pct, personName, wrongAnswersText } from "../format.ts";
+import { attemptsText, levelLabel, pct, personName, wrongAnswersText } from "../format.ts";
 import { lookup } from "../lookup.ts";
 import { sortRows } from "../sort.ts";
 import { useData } from "../useData.ts";
-import { BarRow, Card, Dimmed, FiltersRow, MistakeAnswers, StatTile, StateBox } from "../ui.tsx";
+import { BarRow, Card, Dimmed, FiltersRow, MistakeAnswers, MoodleRange, StatTile, StateBox } from "../ui.tsx";
 import type { PageProps } from "./types.ts";
 
 const KIND_LABEL: Record<string, string> = { grammar: "Grammar", vocab: "Vocabulary" };
@@ -34,7 +34,7 @@ export function TopicPage({ filters, setFilters, href, topicKey }: PageProps & {
   const subtitle = TOPIC_KEY.test(topicKey)
     ? [levelLabel(level), lookup(KIND_LABEL, kind) ?? kind].join(" · ")
     : "";
-  if (!data.title && data.answers === 0) {
+  if (!data.title && data.answers === 0 && !data.moodle) {
     return (
       <div className="space-y-3">
         {back}
@@ -62,6 +62,46 @@ export function TopicPage({ filters, setFilters, href, topicKey }: PageProps & {
             <StatTile label="Answers" value={`${data.answers}`} />
             <StatTile label="Students" value={`${data.students.length}`} />
           </div>
+          {data.moodle && (
+            <Card title="Moodle lessons on this topic" subtitle="H5P lesson scores. First try = the first attempt we saw. They never change the accuracy above.">
+              <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+                <StatTile label="First try" value={pct(data.moodle.first_try)} />
+                <StatTile label="Latest" value={pct(data.moodle.latest)} />
+                <StatTile label="Attempts" value={attemptsText(data.moodle.attempts)} hint="per student per lesson" />
+                <StatTile label="Students" value={`${data.moodle.students}`} />
+              </div>
+              <table className="w-full font-body text-sm">
+                <thead className="text-xs text-neutral-500">
+                  <tr className="border-b border-neutral-200">
+                    <th scope="col" className="py-2 pr-3 text-left font-semibold">Lesson</th>
+                    <th scope="col" className="py-2 pr-3 text-left font-semibold">First try → latest</th>
+                    <th scope="col" className="py-2 text-right font-semibold">Attempts</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.moodle.lessons.map((l) => (
+                    <tr key={l.hvp_id} className="border-b border-neutral-100">
+                      <td className="py-2 pr-3 text-neutral-800">{l.title}{l.section_name && <span className="block text-xs text-neutral-400">{l.section_name}</span>}</td>
+                      <td className="py-2 pr-3"><MoodleRange first={l.first_try} latest={l.latest} /></td>
+                      <td className="py-2 text-right tabular-nums text-neutral-600">{attemptsText(l.attempts)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <h3 className="mb-1 mt-5 font-display text-sm font-semibold text-neutral-700">Students</h3>
+              <ul className="divide-y divide-neutral-100">
+                {data.moodle.by_student.map((s) => (
+                  <li key={s.person_id} className="flex items-center justify-between gap-3 py-2 font-body text-sm">
+                    <a href={href({ page: "student", personId: s.person_id })} className="truncate hover:text-brand hover:underline">{personName(s.display_name)}</a>
+                    <span className="flex items-center gap-3">
+                      <MoodleRange first={s.first_try} latest={s.latest} />
+                      <span className="text-xs text-neutral-400">{s.attempts} {s.attempts === 1 ? "attempt" : "attempts"}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          )}
           <Card title="Students on this topic" subtitle="Weakest first">
             {students.length === 0 ? (
               <StateBox>No answers for these filters.</StateBox>
