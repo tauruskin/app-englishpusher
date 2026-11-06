@@ -1,8 +1,30 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  attentionText, daysAgo, delta, friendlyError, levelLabel, pct, periodLabel, personName, shorten, sourceLabel, wrongAnswersText,
+  attemptsText, attentionText, daysAgo, delta, friendlyError, levelLabel, moodleRange, pct, periodLabel, personName, scoreText, shorten, sourceLabel, wrongAnswersText,
 } from "./format.ts";
+
+test("moodleRange shows first try and latest", () => {
+  assert.equal(moodleRange(60, 80), "60% → 80%");
+  assert.equal(moodleRange(null, 90), "– → 90%");
+  assert.equal(moodleRange(undefined, null), "– → –");
+});
+test("attemptsText keeps one decimal for averages", () => {
+  assert.equal(attemptsText(2), "2");
+  assert.equal(attemptsText(1.8), "1.8");
+  assert.equal(attemptsText(null), "–");
+});
+test("scoreText shows raw / max", () => {
+  assert.equal(scoreText(8, 10), "8 / 10");
+  assert.equal(scoreText(8.06, 10), "8.1 / 10");
+  assert.equal(scoreText(5, null), "5");
+});
+test("attentionText for a hard Moodle lesson", () => {
+  const base = { type: "hard_lesson" as const, person_id: null, display_name: null, topic_key: null, hvp_id: 460 };
+  assert.equal(attentionText({ ...base, title: "Lesson 1. Activation", value: 48, value2: 5 }),
+    "Lesson 1. Activation (Moodle): first try 48% from 5 students");
+  assert.equal(attentionText({ ...base, title: null, value: null, value2: null }), "A Moodle lesson is hard for the group");
+});
 
 test("wrongAnswersText joins answers with counts, most frequent first as given", () => {
   assert.equal(wrongAnswersText([{ answer: "flied", count: 2 }, { answer: "flown", count: 1 }]), "flied (2), flown (1)");

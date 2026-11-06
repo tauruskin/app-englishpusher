@@ -1,5 +1,5 @@
 // Shapes returned by analytics_student() and analytics_student_topic() (moodle-task-builder plan 1).
-import type { BySource, Role, StudentTopic } from "../teacher/types.ts";
+import type { BySource, MoodleStudent, Role, StudentTopic } from "../teacher/types.ts";
 
 export type WeakTopic = Omit<StudentTopic, "last_at">;
 
@@ -25,6 +25,7 @@ export interface Progress {
   trend: Week[];
   calendar: CalendarDay[];
   sources: BySource;
+  moodle?: MoodleStudent | null;
 }
 
 export interface TopicProgress {

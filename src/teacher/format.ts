@@ -30,6 +30,24 @@ export function pct(value: number | null | undefined): string {
   return value === null || value === undefined || !Number.isFinite(value) ? "–" : `${Math.round(value)}%`;
 }
 
+/** "60% → 80%": a Moodle first try and the latest score. */
+export function moodleRange(first: number | null | undefined, latest: number | null | undefined): string {
+  return `${pct(first)} → ${pct(latest)}`;
+}
+
+/** Attempts: whole numbers as is, averages with one decimal. */
+export function attemptsText(n: number | null | undefined): string {
+  if (n === null || n === undefined || !Number.isFinite(n)) return "–";
+  return Number.isInteger(n) ? `${n}` : n.toFixed(1);
+}
+
+const score = (n: number) => (Number.isInteger(n) ? `${n}` : n.toFixed(1));
+
+/** "8 / 10" for one Moodle attempt (the max may be unknown). */
+export function scoreText(raw: number, max: number | null): string {
+  return max === null || !Number.isFinite(max) ? score(raw) : `${score(raw)} / ${score(max)}`;
+}
+
 export function delta(now: number | null, before: number | null): { text: string; direction: "up" | "down" | "flat" } | null {
   if (now === null || before === null || !Number.isFinite(now) || !Number.isFinite(before)) return null;
   const d = Math.round(now - before);
@@ -78,6 +96,13 @@ export function attentionText(a: Attention): string {
     return value === null || value2 === null
       ? `${name}'s accuracy has dropped recently`
       : `${name}'s accuracy fell from ${value2}% to ${value}% in the last 14 days`;
+  }
+  if (a.type === "hard_lesson") {
+    const lesson = a.title || "A Moodle lesson";
+    if (value === null) return `${lesson} is hard for the group`;
+    return value2 === null
+      ? `${lesson} (Moodle): first try ${value}%`
+      : `${lesson} (Moodle): first try ${value}% from ${value2} students`;
   }
   const topic = a.title || a.topic_key || "A topic";
   if (value === null) return `${topic} is hard for the group`;

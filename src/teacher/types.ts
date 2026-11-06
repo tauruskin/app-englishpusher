@@ -7,6 +7,33 @@ export type BySource = Record<string, number>;
 /** A wrong answer students chose for one question, with how many times (topic "Most missed"). */
 export interface WrongAnswer { answer: string; count: number }
 
+/** Moodle H5P lesson scores (moodle-task-builder parts 10-11). Percentages 0-100; null = unknown. */
+export interface MoodleMatrixTopic {
+  topic_key: string; title: string; kind: string; level: string;
+  first_try: number | null; latest: number | null; attempts: number | null; students: number;
+}
+export interface MoodleMatrixCell { person_id: string; topic_key: string; first_try: number | null; latest: number | null; attempts: number }
+export interface MoodleMatrix { topics: MoodleMatrixTopic[]; cells: MoodleMatrixCell[] }
+export interface MoodleLesson {
+  hvp_id: number; title: string; section_name: string | null;
+  first_try: number | null; latest: number | null; attempts: number | null; students?: number;
+}
+export interface MoodleTopicDetail {
+  first_try: number | null; latest: number | null; attempts: number | null; students: number;
+  lessons: MoodleLesson[];
+  by_student: { person_id: string; display_name: string | null; first_try: number | null; latest: number | null; attempts: number }[];
+}
+export interface MoodleStudentTopic { topic_key: string; title: string; first_try: number | null; latest: number | null; attempts: number; lessons: number }
+export interface MoodleStudent {
+  lessons: number; first_try: number | null; latest: number | null;
+  topics: MoodleStudentTopic[]; other_lessons: MoodleLesson[];
+}
+export interface MoodleAttempt {
+  attempt_id: number; occurred_at: string; hvp_id: number; title: string; section_name: string | null;
+  topic_key: string | null; topic_title: string | null; raw_score: number; max_score: number | null;
+  pct: number | null; before_tracking: boolean; is_first_try: boolean;
+}
+
 export interface Me {
   person_id: string;
   display_name: string | null;
@@ -15,10 +42,11 @@ export interface Me {
 }
 
 export interface Attention {
-  type: "inactive" | "dropping" | "hard_topic";
+  type: "inactive" | "dropping" | "hard_topic" | "hard_lesson";
   person_id: string | null;
   display_name: string | null;
   topic_key: string | null;
+  hvp_id?: number;
   title: string | null;
   value: number | null;
   value2: number | null;
@@ -55,6 +83,7 @@ export interface TopicMatrix {
   students: { person_id: string; display_name: string | null }[];
   cells: MatrixCell[];
   sources: string[];
+  moodle?: MoodleMatrix | null;
 }
 
 export interface TopicDetail {
@@ -68,6 +97,7 @@ export interface TopicDetail {
     correct_answer?: string | null; wrong_answers?: WrongAnswer[];
   }[];
   sources: string[];
+  moodle?: MoodleTopicDetail | null;
 }
 
 export interface StudentTopic {
@@ -92,6 +122,7 @@ export interface StudentDetail {
     // Present only after the database RPC returns them; either may be null.
     correct_answer?: string | null; your_answer?: string | null;
   }[];
+  moodle?: MoodleStudent | null;
 }
 
 export type Result<T> = { data: T; error: null } | { data: null; error: string };
