@@ -32,13 +32,6 @@ export function Overview({ data }: { data: Progress }) {
         <StatTile label="Words learned" value={`${s.words_learned}`} />
       </div>
 
-      {data.moodle && (
-        <Card title="Your Moodle lessons" subtitle="Lesson scores from the course. Your first try and your latest score.">
-          <p className="font-body text-sm text-neutral-700">
-            {data.moodle.lessons} {data.moodle.lessons === 1 ? "lesson" : "lessons"} done · <MoodleRange first={data.moodle.first_try} latest={data.moodle.latest} />
-          </p>
-        </Card>
-      )}
 
       <Card title="Your weak topics" subtitle="Lowest accuracy, practised in the last 60 days">
         {data.weak_topics.length === 0 ? (
@@ -65,6 +58,14 @@ export function Overview({ data }: { data: Progress }) {
           Opens the Quiz Bot in Telegram and starts 5 questions on your weakest grammar topic.
         </p>
       </Card>
+
+      {data.moodle && (
+        <Card title="Your Moodle lessons" subtitle="Lesson scores from the course. Your first try and your latest score.">
+          <p className="font-body text-sm text-neutral-700">
+            {data.moodle.lessons} {data.moodle.lessons === 1 ? "lesson" : "lessons"} done · <MoodleRange first={data.moodle.first_try} latest={data.moodle.latest} />
+          </p>
+        </Card>
+      )}
 
       <Card title="Accuracy per week" subtitle="Last 8 weeks, every platform">
         {weeks.some((w) => w.value !== null) ? (

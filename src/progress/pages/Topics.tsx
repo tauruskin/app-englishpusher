@@ -8,7 +8,7 @@ export function TopicsTab({ data }: { data: Progress }) {
   const groups = groupTopics(data.topics);
   const moodle = data.moodle;
   return (
-    <>
+    <div className="space-y-5">
       <Card title="Mastery map" subtitle="Every topic you have practised, judged by your last 20 answers">
         {groups.length === 0 && <StateBox>No quiz or App answers yet.</StateBox>}
         {groups.map((g) => (
@@ -42,7 +42,7 @@ export function TopicsTab({ data }: { data: Progress }) {
       {moodle && (
         <Card title="Moodle lessons" subtitle="Lesson scores from the course. Not part of accuracy or mastery.">
           <p className="mb-3 font-body text-sm text-neutral-700">
-            {moodle.lessons} {moodle.lessons === 1 ? "lesson" : "lessons"} · first try → latest{" "}
+            {moodle.lessons} {moodle.lessons === 1 ? "lesson" : "lessons"} · your first try and your latest score:{" "}
             <MoodleRange first={moodle.first_try} latest={moodle.latest} />
           </p>
           {moodle.topics.length > 0 && (
@@ -79,6 +79,6 @@ export function TopicsTab({ data }: { data: Progress }) {
           )}
         </Card>
       )}
-    </>
+    </div>
   );
 }
