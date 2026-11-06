@@ -81,6 +81,21 @@ export function daysAgo(iso: string | null, now: number = Date.now()): string {
   return `${days} days ago`;
 }
 
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** "6 Nov 2026" in Kyiv time; "an unknown date" for missing or unparseable input. */
+export function dateLabel(iso: string | null | undefined): string {
+  const then = iso ? Date.parse(iso) : NaN;
+  if (!Number.isFinite(then)) return "an unknown date";
+  const [y, m, d] = kyivToday(new Date(then)).split("-").map(Number);
+  return `${d} ${MONTHS[m - 1]} ${y}`;
+}
+
+/** The confirmation shown before archiving a student. */
+export function archiveConfirmText(name: string | null | undefined): string {
+  return `Archive ${personName(name)}? They will be hidden from the dashboard lists and counts. Nothing is deleted, and you can unarchive them any time.`;
+}
+
 function num(v: number | null | undefined): number | null {
   return typeof v === "number" && Number.isFinite(v) ? Math.round(v) : null;
 }
@@ -125,6 +140,14 @@ export function friendlyError(error: { code?: string; message?: string; status?:
   }
   if (error.code === "22023" || error.code === "22P02") return "That student or topic doesn't exist.";
   return "Couldn't load the data. Check your connection and try again.";
+}
+
+/** Like friendlyError, but worded for a failed save (archive / unarchive). */
+export function archiveError(error: { code?: string; message?: string; status?: number }): string {
+  if (error.code === "42501") return "You're not allowed to change this student.";
+  if (error.code === "22023" || error.code === "22P02") return "That student doesn't exist or can't be archived.";
+  const generic = friendlyError(error);
+  return generic === SESSION_EXPIRED ? generic : "Couldn't save the change. Check your connection and try again.";
 }
 
 export const MASTERY_LABEL: Record<string, string> = {

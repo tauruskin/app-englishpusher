@@ -1,6 +1,9 @@
-import { rpc } from "./rpc.ts";
+import { rpc, type RpcError } from "./rpc.ts";
+import { archiveError } from "./format.ts";
 import type { Filters } from "./route.ts";
-import type { Me, MoodleAttempt, Overview, RosterRow, StudentDetail, TopicDetail, TopicMatrix } from "./types.ts";
+import type {
+  ArchivedRow, ArchiveResult, Me, MoodleAttempt, Overview, RosterRow, StudentDetail, TopicDetail, TopicMatrix,
+} from "./types.ts";
 
 export { isDemo } from "./rpc.ts";
 
@@ -9,9 +12,9 @@ export { isDemo } from "./rpc.ts";
 const loadDemo = import.meta.env.DEV ? async () => (await import("./demo.ts")).DEMO : null;
 type Demo = typeof import("./demo.ts").DEMO;
 
-function call<T>(fn: string, args: Record<string, unknown>, pick: (d: Demo) => T) {
+function call<T>(fn: string, args: Record<string, unknown>, pick: (d: Demo) => T, errorText?: (e: RpcError) => string) {
   const load = loadDemo; // a local const keeps TypeScript's null check inside the arrow function
-  return rpc<T>(fn, args, load && (async () => pick(await load())));
+  return rpc<T>(fn, args, load && (async () => pick(await load())), errorText);
 }
 
 const period = (f: Filters) => ({ p_days: f.days, p_source: f.source });
@@ -25,7 +28,12 @@ export const api = {
   topic: (topicKey: string, f: Filters) =>
     call<TopicDetail>("analytics_topic_detail", { p_topic_key: topicKey, ...period(f) }, (d) => d.topic),
   student: (personId: string) =>
-    call<StudentDetail>("analytics_student_detail", { p_person: personId }, (d) => d.student),
+    call<StudentDetail>("analytics_student_detail", { p_person: personId }, (d) => d.studentFor(personId)),
+  archived: () => call<ArchivedRow[]>("analytics_teacher_archived", {}, (d) => d.archived),
+  setArchived: (personId: string, archived: boolean) =>
+    call<ArchiveResult>(
+      "analytics_set_archived", { p_person: personId, p_archived: archived }, (d) => d.archiveResult(personId, archived), archiveError,
+    ),
   studentMoodleAttempts: (personId: string) =>
     call<MoodleAttempt[]>("analytics_student_moodle_attempts", { p_person: personId }, (d) => d.moodleAttempts),
 };
