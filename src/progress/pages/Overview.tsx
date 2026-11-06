@@ -1,7 +1,7 @@
 import { Send } from "lucide-react";
 import { addDays, dayLabel } from "../../teacher/charts/columns.ts";
 import { pct } from "../../teacher/format.ts";
-import { BarRow, Card, StateBox, StatTile } from "../../teacher/ui.tsx";
+import { BarRow, Card, MoodleRange, StateBox, StatTile } from "../../teacher/ui.tsx";
 import { LineChart } from "../charts/LineChart.tsx";
 import { routeHash } from "../route.ts";
 import { greetingLine, kyivHour, PRACTICE_URL } from "../shape.ts";
@@ -31,6 +31,14 @@ export function Overview({ data }: { data: Progress }) {
         <StatTile label="Streak" value={`🔥 ${s.streak}`} hint={s.streak === 1 ? "day" : "days"} />
         <StatTile label="Words learned" value={`${s.words_learned}`} />
       </div>
+
+      {data.moodle && (
+        <Card title="Your Moodle lessons" subtitle="Lesson scores from the course. Your first try and your latest score.">
+          <p className="font-body text-sm text-neutral-700">
+            {data.moodle.lessons} {data.moodle.lessons === 1 ? "lesson" : "lessons"} done · <MoodleRange first={data.moodle.first_try} latest={data.moodle.latest} />
+          </p>
+        </Card>
+      )}
 
       <Card title="Your weak topics" subtitle="Lowest accuracy, practised in the last 60 days">
         {data.weak_topics.length === 0 ? (

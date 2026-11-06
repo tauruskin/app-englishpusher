@@ -101,6 +101,8 @@ test("hasActivity is false only when there is nothing at all", () => {
   assert.equal(hasActivity({ ...empty, summary: { ...empty.summary, answers: 3 } }), true);
   assert.equal(hasActivity({ ...empty, sources: { bot: 4 } }), true);
   assert.equal(hasActivity({ ...empty, sources: { bot: 0 } }), false);
+  assert.equal(hasActivity({ ...empty, moodle: { lessons: 1, first_try: null, latest: 80, topics: [], other_lessons: [] } }), true);
+  assert.equal(hasActivity({ ...empty, moodle: null }), false);
 });
 
 test("topicExists: unknown keys come back with an empty title and no data", () => {
