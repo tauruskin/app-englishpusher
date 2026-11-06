@@ -2,7 +2,7 @@ import { lookup } from "./lookup.ts";
 import type { ReactNode } from "react";
 import { AlertCircle, ArrowDownRight, ArrowUpRight, Minus } from "lucide-react";
 import { BAND_STYLE, band } from "./heat.ts";
-import { delta, MASTERY_LABEL, periodLabel, pct, SESSION_EXPIRED, shorten, sourceLabel } from "./format.ts";
+import { delta, MASTERY_LABEL, moodleRange, periodLabel, pct, SESSION_EXPIRED, shorten, sourceLabel } from "./format.ts";
 import { DAY_OPTIONS, type Filters } from "./route.ts";
 import { ANSWER_COLORS, INK, orderSources, sourceColor } from "./theme.ts";
 import type { Mastery } from "./types.ts";
@@ -102,6 +102,21 @@ export function AccuracyCell({ accuracy, answers }: { accuracy: number | null; a
       title={answers !== undefined ? `${pct(accuracy)} of ${answers} answers` : undefined}
     >
       {pct(accuracy)}
+    </span>
+  );
+}
+
+// "60% → 80%": Moodle first try and latest; the latest is green when it went up, red when it went down.
+export function MoodleRange({ first, latest }: { first: number | null; latest: number | null }) {
+  const up = first !== null && latest !== null && latest > first;
+  const down = first !== null && latest !== null && latest < first;
+  const [a, b] = moodleRange(first, latest).split(" → ");
+  return (
+    <span className="whitespace-nowrap font-body text-sm tabular-nums">
+      <span className="text-neutral-700">{a}</span>
+      <span className="mx-1 text-neutral-400" aria-hidden>→</span>
+      <span className="sr-only"> then </span>
+      <span style={{ color: up ? INK.good : down ? INK.bad : undefined }} className={up || down ? "font-semibold" : "text-neutral-700"}>{b}</span>
     </span>
   );
 }

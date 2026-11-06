@@ -50,7 +50,16 @@ export const PROGRESS_DEMO = {
     topics,
     trend: weeks(8, [12, 0, 18, 22, 15, 25, 19, 14], [64, null, 69, 72, 70, 76, 79, 81]),
     calendar,
-    sources: { bot: 120, app: 44 },
+    sources: { bot: 120, app: 44, moodle: 3 },
+    moodle: {
+      lessons: 3, first_try: 58, latest: 84,
+      topics: [
+        { topic_key: "b1:grammar:modifiers", title: "Modifiers", first_try: 50, latest: 90, attempts: 3, lessons: 1 },
+      ],
+      other_lessons: [
+        { hvp_id: 460, title: "Lesson 1. Activation", section_name: "Lesson 1. WHO ARE YOU", first_try: null, latest: 90, attempts: 1 },
+      ],
+    },
   } as Progress,
   topic: (topicKey: string): TopicProgress => {
     const title = topics.find((t) => t.topic_key === topicKey)?.title ?? "";

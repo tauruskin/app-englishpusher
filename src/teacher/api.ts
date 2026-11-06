@@ -1,6 +1,6 @@
 import { rpc } from "./rpc.ts";
 import type { Filters } from "./route.ts";
-import type { Me, Overview, RosterRow, StudentDetail, TopicDetail, TopicMatrix } from "./types.ts";
+import type { Me, MoodleAttempt, Overview, RosterRow, StudentDetail, TopicDetail, TopicMatrix } from "./types.ts";
 
 export { isDemo } from "./rpc.ts";
 
@@ -26,4 +26,6 @@ export const api = {
     call<TopicDetail>("analytics_topic_detail", { p_topic_key: topicKey, ...period(f) }, (d) => d.topic),
   student: (personId: string) =>
     call<StudentDetail>("analytics_student_detail", { p_person: personId }, (d) => d.student),
+  studentMoodleAttempts: (personId: string) =>
+    call<MoodleAttempt[]>("analytics_student_moodle_attempts", { p_person: personId }, (d) => d.moodleAttempts),
 };
