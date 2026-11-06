@@ -1,4 +1,4 @@
-import { AlertTriangle, TrendingDown, UserX } from "lucide-react";
+import { AlertTriangle, BookOpen, TrendingDown, UserX } from "lucide-react";
 import { api } from "../api.ts";
 import { fillDays, kyivToday } from "../charts/columns.ts";
 import { StackedColumns } from "../charts/StackedColumns.tsx";
@@ -9,10 +9,11 @@ import { Card, Dimmed, FiltersRow, StatTile, StateBox } from "../ui.tsx";
 import type { Attention } from "../types.ts";
 import type { PageProps } from "./types.ts";
 
-const ICON = { inactive: UserX, dropping: TrendingDown, hard_topic: AlertTriangle };
-const ICON_LABEL: Record<string, string> = { inactive: "Inactive", dropping: "Dropping", hard_topic: "Hard topic" };
+const ICON = { inactive: UserX, dropping: TrendingDown, hard_topic: AlertTriangle, hard_lesson: BookOpen };
+const ICON_LABEL: Record<string, string> = { inactive: "Inactive", dropping: "Dropping", hard_topic: "Hard topic", hard_lesson: "Hard Moodle lesson" };
 
 function attentionHref(a: Attention, href: PageProps["href"]): string | null {
+  if (a.type === "hard_lesson") return null; // no lesson page
   if (a.type === "hard_topic" && a.topic_key) return href({ page: "topic", topicKey: a.topic_key });
   if (a.person_id) return href({ page: "student", personId: a.person_id });
   return null;
@@ -53,7 +54,7 @@ export function Overview({ filters, setFilters, href }: PageProps) {
             )}
           </Card>
 
-          <Card title="Needs attention" subtitle="Inactive students, dropping accuracy and topics the group finds hard">
+          <Card title="Needs attention" subtitle="Inactive students, dropping accuracy, topics and Moodle lessons the group finds hard">
             {data.needs_attention.length === 0 ? (
               <StateBox>Nothing needs attention right now.</StateBox>
             ) : (
@@ -63,7 +64,7 @@ export function Overview({ filters, setFilters, href }: PageProps) {
                   const link = attentionHref(a, href);
                   const text = attentionText(a);
                   return (
-                    <li key={`${a.type}:${a.person_id ?? ""}:${a.topic_key ?? ""}`} className="flex items-center gap-3 py-2.5 font-body text-sm text-neutral-800">
+                    <li key={`${a.type}:${a.person_id ?? ""}:${a.topic_key ?? ""}:${a.hvp_id ?? ""}`} className="flex items-center gap-3 py-2.5 font-body text-sm text-neutral-800">
                       <Icon size={16} className="shrink-0 text-red-600" aria-hidden />
                       <span className="sr-only">{lookup(ICON_LABEL, a.type) ?? "Attention"}:</span>
                       {link ? <a href={link} className="hover:text-brand hover:underline">{text}</a> : <span>{text}</span>}
