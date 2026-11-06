@@ -82,6 +82,7 @@ export function sourceShares(sources: BySource): Share[] {
 export function hasActivity(p: Progress): boolean {
   return (
     p.topics.length > 0 ||
+    (p.moodle?.lessons ?? 0) > 0 ||
     p.summary.answers > 0 ||
     p.calendar.some((d) => d.events > 0) ||
     Object.values(p.sources).some((n) => n > 0)
