@@ -92,12 +92,12 @@ export function StudentPage({ href, personId }: PageProps & { personId: string }
                 color={() => SERIES_INK}
               />
             ) : (
-              <StateBox>No activity in the last 8 weeks.</StateBox>
+              <StateBox>No Bot or App answers in the last 8 weeks.</StateBox>
             )}
           </Card>
           <Card title="Topics" subtitle="Mastery over the last 20 answers per topic">
             {data.topics.length === 0 ? (
-              <StateBox>No activity yet.</StateBox>
+              <StateBox>No Bot or App answers yet.</StateBox>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[32rem] font-body text-sm">

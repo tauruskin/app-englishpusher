@@ -47,20 +47,29 @@ export function TopicsTab({ data }: { data: Progress }) {
           </p>
           {moodle.topics.length > 0 && (
             <ul className="divide-y divide-neutral-100">
-              {moodle.topics.map((t) => (
-                <li key={t.topic_key}>
-                  <a
-                    href={routeHash({ page: "topic", topicKey: t.topic_key })}
-                    className="flex items-center justify-between gap-3 rounded-md py-2 font-body text-sm hover:bg-neutral-50"
-                  >
+              {moodle.topics.map((t) => {
+                // The topic page shows Bot/App answers, so link only when the student has some for this topic.
+                const linked = data.topics.some((x) => x.topic_key === t.topic_key);
+                const row = "flex items-center justify-between gap-3 rounded-md py-2 font-body text-sm";
+                const content = (
+                  <>
                     <span className="min-w-0 truncate text-neutral-900" title={t.title}>{t.title}</span>
                     <span className="flex shrink-0 items-center gap-3">
                       <MoodleRange first={t.first_try} latest={t.latest} />
                       <span className="text-xs text-neutral-400">{t.attempts} {t.attempts === 1 ? "attempt" : "attempts"}</span>
                     </span>
-                  </a>
-                </li>
-              ))}
+                  </>
+                );
+                return (
+                  <li key={t.topic_key}>
+                    {linked ? (
+                      <a href={routeHash({ page: "topic", topicKey: t.topic_key })} className={`${row} hover:bg-neutral-50`}>{content}</a>
+                    ) : (
+                      <div className={row}>{content}</div>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           )}
           {moodle.other_lessons.length > 0 && (

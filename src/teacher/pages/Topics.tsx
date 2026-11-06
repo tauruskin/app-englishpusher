@@ -58,7 +58,7 @@ export function Topics({ filters, setFilters, href }: PageProps) {
       </div>
       {error && <StateBox error={error} onRetry={retry} />}
       <Dimmed when={loading || !!error}>
-        <Card title="Topics × students" subtitle={data.moodle ? "Accuracy per student and topic (Bot + App); Moodle row = lesson first-try average" : "Accuracy per student and topic; hardest topics first"} right={<BandLegend />}>
+        <Card title="Topics × students" subtitle={data.moodle ? "Accuracy per student and topic (Bot + App), hardest first; the Moodle row is the lesson first-try average." : "Accuracy per student and topic; hardest topics first"} right={<BandLegend />}>
           {cols.length === 0 ? (
             <StateBox>No answers for these filters.</StateBox>
           ) : (

@@ -23,6 +23,8 @@ test("attentionText for a hard Moodle lesson", () => {
   const base = { type: "hard_lesson" as const, person_id: null, display_name: null, topic_key: null, hvp_id: 460 };
   assert.equal(attentionText({ ...base, title: "Lesson 1. Activation", value: 48, value2: 5 }),
     "Lesson 1. Activation (Moodle): first try 48% from 5 students");
+  assert.equal(attentionText({ ...base, title: "Lesson 1. Activation", value: 48, value2: 1 }),
+    "Lesson 1. Activation (Moodle): first try 48% from 1 student");
   assert.equal(attentionText({ ...base, title: null, value: null, value2: null }), "A Moodle lesson is hard for the group");
 });
 

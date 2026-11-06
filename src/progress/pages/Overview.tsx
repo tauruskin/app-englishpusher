@@ -32,7 +32,6 @@ export function Overview({ data }: { data: Progress }) {
         <StatTile label="Words learned" value={`${s.words_learned}`} />
       </div>
 
-
       <Card title="Your weak topics" subtitle="Lowest accuracy, practised in the last 60 days">
         {data.weak_topics.length === 0 ? (
           <p className="font-body text-sm text-neutral-500">No weak topics right now. Keep practising and they will show up here.</p>

@@ -102,7 +102,7 @@ export function attentionText(a: Attention): string {
     if (value === null) return `${lesson} is hard for the group`;
     return value2 === null
       ? `${lesson} (Moodle): first try ${value}%`
-      : `${lesson} (Moodle): first try ${value}% from ${value2} students`;
+      : `${lesson} (Moodle): first try ${value}% from ${value2} ${value2 === 1 ? "student" : "students"}`;
   }
   const topic = a.title || a.topic_key || "A topic";
   if (value === null) return `${topic} is hard for the group`;
