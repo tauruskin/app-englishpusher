@@ -1,4 +1,4 @@
-import type { Me, MoodleAttempt, Overview, RosterRow, StudentDetail, TopicDetail, TopicMatrix } from "./types.ts";
+import type { ArchivedRow, ArchiveResult, Me, MoodleAttempt, Overview, RosterRow, StudentDetail, TopicDetail, TopicMatrix } from "./types.ts";
 
 // Used only when the dev server runs with ?demo in the URL (see api.ts).
 const today = new Date();
@@ -12,7 +12,7 @@ const people = [
   { person_id: "d4", display_name: "Dmytro" },
 ];
 
-export const DEMO = {
+const BASE = {
   me: { person_id: "d0", display_name: "Demo Teacher", role: "teacher", telegram_linked: true } as Me,
   overview: {
     total_students: 4, active_students: 3, accuracy: 74, accuracy_prev: 79, answers: 262,
@@ -125,9 +125,26 @@ export const DEMO = {
       ],
     },
   } as StudentDetail,
+  archived: [
+    { person_id: "d5", display_name: "Test Account", archived_at: iso(5), last_active: iso(21), sources: ["app"] },
+    { person_id: "d6", display_name: "Ihor", archived_at: iso(40), last_active: iso(75), sources: ["bot", "app"] },
+  ] as ArchivedRow[],
+  // Demo does not remember the change: the lists above stay as they are.
+  archiveResult: (personId: string, archived: boolean): ArchiveResult => ({
+    person_id: personId, archived, archived_at: archived ? iso(0) : null,
+  }),
   moodleAttempts: [
     { attempt_id: 3, occurred_at: iso(0), hvp_id: 571, title: "Lesson 7. Modifiers", section_name: "Lesson 7. MODIFIERS", topic_key: "b1:grammar:modifiers", topic_title: "Modifiers", raw_score: 9, max_score: 10, pct: 90, before_tracking: false, is_first_try: false },
     { attempt_id: 2, occurred_at: iso(0), hvp_id: 571, title: "Lesson 7. Modifiers", section_name: "Lesson 7. MODIFIERS", topic_key: "b1:grammar:modifiers", topic_title: "Modifiers", raw_score: 5, max_score: 10, pct: 50, before_tracking: false, is_first_try: true },
     { attempt_id: 1, occurred_at: iso(60), hvp_id: 460, title: "Lesson 1. Activation", section_name: "Lesson 1. WHO ARE YOU", topic_key: null, topic_title: null, raw_score: 9, max_score: 10, pct: 90, before_tracking: true, is_first_try: false },
   ] as MoodleAttempt[],
+};
+
+export const DEMO = {
+  ...BASE,
+  // The student page of the archived "Test Account" shows the amber archived banner; every other id shows Anna.
+  studentFor: (personId: string): StudentDetail =>
+    personId === "d5"
+      ? { ...BASE.student, person: { id: "d5", display_name: "Test Account", role: "student" }, archived_at: iso(5) }
+      : BASE.student,
 };

@@ -45,7 +45,15 @@ export function Students({ filters, setFilters, href }: PageProps) {
       <FiltersRow filters={filters} sources={sources} onChange={setFilters} />
       {error && <StateBox error={error} onRetry={retry} />}
       <Dimmed when={loading || !!error}>
-        <Card title="Students" subtitle="Accuracy and answers for the chosen period; weakest topic over each student's last answers">
+        <Card
+          title="Students"
+          subtitle="Accuracy and answers for the chosen period; weakest topic over each student's last answers"
+          right={
+            <a href={href({ page: "archived" })} className="shrink-0 whitespace-nowrap py-1 font-body text-sm text-neutral-500 hover:text-brand hover:underline">
+              Archived students →
+            </a>
+          }
+        >
           {data.length === 0 ? (
             <StateBox>No students yet.</StateBox>
           ) : (

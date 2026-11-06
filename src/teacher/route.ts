@@ -1,8 +1,10 @@
 // Hash routes for the teacher dashboard: #/<page>[/<id>][?days=7|30|90|all&source=bot]
+// Pages: overview, students, topics, archived, student/<id>, topic/<key>
 
 export type Tab = "overview" | "students" | "topics";
 export type Route =
   | { page: Tab }
+  | { page: "archived" } // list of archived students; shown under the Students tab
   | { page: "student"; personId: string }
   | { page: "topic"; topicKey: string };
 
@@ -41,6 +43,7 @@ export function parseHash(hash: string): { route: Route; filters: Filters } {
   const filters = parseFilters(new URLSearchParams(query));
   let route: Route = { page: "overview" };
   if (TABS.includes(parts[0] as Tab)) route = { page: parts[0] as Tab };
+  else if (parts[0] === "archived") route = { page: "archived" };
   else if (parts[0] === "student" && parts[1]) route = { page: "student", personId: safeDecode(parts[1]) };
   else if (parts[0] === "topic" && parts[1]) route = { page: "topic", topicKey: safeDecode(parts[1]) };
   return { route, filters };

@@ -34,6 +34,15 @@ test("toHash writes only non-default filters", () => {
   assert.equal(toHash({ page: "students" }, { days: null, source: "app" }), "#/students?days=all&source=app");
 });
 
+test("the archived page parses, round-trips and keeps filters", () => {
+  assert.deepEqual(parseHash("#/archived").route, { page: "archived" });
+  assert.equal(toHash({ page: "archived" }, DEFAULT_FILTERS), "#/archived");
+  const filters = { days: 7, source: "bot" };
+  const hash = toHash({ page: "archived" }, filters);
+  assert.equal(hash, "#/archived?days=7&source=bot");
+  assert.deepEqual(parseHash(hash), { route: { page: "archived" }, filters });
+});
+
 test("a malformed % escape in the hash does not throw", () => {
   assert.deepEqual(parseHash("#/topic/%").route, { page: "topic", topicKey: "%" });
   assert.deepEqual(parseHash("#/student/%E0%A4%A").route, { page: "student", personId: "%E0%A4%A" });

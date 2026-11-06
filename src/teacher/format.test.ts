@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  attemptsText, attentionText, daysAgo, delta, friendlyError, levelLabel, moodleRange, pct, periodLabel, personName, scoreText, shorten, sourceLabel, wrongAnswersText,
+  archiveConfirmText, archiveError, attemptsText, attentionText, dateLabel, daysAgo, delta, friendlyError, levelLabel, moodleRange, pct, periodLabel, personName, scoreText, shorten, sourceLabel, wrongAnswersText,
 } from "./format.ts";
 
 test("moodleRange shows first try and latest", () => {
@@ -91,6 +91,13 @@ test("RPC errors become friendly messages", () => {
   assert.equal(friendlyError({ message: "fetch failed" }), "Couldn't load the data. Check your connection and try again.");
 });
 
+test("archiveError words a failed save", () => {
+  assert.equal(archiveError({ code: "42501" }), "You're not allowed to change this student.");
+  assert.equal(archiveError({ code: "22023" }), "That student doesn't exist or can't be archived.");
+  assert.equal(archiveError({ code: "PGRST301" }), "Your session has expired. Please sign in again.");
+  assert.equal(archiveError({ message: "fetch failed" }), "Couldn't save the change. Check your connection and try again.");
+});
+
 test("pct and delta round to whole numbers and reject NaN", () => {
   assert.equal(pct(75.6), "76%");
   assert.equal(pct(Number.NaN), "–");
@@ -138,6 +145,23 @@ test("friendlyError asks for a new sign-in on expired or missing sessions", () =
   // not-staff keeps its own message even when a 4xx status is attached
   assert.equal(friendlyError({ code: "42501", status: 403 }), "You don't have access to this page.");
   assert.equal(friendlyError({ message: "boom", status: 500 }), "Couldn't load the data. Check your connection and try again.");
+});
+
+test("archiveConfirmText names the student and says nothing is deleted", () => {
+  assert.equal(
+    archiveConfirmText("Olena"),
+    "Archive Olena? They will be hidden from the dashboard lists and counts. Nothing is deleted, and you can unarchive them any time.",
+  );
+  assert.match(archiveConfirmText(null), /^Archive Unnamed student\? /);
+});
+
+test("dateLabel is a short Kyiv date and survives bad input", () => {
+  assert.equal(dateLabel("2026-11-06T10:00:00Z"), "6 Nov 2026");
+  assert.equal(dateLabel("2026-09-01T09:00:00Z"), "1 Sep 2026");
+  // 22:30Z is already the next day in Kyiv (winter time)
+  assert.equal(dateLabel("2026-12-31T22:30:00Z"), "1 Jan 2027");
+  assert.equal(dateLabel("nope"), "an unknown date");
+  assert.equal(dateLabel(null), "an unknown date");
 });
 
 test("shorten keeps short text and collapses whitespace", () => {

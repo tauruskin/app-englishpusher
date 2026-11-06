@@ -7,6 +7,10 @@ import { DAY_OPTIONS, type Filters } from "./route.ts";
 import { ANSWER_COLORS, INK, orderSources, sourceColor } from "./theme.ts";
 import type { Mastery } from "./types.ts";
 
+// Small secondary button (Archive / Unarchive): outlined, at least 44px tall for touch.
+export const SECONDARY_BUTTON =
+  "min-h-[44px] rounded-lg border border-neutral-300 bg-white px-4 py-2 font-body text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50";
+
 export function Card({ title, subtitle, children, right }: { title?: string; subtitle?: string; children: ReactNode; right?: ReactNode }) {
   return (
     <section className="rounded-xl border border-neutral-200 bg-white p-5">

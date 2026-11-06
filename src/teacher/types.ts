@@ -123,6 +123,24 @@ export interface StudentDetail {
     correct_answer?: string | null; your_answer?: string | null;
   }[];
   moodle?: MoodleStudent | null;
+  /** When the teacher archived this student; null or missing = active. */
+  archived_at?: string | null;
+}
+
+/** One archived student in `analytics_teacher_archived` (newest archive first). */
+export interface ArchivedRow {
+  person_id: string;
+  display_name: string | null;
+  archived_at: string;
+  last_active: string | null;
+  sources: string[];
+}
+
+/** What `analytics_set_archived` returns. */
+export interface ArchiveResult {
+  person_id: string;
+  archived: boolean;
+  archived_at: string | null;
 }
 
 export type Result<T> = { data: T; error: null } | { data: null; error: string };

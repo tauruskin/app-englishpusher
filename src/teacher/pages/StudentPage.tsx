@@ -1,11 +1,12 @@
+import { useState } from "react";
 import { api } from "../api.ts";
 import { addDays, dayLabel } from "../charts/columns.ts";
 import { StackedColumns } from "../charts/StackedColumns.tsx";
-import { daysAgo, levelLabel, pct, personName, scoreText, sourceLabel } from "../format.ts";
+import { archiveConfirmText, dateLabel, daysAgo, levelLabel, pct, personName, scoreText, sourceLabel } from "../format.ts";
 import { lookup } from "../lookup.ts";
 import { INK } from "../theme.ts";
 import { useData } from "../useData.ts";
-import { AccuracyCell, Card, Dimmed, MasteryBadge, MistakeAnswers, MoodleRange, SourceDots, StatTile, StateBox } from "../ui.tsx";
+import { AccuracyCell, Card, Dimmed, MasteryBadge, MistakeAnswers, MoodleRange, SECONDARY_BUTTON, SourceDots, StatTile, StateBox } from "../ui.tsx";
 import type { PageProps } from "./types.ts";
 
 const KIND_LABEL: Record<string, string> = { grammar: "Grammar", vocab: "Vocab" };
@@ -36,9 +37,37 @@ function MoodleAttempts({ personId }: { personId: string }) {
   );
 }
 
-export function StudentPage({ href, personId }: PageProps & { personId: string }) {
+// Archive / unarchive state for one student page. Archiving leaves the page (back to the roster);
+// unarchiving hides the banner at once and reloads the student so the page matches the database.
+function useArchive(personId: string, name: string | null, archivedAt: string | null, go: () => void, reload: () => void) {
+  const [saving, setSaving] = useState(false);
+  const [restored, setRestored] = useState(false);
+  const [failure, setFailure] = useState<string | null>(null);
+  const save = async (value: boolean) => {
+    if (value && !window.confirm(archiveConfirmText(name))) return;
+    setSaving(true);
+    setFailure(null);
+    const r = await api.setArchived(personId, value);
+    setSaving(false);
+    if (r.error !== null) { setFailure(r.error); return; }
+    if (value) go();
+    else { setRestored(true); reload(); }
+  };
+  return { archived: archivedAt !== null && !restored, saving, failure, save };
+}
+
+// The page remounts per student, so one student's saving/error state never shows on another's page.
+export function StudentPage(props: PageProps & { personId: string }) {
+  return <StudentView key={props.personId} {...props} />;
+}
+
+function StudentView({ href, personId }: PageProps & { personId: string }) {
   // Entity page: entityKey keeps student A's numbers from showing under student B.
   const { data, error, loading, retry } = useData(() => api.student(personId), personId, `student:${personId}`);
+  const archive = useArchive(
+    personId, data?.person?.display_name ?? null, data?.archived_at ?? null,
+    () => { window.location.hash = href({ page: "students" }); }, retry,
+  );
   const back = (
     <a href={href({ page: "students" })} className="font-body text-sm text-neutral-500 hover:text-brand">← Students</a>
   );
@@ -52,6 +81,7 @@ export function StudentPage({ href, personId }: PageProps & { personId: string }
   }
 
   const s = data.summary;
+  const isStudent = data.person?.role === "student";
   const weeks = data.trend.map((w) => ({
     key: w.week,
     label: `${dayLabel(w.week)}–${dayLabel(addDays(w.week, 6))}`, // tooltip and table
@@ -67,11 +97,29 @@ export function StudentPage({ href, personId }: PageProps & { personId: string }
     <div className="space-y-5">
       <div>
         {back}
-        <h1 className="mt-1 font-display text-2xl font-bold text-neutral-900">{personName(data.person?.display_name)}</h1>
-        <p className="mt-1 flex flex-wrap items-center gap-3 font-body text-sm text-neutral-500">
-          Last active {daysAgo(s.last_active)} <SourceDots sources={Object.keys(data.sources)} />
-        </p>
+        <div className="mt-1 flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h1 className="font-display text-2xl font-bold text-neutral-900">{personName(data.person?.display_name)}</h1>
+            <p className="mt-1 flex flex-wrap items-center gap-3 font-body text-sm text-neutral-500">
+              Last active {daysAgo(s.last_active)} <SourceDots sources={Object.keys(data.sources)} />
+            </p>
+          </div>
+          {isStudent && !archive.archived && (
+            <button type="button" className={SECONDARY_BUTTON} disabled={archive.saving} onClick={() => void archive.save(true)}>
+              {archive.saving ? "Saving…" : "Archive"}
+            </button>
+          )}
+        </div>
       </div>
+      {isStudent && archive.archived && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 font-body text-sm text-amber-900">
+          <p>Archived on {dateLabel(data.archived_at)}. Hidden from the dashboard lists and counts; nothing is deleted.</p>
+          <button type="button" className={SECONDARY_BUTTON} disabled={archive.saving} onClick={() => void archive.save(false)}>
+            {archive.saving ? "Saving…" : "Unarchive"}
+          </button>
+        </div>
+      )}
+      {archive.failure && <StateBox error={archive.failure} />}
       {error && <StateBox error={error} onRetry={retry} />}
       <Dimmed when={loading || !!error}>
         <div className="space-y-5">
