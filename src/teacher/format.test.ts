@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  archiveConfirmText, archiveError, attemptsText, attentionText, dateLabel, daysAgo, delta, friendlyError, levelLabel, moodleRange, pct, periodLabel, personName, scoreText, shorten, sourceLabel, wrongAnswersText,
+  accountsText, archiveConfirmText, archiveError, attemptsText, attentionText, dateLabel, daysAgo, delta, filterCandidates, friendlyError, levelLabel, mergeError, mergeWarning, moodleRange, pct, periodLabel, personName, scoreText, shorten, sourceLabel, wrongAnswersText,
 } from "./format.ts";
 
 test("moodleRange shows first try and latest", () => {
@@ -177,4 +177,45 @@ test("shorten cuts long text with an ellipsis, max length included", () => {
 test("shorten default max is 80", () => {
   assert.equal(shorten("b".repeat(80)), "b".repeat(80));
   assert.equal(shorten("b".repeat(81)).length, 80);
+});
+
+test("accountsText names the accounts in a fixed order", () => {
+  assert.equal(accountsText(["telegram", "app", "moodle"]), "Quiz Bot, App, Moodle");
+  assert.equal(accountsText(["moodle"]), "Moodle");
+  assert.equal(accountsText(["moodle", "telegram"]), "Quiz Bot, Moodle");
+  assert.equal(accountsText([]), "No accounts");
+  assert.equal(accountsText(["fax"]), "Fax");
+});
+
+test("filterCandidates matches any part of the name, any case, ignoring spaces around", () => {
+  const list = [
+    { person_id: "1", display_name: "Olena Kovalenko" },
+    { person_id: "2", display_name: "olena k." },
+    { person_id: "3", display_name: "Ihor" },
+    { person_id: "4", display_name: null },
+  ];
+  assert.deepEqual(filterCandidates(list, "OLENA").map((c) => c.person_id), ["1", "2"]);
+  assert.deepEqual(filterCandidates(list, "  kov ").map((c) => c.person_id), ["1"]);
+  assert.deepEqual(filterCandidates(list, "").map((c) => c.person_id), ["1", "2", "3", "4"]);
+  assert.deepEqual(filterCandidates(list, "   ").length, 4);
+  assert.deepEqual(filterCandidates(list, "unnamed").map((c) => c.person_id), ["4"]);
+  assert.deepEqual(filterCandidates(list, "zzz"), []);
+});
+
+test("mergeWarning says what moves where and who can undo it", () => {
+  assert.equal(
+    mergeWarning("Olena", "olena k."),
+    "olena k.'s accounts and history will move to Olena, and olena k. will disappear from the lists. Only Oleksandr can undo this.",
+  );
+  assert.match(mergeWarning(null, "Ihor"), /move to Unnamed student, /);
+});
+
+test("mergeError explains refusals in plain words", () => {
+  assert.equal(mergeError({ code: "42501" }), "You're not allowed to merge these students.");
+  assert.equal(
+    mergeError({ code: "22023" }),
+    "These two can't be merged (one of them may already be merged, or isn't a student). Reload the page and try again.",
+  );
+  assert.equal(mergeError({ status: 401 }), "Your session has expired. Please sign in again.");
+  assert.equal(mergeError({}), "Couldn't save the change. Check your connection and try again.");
 });
