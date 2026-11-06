@@ -52,9 +52,9 @@ export const PROGRESS_DEMO = {
     calendar,
     sources: { bot: 120, app: 44, moodle: 3 },
     moodle: {
-      lessons: 3, first_try: 58, latest: 84,
+      lessons: 2, first_try: 50, latest: 90,
       topics: [
-        { topic_key: "b1:grammar:modifiers", title: "Modifiers", first_try: 50, latest: 90, attempts: 3, lessons: 1 },
+        { topic_key: "b1:grammar:modifiers", title: "Modifiers", first_try: 50, latest: 90, attempts: 2, lessons: 1 },
       ],
       other_lessons: [
         { hvp_id: 460, title: "Lesson 1. Activation", section_name: "Lesson 1. WHO ARE YOU", first_try: null, latest: 90, attempts: 1 },

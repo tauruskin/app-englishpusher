@@ -25,7 +25,7 @@ export const DEMO = {
       { type: "dropping", person_id: "d2", display_name: "Bohdan", topic_key: null, title: null, value: 61, value2: 84 },
       { type: "hard_topic", person_id: null, display_name: null, topic_key: "b1:grammar:irregular-verbs", title: "Irregular Verbs", value: 56, value2: 4 },
       { type: "inactive", person_id: "d4", display_name: "Dmytro", topic_key: null, title: null, value: 12, value2: null },
-      { type: "hard_lesson", person_id: null, display_name: null, topic_key: null, title: "Lesson 4. Adverbs of Frequency", value: 52, value2: 3, hvp_id: 567 },
+      { type: "hard_lesson", person_id: null, display_name: null, topic_key: null, title: "Lesson 9. Irregular Verbs", value: 52, value2: 3, hvp_id: 567 },
     ],
   } as Overview,
   students: [
@@ -50,14 +50,19 @@ export const DEMO = {
       { person_id: "d3", topic_key: "b1:grammar:irregular-verbs", answers: 15, accuracy: 60 },
       { person_id: "d3", topic_key: "b1:vocab:jobs", answers: 12, accuracy: 67 },
     ],
-    sources: ["app", "bot"],
+    sources: ["app", "bot", "moodle"],
+    // Topic rows are the rounded averages of their cells (students = number of cells).
     moodle: {
       topics: [
-        { topic_key: "b1:grammar:modifiers", title: "Modifiers", kind: "grammar", level: "b1", first_try: 58, latest: 86, attempts: 2.1, students: 3 },
-        { topic_key: "b1:grammar:adverbs-of-frequency", title: "Adverbs of Frequency", kind: "grammar", level: "b1", first_try: 65, latest: 88, attempts: 1.8, students: 3 },
+        { topic_key: "b1:grammar:irregular-verbs", title: "Irregular Verbs", kind: "grammar", level: "b1", first_try: 58, latest: 85, attempts: 2, students: 3 },
+        { topic_key: "b1:grammar:modifiers", title: "Modifiers", kind: "grammar", level: "b1", first_try: 45, latest: 85, attempts: 2, students: 2 },
+        { topic_key: "b1:grammar:adverbs-of-frequency", title: "Adverbs of Frequency", kind: "grammar", level: "b1", first_try: 70, latest: 70, attempts: 1, students: 1 },
       ],
       cells: [
-        { person_id: "d1", topic_key: "b1:grammar:modifiers", first_try: 50, latest: 90, attempts: 3 },
+        { person_id: "d1", topic_key: "b1:grammar:irregular-verbs", first_try: 50, latest: 90, attempts: 3 },
+        { person_id: "d2", topic_key: "b1:grammar:irregular-verbs", first_try: 40, latest: 80, attempts: 2 },
+        { person_id: "d3", topic_key: "b1:grammar:irregular-verbs", first_try: 85, latest: 85, attempts: 1 },
+        { person_id: "d1", topic_key: "b1:grammar:modifiers", first_try: 50, latest: 90, attempts: 2 },
         { person_id: "d2", topic_key: "b1:grammar:modifiers", first_try: 40, latest: 80, attempts: 2 },
         { person_id: "d3", topic_key: "b1:grammar:adverbs-of-frequency", first_try: 70, latest: 70, attempts: 1 },
       ],
@@ -78,10 +83,10 @@ export const DEMO = {
     ],
     sources: ["app", "bot"],
     moodle: {
-      first_try: 58, latest: 86, attempts: 2.1, students: 3,
+      first_try: 58, latest: 85, attempts: 2, students: 3,
       lessons: [
-        { hvp_id: 567, title: "Lesson 4. Adverbs of Frequency", section_name: "Lesson 4. ADVERBS of FREQUENCY", first_try: 52, latest: 84, attempts: 2.3, students: 3 },
-        { hvp_id: 653, title: "Lesson 4. Activation", section_name: "Lesson 4. ADVERBS of FREQUENCY", first_try: 64, latest: 88, attempts: 1.7, students: 3 },
+        { hvp_id: 567, title: "Lesson 9. Irregular Verbs", section_name: "Lesson 9. PAST SIMPLE", first_try: 52, latest: 82, attempts: 2.3, students: 3 },
+        { hvp_id: 653, title: "Lesson 9. Activation", section_name: "Lesson 9. PAST SIMPLE", first_try: 64, latest: 88, attempts: 1.7, students: 3 },
       ],
       by_student: [
         { person_id: "d2", display_name: "Bohdan", first_try: 40, latest: 80, attempts: 2 },
@@ -110,9 +115,10 @@ export const DEMO = {
       { topic_key: "b1:grammar:modifiers", title: "Modifiers", item: "b77", item_label: "Choose the sentence that is correct.", source: "bot", activity: "quiz", occurred_at: iso(3), correct_answer: "If I had known about the delay, I would have taken an earlier train to the station.", your_answer: "If I would have known about the delay, I would have taken an earlier train to the station." },
     ],
     moodle: {
-      lessons: 3, first_try: 58, latest: 84,
+      // 2 lessons shown; the average first try skips the lesson without one.
+      lessons: 2, first_try: 50, latest: 90,
       topics: [
-        { topic_key: "b1:grammar:modifiers", title: "Modifiers", first_try: 50, latest: 90, attempts: 3, lessons: 1 },
+        { topic_key: "b1:grammar:modifiers", title: "Modifiers", first_try: 50, latest: 90, attempts: 2, lessons: 1 },
       ],
       other_lessons: [
         { hvp_id: 460, title: "Lesson 1. Activation", section_name: "Lesson 1. WHO ARE YOU", first_try: null, latest: 90, attempts: 1 },
@@ -120,8 +126,8 @@ export const DEMO = {
     },
   } as StudentDetail,
   moodleAttempts: [
-    { attempt_id: 3, occurred_at: iso(0), hvp_id: 567, title: "Lesson 4. Adverbs of Frequency", section_name: "Lesson 4. ADVERBS of FREQUENCY", topic_key: "b1:grammar:modifiers", topic_title: "Modifiers", raw_score: 9, max_score: 10, pct: 90, before_tracking: false, is_first_try: false },
-    { attempt_id: 2, occurred_at: iso(0), hvp_id: 567, title: "Lesson 4. Adverbs of Frequency", section_name: "Lesson 4. ADVERBS of FREQUENCY", topic_key: "b1:grammar:modifiers", topic_title: "Modifiers", raw_score: 5, max_score: 10, pct: 50, before_tracking: false, is_first_try: true },
+    { attempt_id: 3, occurred_at: iso(0), hvp_id: 571, title: "Lesson 7. Modifiers", section_name: "Lesson 7. MODIFIERS", topic_key: "b1:grammar:modifiers", topic_title: "Modifiers", raw_score: 9, max_score: 10, pct: 90, before_tracking: false, is_first_try: false },
+    { attempt_id: 2, occurred_at: iso(0), hvp_id: 571, title: "Lesson 7. Modifiers", section_name: "Lesson 7. MODIFIERS", topic_key: "b1:grammar:modifiers", topic_title: "Modifiers", raw_score: 5, max_score: 10, pct: 50, before_tracking: false, is_first_try: true },
     { attempt_id: 1, occurred_at: iso(60), hvp_id: 460, title: "Lesson 1. Activation", section_name: "Lesson 1. WHO ARE YOU", topic_key: null, topic_title: null, raw_score: 9, max_score: 10, pct: 90, before_tracking: true, is_first_try: false },
   ] as MoodleAttempt[],
 };
