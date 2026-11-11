@@ -1,41 +1,36 @@
-/* Grammar pages: theme tokens and game animations. Loaded after c1-shared.css. */
+/* Grammar pages: theme tokens and game animations. Loaded after c1-shared.css (plain CSS: no @layer, because this file has no @tailwind directives; :where() keeps the default rules below Tailwind utilities). */
 
-@layer base {
-  .grammar-app {
-    --background: 30 100% 97%;
-    --foreground: 20 20% 20%;
-    --card: 0 0% 100%;
-    --card-foreground: 20 20% 20%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 20 20% 20%;
-    --primary: 30 95% 55%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 30 30% 93%;
-    --secondary-foreground: 20 20% 25%;
-    --muted: 30 20% 92%;
-    --muted-foreground: 20 10% 50%;
-    --accent: 30 80% 48%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 65% 55%;
-    --destructive-foreground: 0 0% 100%;
-    --success: 145 55% 45%;
-    --success-foreground: 0 0% 100%;
-    --border: 30 20% 88%;
-    --input: 30 20% 88%;
-    --ring: 30 95% 55%;
-    color: hsl(var(--foreground));
-    font-family: "Inter", sans-serif;
-  }
-  /* The grammar markup relies on a default border colour, as the grammar site set it globally. */
-  .grammar-app * {
-    border-color: hsl(var(--border));
-  }
-  .grammar-app h1,
-  .grammar-app h2,
-  .grammar-app h3,
-  .grammar-app h4 {
-    font-family: "Space Grotesk", sans-serif;
-  }
+.grammar-app {
+  --background: 30 100% 97%;
+  --foreground: 20 20% 20%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 20% 20%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 20% 20%;
+  --primary: 30 95% 55%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 30 30% 93%;
+  --secondary-foreground: 20 20% 25%;
+  --muted: 30 20% 92%;
+  --muted-foreground: 20 10% 50%;
+  --accent: 30 80% 48%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 65% 55%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 145 55% 45%;
+  --success-foreground: 0 0% 100%;
+  --border: 30 20% 88%;
+  --input: 30 20% 88%;
+  --ring: 30 95% 55%;
+  color: hsl(var(--foreground));
+  font-family: "Inter", sans-serif;
+}
+/* The grammar markup relies on a default border colour, as the grammar site set it globally. */
+.grammar-app :where(*) {
+  border-color: hsl(var(--border));
+}
+.grammar-app :where(h1, h2, h3, h4) {
+  font-family: "Space Grotesk", sans-serif;
 }
 
 .gradient-border-hover { animation: none; }
@@ -90,16 +85,14 @@
   50% { transform: translateY(-3px); }
 }
 
-@layer utilities {
-  .animate-slide-up { animation: slide-up 0.4s ease-out; }
-  .animate-emoji-correct { animation: emoji-correct 1.2s ease-out forwards; }
-  .animate-emoji-wrong { animation: emoji-wrong 1s ease-out forwards; }
-  .animate-bounce-once { animation: bounce-once 0.4s ease-out; }
-  .animate-character-jump { animation: character-jump 0.6s ease-out; }
-  .animate-character-droop { animation: character-droop 0.5s ease-out forwards; }
-  .animate-character-celebrate { animation: character-celebrate 1s ease-in-out infinite; }
-  .animate-character-think { animation: character-think 2s ease-in-out infinite; }
-  .animate-character-idle { animation: character-idle 3s ease-in-out infinite; }
-  .topic-scroll { scrollbar-width: none; -ms-overflow-style: none; }
-  .topic-scroll::-webkit-scrollbar { display: none; }
-}
+.animate-slide-up { animation: slide-up 0.4s ease-out; }
+.animate-emoji-correct { animation: emoji-correct 1.2s ease-out forwards; }
+.animate-emoji-wrong { animation: emoji-wrong 1s ease-out forwards; }
+.animate-bounce-once { animation: bounce-once 0.4s ease-out; }
+.animate-character-jump { animation: character-jump 0.6s ease-out; }
+.animate-character-droop { animation: character-droop 0.5s ease-out forwards; }
+.animate-character-celebrate { animation: character-celebrate 1s ease-in-out infinite; }
+.animate-character-think { animation: character-think 2s ease-in-out infinite; }
+.animate-character-idle { animation: character-idle 3s ease-in-out infinite; }
+.topic-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+.topic-scroll::-webkit-scrollbar { display: none; }
