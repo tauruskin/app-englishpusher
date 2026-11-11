@@ -466,6 +466,7 @@ src/
     progress.ts                   ← trivia results / saved words / study events / grammar answers data access
     savedWords.tsx                ← useSavedWords, StarButton, My Words topic resolution
     TriviaSave.tsx                ← end-screen auto-save + guest hint + failure notice
+    SignInPopup.tsx               ← guest "Keep your results" popup on grammar + trivia end screens
   index.css                       ← Tailwind imports + character animations
   main.tsx                        ← hub React entry
   Index.tsx                       ← entire hub landing page (single file)

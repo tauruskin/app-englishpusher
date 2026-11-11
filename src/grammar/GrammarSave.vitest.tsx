@@ -48,12 +48,12 @@ describe("GrammarSaveStatus", () => {
     await screen.findByRole("status");
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
     expect(screen.queryByRole("status")).toBeNull();
-    expect(sessionStorage.getItem("ep-grammar-signin-popup-closed")).toBe("1");
+    expect(sessionStorage.getItem("ep-signin-popup-closed")).toBe("1");
     expect(screen.getAllByRole("link", { name: "Sign in" })).toHaveLength(1);
   });
 
   it("does not show the popup when it was already closed this session", async () => {
-    sessionStorage.setItem("ep-grammar-signin-popup-closed", "1");
+    sessionStorage.setItem("ep-signin-popup-closed", "1");
     render(<GrammarSaveStatus app="b1-grammar" topicId="modifiers" results={results} />);
     await new Promise((r) => setTimeout(r, 100));
     expect(screen.queryByRole("status")).toBeNull();

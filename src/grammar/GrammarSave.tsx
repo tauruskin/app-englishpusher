@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
-import { motion } from "motion/react";
 import { useSessionUser } from "../shared/auth.tsx";
 import { isSupabaseConfigured } from "../shared/supabase.ts";
+import { SignInPopup } from "../shared/SignInPopup.tsx";
 import { saveGrammarAnswers, type GrammarAppId } from "../shared/progress.ts";
 import { buildGrammarAnswerRows, type AnsweredQuestion } from "./answers.ts";
 
@@ -16,60 +16,6 @@ import { buildGrammarAnswerRows, type AnsweredQuestion } from "./answers.ts";
 // screen, so the next end screen is a new session with a new id.
 // Same contract as shared/TriviaSave.tsx.
 // ---------------------------------------------------------------------------
-
-const POPUP_CLOSED_KEY = "ep-grammar-signin-popup-closed";
-
-// sessionStorage can throw (private mode, blocked site data): on error behave as "not closed".
-function readPopupClosed(): boolean {
-  try {
-    return sessionStorage.getItem(POPUP_CLOSED_KEY) === "1";
-  } catch {
-    return false;
-  }
-}
-
-function SignInPopup() {
-  const [closed, setClosed] = useState(readPopupClosed);
-  if (closed) return null;
-
-  const close = () => {
-    setClosed(true);
-    try {
-      sessionStorage.setItem(POPUP_CLOSED_KEY, "1");
-    } catch {
-      /* hide for now only */
-    }
-  };
-
-  return (
-    <motion.div
-      role="status"
-      aria-live="polite"
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.6, duration: 0.3 }}
-      className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 sm:w-80 z-50 bg-card border-2 border-primary/40 rounded-2xl shadow-lg p-4"
-    >
-      <button
-        onClick={close}
-        aria-label="Close"
-        className="absolute top-3 right-3 text-muted-foreground hover:text-foreground transition-colors"
-      >
-        <X size={16} />
-      </button>
-      <p className="pr-6 font-display font-semibold text-foreground">Keep your results</p>
-      <p className="mt-1 text-sm text-foreground/80">
-        Sign in and your grammar answers are saved to My progress, so you can see what to practise next.
-      </p>
-      <a
-        href="/account/"
-        className="mt-3 inline-block bg-primary text-primary-foreground rounded-lg px-4 py-2 font-display font-semibold"
-      >
-        Sign in
-      </a>
-    </motion.div>
-  );
-}
 
 export function GrammarSaveStatus({ app, topicId, results }: {
   app: GrammarAppId;
@@ -100,7 +46,7 @@ export function GrammarSaveStatus({ app, topicId, results }: {
           </a>{" "}
           to save your progress
         </p>
-        <SignInPopup />
+        <SignInPopup message="Sign in and your grammar answers are saved to My progress, so you can see what to practise next." />
       </>
     );
   }
