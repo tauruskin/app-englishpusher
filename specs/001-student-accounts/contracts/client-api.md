@@ -41,6 +41,7 @@ export interface TriviaResultInput { app: AppId; topicId: string; scorePct: numb
 
 // Fire-and-forget writes — resolve to an error string or null, NEVER throw, NEVER block UI:
 export function saveTriviaResult(input: TriviaResultInput): Promise<string | null>;
+export function saveGrammarAnswers(rows: GrammarAnswerRow[]): Promise<string | null>;
 export function logStudyEvent(app: AppId, topicId: string): Promise<string | null>;
 export function saveWord(w: SavedWord): Promise<string | null>;      // upsert, no-op if exists
 export function unsaveWord(word: string, level: Level): Promise<string | null>;
@@ -69,5 +70,6 @@ All functions silently no-op / return empty when there is no session or `isSupab
 ## UI contracts in existing apps
 
 - **Trivia end screen**: after session completes → `saveTriviaResult(...)` once (guard against double-fire on re-render); on error string → small dismissible notice. Word rows in results lists get a star toggle (`saveWord`/`unsaveWord`, optimistic). Guests: no stars, one subtle "Sign in to save your progress" link → `/account/`.
+- **Grammar end screen** (`src/grammar/`): `<GrammarSaveStatus>` under the end screen → `saveGrammarAnswers(rows)` once per end screen (rows from `buildGrammarAnswerRows`, one per answered question, one new `session_id` per end screen); on error string → small dismissible notice. Guests: one subtle "Sign in to save your progress" link → `/account/`. Saving never blocks the page.
 - **Flashcards**: card face gets a star toggle when signed in (placement per app's existing control row; absent for guests). Topic open → `logStudyEvent(...)` once per selection.
 - **My Words virtual topic**: id `"my-words"` (reserved — `?topic=my-words` deep link resolves only when signed in with ≥1 resolvable word, else falls back to topic list). Appears first in the topic list with a star icon when it has ≥1 resolvable word. Contents = `listSavedWords(level)` resolved against local `TOPICS` (exact `topic_id` + `word` match; misses dropped).

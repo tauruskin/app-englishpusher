@@ -26,7 +26,7 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 | My Account (login + personal page) | https://app.englishpusher.in.ua/account/ |
 | Instagram | https://www.instagram.com/teti_push_english?igsh=MWMxbGxodnJrOHI2 |
 
-**Grammar migration in progress.** The grammar game lives in `src/grammar/` (topics in `src/grammar/topics/`, one file per topic, each with a `level`). Until stage 4 of `moodle-task-builder/docs/superpowers/plans/2026-11-11-grammar-migration-roadmap.md` the live grammar site is still `grammar.englishpusher.in.ua`, and new topics are still created in the old repo. Grammar tests: `npm run test:grammar` (Vitest, files named `*.vitest.ts(x)`).
+**Grammar migration in progress.** The grammar game lives in `src/grammar/` (topics in `src/grammar/topics/`, one file per topic, each with a `level`). Until stage 4 of `moodle-task-builder/docs/superpowers/plans/2026-11-11-grammar-migration-roadmap.md` the live grammar site is still `grammar.englishpusher.in.ua`, and new topics are still created in the old repo. Grammar tests: `npm run test:grammar` (Vitest, files named `*.vitest.ts(x)`). Since stage 2 a signed-in student's finished grammar session is saved to `public.grammar_answers` (`src/grammar/GrammarSave.tsx`, `src/grammar/answers.ts`) and appears in My progress and the teacher dashboard.
 
 ### Direct topic links — Flash Card apps
 
@@ -463,7 +463,7 @@ src/
     AppShell.tsx                  ← ⭐ Shared AppHeader + AppFooter components (incl. account icon)
     supabase.ts                   ← Supabase client singleton + isSupabaseConfigured
     auth.tsx                      ← AuthProvider/useAuth + provider-free useSessionUser
-    progress.ts                   ← trivia results / saved words / study events data access
+    progress.ts                   ← trivia results / saved words / study events / grammar answers data access
     savedWords.tsx                ← useSavedWords, StarButton, My Words topic resolution
     TriviaSave.tsx                ← end-screen auto-save + guest hint + failure notice
   index.css                       ← Tailwind imports + character animations
