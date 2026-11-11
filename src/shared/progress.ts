@@ -1,7 +1,7 @@
 import { supabase, isSupabaseConfigured } from "./supabase.ts";
 
 // ---------------------------------------------------------------------------
-// Data access for student progress, saved words, and study events.
+// Data access for student progress, saved words, study events and grammar answers.
 //
 // Contract (specs/001-student-accounts/contracts/client-api.md):
 //   - writes are fire-and-forget: resolve to an error string or null,
@@ -51,6 +51,22 @@ export interface StudyEventRow {
   createdAt: string;
 }
 
+export type GrammarAppId =
+  | "a2-grammar" | "a2plus-grammar" | "b1-grammar" | "b1plus-grammar" | "b2plus-grammar" | "c1-grammar";
+
+/** One answered grammar question, in the column names of public.grammar_answers. */
+export interface GrammarAnswerRow {
+  app: GrammarAppId;
+  topic_id: string;
+  question_id: string;
+  question_type: string;
+  question_text: string;
+  user_answer: string;
+  correct_answer: string;
+  correct: boolean;
+  session_id: string;
+}
+
 const SAVE_ERROR = "Couldn't save — check your connection.";
 
 async function userId(): Promise<string | null> {
@@ -86,6 +102,24 @@ export async function logStudyEvent(app: AppId, topicId: string): Promise<string
       app,
       topic_id: topicId,
     });
+    return error ? SAVE_ERROR : null;
+  } catch {
+    return SAVE_ERROR;
+  }
+}
+
+/**
+ * Stores one finished grammar session (one row per question). The database fills user_id and created_at.
+ * Saving the same session again changes nothing (rows are unique per session + question).
+ */
+export async function saveGrammarAnswers(rows: GrammarAnswerRow[]): Promise<string | null> {
+  try {
+    if (rows.length === 0) return null;
+    const uid = await userId();
+    if (!uid) return null; // guest — silently skip
+    const { error } = await supabase
+      .from("grammar_answers")
+      .upsert(rows, { onConflict: "user_id,session_id,question_id", ignoreDuplicates: true });
     return error ? SAVE_ERROR : null;
   } catch {
     return SAVE_ERROR;

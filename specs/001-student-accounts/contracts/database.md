@@ -112,6 +112,18 @@ create policy "own events insert" on public.study_events
   for insert with check (auth.uid() = user_id);
 ```
 
+## Grammar answers (added 2026-11-11)
+
+`public.grammar_topics` and `public.grammar_answers` are NOT defined in this file. Their authoritative SQL is
+`moodle-task-builder/deploy/analytics/sql/2026-11-11-analytics-15-grammar.sql` (they belong to the learning
+analytics install; description in that repo's `docs/analytics-database.md`). What the App relies on:
+
+- A signed-in student may insert rows with exactly these columns: `app`, `topic_id`, `question_id`,
+  `question_type`, `question_text` (max 300), `user_answer` (max 500), `correct_answer` (max 500), `correct`,
+  `session_id`. The database fills `user_id` and `created_at`; sending either is refused.
+- `topic_id` must exist in `public.grammar_topics`; `(user_id, session_id, question_id)` is unique.
+- Students read only their own rows. No update, no delete. Guests have no access.
+
 ## Auth configuration (Supabase dashboard, not SQL)
 
 | Setting | Value |
