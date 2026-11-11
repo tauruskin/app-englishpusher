@@ -1,4 +1,4 @@
-/* Grammar pages: theme tokens and game animations. Loaded after c1-shared.css (plain CSS: no @layer, because this file has no @tailwind directives; :where() keeps the default rules below Tailwind utilities). */
+/* Grammar pages: theme tokens and game animations. Plain CSS (no @layer: this file has no @tailwind directives). */
 
 .grammar-app {
   --background: 30 100% 97%;
@@ -25,11 +25,14 @@
   color: hsl(var(--foreground));
   font-family: "Inter", sans-serif;
 }
-/* The grammar markup relies on a default border colour, as the grammar site set it globally. */
-.grammar-app :where(*) {
+/* The grammar markup relies on a default border colour, as the grammar site set it globally.
+   These two defaults must beat Tailwind's reset (specificity 0,0,0) and lose to every utility
+   class (0,1,0) whichever stylesheet loads first: the dev server and the build order them
+   differently. :where() adds nothing and :not(x-none) adds one element, giving 0,0,1. */
+:where(.grammar-app) :not(x-none) {
   border-color: hsl(var(--border));
 }
-.grammar-app :where(h1, h2, h3, h4) {
+:where(.grammar-app) :is(h1, h2, h3, h4) {
   font-family: "Space Grotesk", sans-serif;
 }
 
