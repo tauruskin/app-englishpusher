@@ -27,6 +27,12 @@ const APPS = [
   "c1-flashcards",
   "c1-trivia",
   "word-connections",
+  "a2-grammar",
+  "a2plus-grammar",
+  "b1-grammar",
+  "b1plus-grammar",
+  "b2plus-grammar",
+  "c1-grammar",
 ];
 
 // Dev server middleware: rewrite /<app>/* → /apps/<app>/*
@@ -122,6 +128,12 @@ export default defineConfig({
         teacher:         resolve(__dirname, "apps/teacher/index.html"),
         progress:        resolve(__dirname, "apps/progress/index.html"),
         wordConnections: resolve(__dirname, "apps/word-connections/index.html"),
+        a2Grammar:       resolve(__dirname, "apps/a2-grammar/index.html"),
+        a2plusGrammar:   resolve(__dirname, "apps/a2plus-grammar/index.html"),
+        b1Grammar:       resolve(__dirname, "apps/b1-grammar/index.html"),
+        b1plusGrammar:   resolve(__dirname, "apps/b1plus-grammar/index.html"),
+        b2plusGrammar:   resolve(__dirname, "apps/b2plus-grammar/index.html"),
+        c1Grammar:       resolve(__dirname, "apps/c1-grammar/index.html"),
         c1Trivia:        resolve(__dirname, "apps/c1-trivia/index.html"),
         c1Business:      resolve(__dirname, "apps/c1-business/index.html"),
         c1Flashcards:    resolve(__dirname, "apps/c1-flashcards/index.html"),
