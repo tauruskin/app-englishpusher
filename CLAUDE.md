@@ -12,6 +12,7 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 | Main website | https://englishpusher.in.ua |
 | Hub (this project) | https://app.englishpusher.in.ua |
 | Grammar Testing | https://grammar.englishpusher.in.ua |
+| Grammar per level (in this repo since stage 1 of the grammar migration; NOT linked from the hub yet) | https://app.englishpusher.in.ua/b1-grammar/ (also a2-, a2plus-, b1plus-, b2plus-, c1-) |
 | Vocabulary Trivia (B1) | https://app.englishpusher.in.ua/b1-trivia/ |
 | Word Connections (B1) | https://app.englishpusher.in.ua/word-connections/ |
 | B1 Vocabulary (chooser page) | https://app.englishpusher.in.ua/b1-vocabulary/ |
@@ -24,6 +25,8 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 | B2+ Vocabulary (chooser page) | https://app.englishpusher.in.ua/b2plus-vocabulary/ |
 | My Account (login + personal page) | https://app.englishpusher.in.ua/account/ |
 | Instagram | https://www.instagram.com/teti_push_english?igsh=MWMxbGxodnJrOHI2 |
+
+**Grammar migration in progress.** The grammar game lives in `src/grammar/` (topics in `src/grammar/topics/`, one file per topic, each with a `level`). Until stage 4 of `moodle-task-builder/docs/superpowers/plans/2026-11-11-grammar-migration-roadmap.md` the live grammar site is still `grammar.englishpusher.in.ua`, and new topics are still created in the old repo. Grammar tests: `npm run test:grammar` (Vitest, files named `*.vitest.ts(x)`).
 
 ### Direct topic links — Flash Card apps
 
