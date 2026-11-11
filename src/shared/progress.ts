@@ -1,4 +1,7 @@
 import { supabase, isSupabaseConfigured } from "./supabase.ts";
+import { grammarSessionResults, type GrammarSessionResult } from "./grammarResults.ts";
+
+export { grammarSessionResults, type GrammarSessionResult };
 
 // ---------------------------------------------------------------------------
 // Data access for student progress, saved words, study events and grammar answers.
@@ -189,13 +192,14 @@ export async function fetchProgress(): Promise<{
   results: TriviaResultRow[];
   weakWords: WeakWord[];
   recentStudy: StudyEventRow[];
+  grammarResults: GrammarSessionResult[];
 }> {
-  const empty = { results: [], weakWords: [], recentStudy: [] };
+  const empty = { results: [], weakWords: [], recentStudy: [], grammarResults: [] };
   try {
     const uid = await userId();
     if (!uid) return empty;
 
-    const [resultsRes, eventsRes] = await Promise.all([
+    const [resultsRes, eventsRes, grammarRes] = await Promise.all([
       supabase
         .from("trivia_results")
         .select("app, topic_id, score_pct, correct_words, missed_words, created_at")
@@ -205,6 +209,11 @@ export async function fetchProgress(): Promise<{
         .select("app, topic_id, created_at")
         .order("created_at", { ascending: false })
         .limit(20),
+      supabase
+        .from("grammar_answers")
+        .select("app, topic_id, session_id, correct, created_at")
+        .order("created_at", { ascending: false })
+        .limit(5000),
     ]);
 
     const results: TriviaResultRow[] = (resultsRes.data ?? []).map((r) => ({
@@ -239,7 +248,11 @@ export async function fetchProgress(): Promise<{
       createdAt: e.created_at as string,
     }));
 
-    return { results, weakWords, recentStudy };
+    const grammarResults = grammarSessionResults(
+      (grammarRes.data ?? []) as Parameters<typeof grammarSessionResults>[0],
+    );
+
+    return { results, weakWords, recentStudy, grammarResults };
   } catch {
     return empty;
   }

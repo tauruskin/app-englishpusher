@@ -6,7 +6,7 @@ import { useAuth } from "../shared/auth.tsx";
 import { supabase, isSupabaseConfigured } from "../shared/supabase.ts";
 import {
   fetchProgress,
-  type AppId, type Level, type TriviaResultRow, type WeakWord, type StudyEventRow,
+  type AppId, type GrammarAppId, type GrammarSessionResult, type Level, type WeakWord, type StudyEventRow,
 } from "../shared/progress.ts";
 import { useSavedWords } from "../shared/savedWords.tsx";
 import { api } from "../teacher/api.ts";
@@ -35,7 +35,13 @@ function topicTitle(app: AppId, topicId: string): string | null {
   return topicsForApp(app).find((t) => t.id === topicId)?.title ?? null;
 }
 
-const APP_LABEL: Record<AppId, string> = {
+const APP_LABEL: Record<AppId | GrammarAppId, string> = {
+  "a2-grammar": "A2 Grammar",
+  "a2plus-grammar": "A2+ Grammar",
+  "b1-grammar": "B1 Grammar",
+  "b1plus-grammar": "B1+ Grammar",
+  "b2plus-grammar": "B2+ Grammar",
+  "c1-grammar": "C1 Grammar",
   "a2-trivia": "A2 Trivia",
   "a2plus-trivia": "A2+ Trivia",
   "b1-trivia": "B1 Trivia",
@@ -288,7 +294,7 @@ function EmptyState({ children }: { children: ReactNode }) {
 }
 
 interface TopicSummary {
-  app: AppId;
+  app: AppId | GrammarAppId;
   topicId: string;
   title: string;
   best: number;
@@ -297,11 +303,21 @@ interface TopicSummary {
   attempts: number;
 }
 
-function summarizeResults(results: TriviaResultRow[]): TopicSummary[] {
+interface ResultLike {
+  app: AppId | GrammarAppId;
+  topicId: string;
+  scorePct: number;
+  createdAt: string;
+}
+
+function summarizeResults(
+  results: ResultLike[],
+  resolveTitle: (app: AppId | GrammarAppId, topicId: string) => string | null,
+): TopicSummary[] {
   const byTopic = new Map<string, TopicSummary>();
   // results arrive newest-first; the first row seen per topic is the latest
   for (const r of results) {
-    const title = topicTitle(r.app, r.topicId);
+    const title = resolveTitle(r.app, r.topicId);
     if (!title) continue; // topic removed from content — drop silently
     const key = `${r.app}::${r.topicId}`;
     const existing = byTopic.get(key);
@@ -321,7 +337,7 @@ function summarizeResults(results: TriviaResultRow[]): TopicSummary[] {
 
 function ProgressSection({ summaries }: { summaries: TopicSummary[] }) {
   if (summaries.length === 0) {
-    return <EmptyState>Nothing here yet — finish a trivia round and your scores will appear.</EmptyState>;
+    return <EmptyState>Nothing here yet — finish a trivia or grammar round and your scores will appear.</EmptyState>;
   }
   return (
     <div className="divide-y divide-neutral-100">
@@ -545,7 +561,32 @@ function PersonalPage() {
   }, [userId]);
   const isStaff = me?.role === "teacher" || me?.role === "admin";
 
-  const summaries = progress ? summarizeResults(progress.results) : [];
+  // The grammar topic registry holds every question, so it is loaded only when the student has
+  // grammar rounds. Until it arrives only vocabulary rows are shown (no raw ids).
+  const [grammarNames, setGrammarNames] = useState<Map<string, string> | null>(null);
+  const grammarResults = progress?.grammarResults;
+  const hasGrammar = (grammarResults?.length ?? 0) > 0;
+  useEffect(() => {
+    if (!hasGrammar) return;
+    let current = true;
+    import("../grammar/topics/index.ts")
+      .then((m) => {
+        if (current) setGrammarNames(new Map(m.default.map((t) => [t.id, t.name])));
+      })
+      .catch(() => {}); // registry unavailable — keep showing vocabulary only
+    return () => {
+      current = false;
+    };
+  }, [hasGrammar]);
+
+  const summaries = progress
+    ? [
+        ...summarizeResults(progress.results, (app, id) => topicTitle(app as AppId, id)),
+        ...(grammarNames
+          ? summarizeResults(grammarResults as GrammarSessionResult[], (_app, id) => grammarNames.get(id) ?? null)
+          : []),
+      ]
+    : [];
 
   return (
     <motion.div
