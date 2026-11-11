@@ -4,7 +4,8 @@ import { RotateCcw, Volume2, VolumeX } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import allTopics from "./topics/index.ts";
 import type { GrammarQuestion, GrammarTopic } from "./types.ts";
-import { topicsForLevel, type GrammarLevel } from "./levels.ts";
+import { grammarAppId, topicsForLevel, type GrammarLevel } from "./levels.ts";
+import { GrammarSaveStatus } from "./GrammarSave.tsx";
 import { useGrammarGame } from "./useGrammarGame.ts";
 import { useTTS } from "./useTTS.ts";
 import ProgressBar from "./components/ProgressBar.tsx";
@@ -155,13 +156,16 @@ function GrammarGame({ level, topics }: { level: GrammarLevel; topics: GrammarTo
         ) : (
           <div key={selectedTopic.id} className="w-full max-w-3xl space-y-8">
             {game.gameOver ? (
-              <EndScreen
-                score={game.score}
-                total={game.totalQuestions}
-                results={game.results}
-                onRestart={() => game.restart()}
-                onPracticeWeak={handlePracticeWeak}
-              />
+              <div className="space-y-4">
+                <EndScreen
+                  score={game.score}
+                  total={game.totalQuestions}
+                  results={game.results}
+                  onRestart={() => game.restart()}
+                  onPracticeWeak={handlePracticeWeak}
+                />
+                <GrammarSaveStatus app={grammarAppId(level)} topicId={selectedTopic.id} results={game.results} />
+              </div>
             ) : (
               <>
                 <ProgressBar current={game.currentIndex} total={game.totalQuestions} />
