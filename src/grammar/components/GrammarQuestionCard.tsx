@@ -147,10 +147,10 @@ const ErrorSpotView = ({
           if (isPrimaryError) {
             if (answered) {
               style += isCorrect
-                ? "bg-green-50 dark:bg-green-900/20 border-green-500 text-green-700 dark:text-green-400 font-bold"
-                : "bg-red-50 dark:bg-red-900/20 border-red-500 text-red-700 dark:text-red-400 font-bold line-through";
+                ? "bg-green-50 border-green-500 text-green-700 font-bold"
+                : "bg-red-50 border-red-500 text-red-700 font-bold line-through";
             } else {
-              style += "bg-red-50 dark:bg-red-900/10 border-red-500/50 text-red-600 dark:text-red-400 font-bold";
+              style += "bg-red-50 border-red-500/50 text-red-600 font-bold";
             }
           } else {
             style += "bg-secondary border-transparent text-foreground opacity-90 cursor-default";
@@ -197,7 +197,7 @@ const ErrorSpotView = ({
           <p className="text-lg font-display font-bold text-green-600">
             ✅ Correct replacement: <em>{data.correction}</em>
           </p>
-          <p className="text-sm text-slate-600 dark:text-slate-300 italic">{data.reason}</p>
+          <p className="text-sm text-slate-700 italic">{data.reason}</p>
         </div>
       )}
     </div>

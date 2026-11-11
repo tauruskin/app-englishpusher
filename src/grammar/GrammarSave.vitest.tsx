@@ -23,13 +23,49 @@ beforeEach(() => {
   state.loading = false;
   state.save.mockReset();
   state.save.mockResolvedValue(null);
+  sessionStorage.clear();
 });
 
 describe("GrammarSaveStatus", () => {
   it("shows a guest the sign-in hint and saves nothing", () => {
     render(<GrammarSaveStatus app="b1-grammar" topicId="modifiers" results={results} />);
-    expect(screen.getByRole("link", { name: "Sign in" })).toHaveAttribute("href", "/account/");
+    expect(screen.getAllByRole("link", { name: "Sign in" })[0]).toHaveAttribute("href", "/account/");
     expect(state.save).not.toHaveBeenCalled();
+  });
+
+  it("shows a guest a sign-in popup as well as the small line", async () => {
+    render(<GrammarSaveStatus app="b1-grammar" topicId="modifiers" results={results} />);
+    const popup = await screen.findByRole("status");
+    expect(popup).toHaveTextContent("Keep your results");
+    const links = screen.getAllByRole("link", { name: "Sign in" });
+    expect(links).toHaveLength(2);
+    links.forEach((l) => expect(l).toHaveAttribute("href", "/account/"));
+    expect(popup).toContainElement(links[1]);
+  });
+
+  it("closing the popup hides it, remembers that for the session and keeps the small line", async () => {
+    render(<GrammarSaveStatus app="b1-grammar" topicId="modifiers" results={results} />);
+    await screen.findByRole("status");
+    fireEvent.click(screen.getByRole("button", { name: "Close" }));
+    expect(screen.queryByRole("status")).toBeNull();
+    expect(sessionStorage.getItem("ep-grammar-signin-popup-closed")).toBe("1");
+    expect(screen.getAllByRole("link", { name: "Sign in" })).toHaveLength(1);
+  });
+
+  it("does not show the popup when it was already closed this session", async () => {
+    sessionStorage.setItem("ep-grammar-signin-popup-closed", "1");
+    render(<GrammarSaveStatus app="b1-grammar" topicId="modifiers" results={results} />);
+    await new Promise((r) => setTimeout(r, 100));
+    expect(screen.queryByRole("status")).toBeNull();
+    expect(screen.getAllByRole("link", { name: "Sign in" })).toHaveLength(1);
+  });
+
+  it("never shows the popup to a signed-in user", async () => {
+    state.user = { id: "u1" };
+    render(<GrammarSaveStatus app="b1-grammar" topicId="modifiers" results={results} />);
+    await waitFor(() => expect(state.save).toHaveBeenCalled());
+    await new Promise((r) => setTimeout(r, 100));
+    expect(screen.queryByRole("status")).toBeNull();
   });
 
   it("saves a signed-in student's session once, even when rendered again", async () => {
