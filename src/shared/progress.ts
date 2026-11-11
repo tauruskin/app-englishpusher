@@ -51,6 +51,22 @@ export interface StudyEventRow {
   createdAt: string;
 }
 
+export type GrammarAppId =
+  | "a2-grammar" | "a2plus-grammar" | "b1-grammar" | "b1plus-grammar" | "b2plus-grammar" | "c1-grammar";
+
+/** One answered grammar question, in the column names of public.grammar_answers. */
+export interface GrammarAnswerRow {
+  app: GrammarAppId;
+  topic_id: string;
+  question_id: string;
+  question_type: string;
+  question_text: string;
+  user_answer: string;
+  correct_answer: string;
+  correct: boolean;
+  session_id: string;
+}
+
 const SAVE_ERROR = "Couldn't save — check your connection.";
 
 async function userId(): Promise<string | null> {

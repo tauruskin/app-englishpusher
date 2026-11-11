@@ -42,6 +42,15 @@ describe("topic registry", () => {
     const bad = topics.filter((t) => !LEVELS.includes(t.level)).map((t) => t.id);
     expect(bad).toEqual([]);
   });
+
+  it("ids fit what the database accepts for saved answers", () => {
+    for (const topic of topics) {
+      expect(topic.id).toMatch(/^[a-z0-9-]{1,80}$/);
+      for (const q of topic.rules) {
+        expect(q.id, `${topic.id}: ${q.id}`).toMatch(/^[A-Za-z0-9_-]{1,80}$/);
+      }
+    }
+  });
 });
 
 describe.each(topics.map((t) => [t.id, t] as const))("topic: %s", (_id, topic) => {
