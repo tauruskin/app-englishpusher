@@ -15,6 +15,113 @@ export const pastSimplePresentPerfectTopic: GrammarTopic = {
   name: "Past Simple & Present Perfect",
   description:
     "Practise when to use the Present Perfect (I've been) and when to use the Past Simple (I went) — one of the most important distinctions in English.",
+  icon: "⏳",
+  cards: [
+    {
+      id: "ps-pp-card-1",
+      rule: "have/has + past participle",
+      example: "Dan ___ (already/send) the invoice, so you don't need to do it.",
+      answer: "has already sent",
+      explanation:
+        "Present Perfect is have/has + past participle. Use has with he, she and it, and have with I, you, we and they. Already goes between has and the participle.",
+      examples: [
+        "I have already booked our table for tonight.",
+        "The students have already finished the first test.",
+      ],
+      ua: "have/has + третя форма дієслова: he/she/it — has. already = «вже».",
+    },
+    {
+      id: "ps-pp-card-2",
+      rule: "ever / never + Present Perfect (life experience)",
+      example: "I ___ (never/try) Georgian food, but I'd love to.",
+      answer: "have never tried",
+      explanation:
+        "Use Present Perfect with ever and never to talk about your life up to now. We do not say when it happened.",
+      examples: [
+        "Have you ever driven a truck?",
+        "My parents have never been to the sea.",
+      ],
+      ua: "ever = «коли-небудь», never = «ніколи». «Ти коли-небудь…?» — Have you ever…?",
+    },
+    {
+      id: "ps-pp-card-3",
+      rule: "Past Simple with a finished time (ago, yesterday, in 2019)",
+      example: "We ___ (move) to this flat three years ago.",
+      answer: "moved",
+      explanation:
+        "When we say exactly when something happened, we use Past Simple. We do not use Present Perfect with words like ago, yesterday, last year or in 2019.",
+      examples: [
+        "I met my husband in 2012.",
+        "The shop closed two weeks ago.",
+      ],
+      ua: "ago, yesterday, in 2019 — точний минулий час: лише Past Simple (moved), не «have moved».",
+    },
+    {
+      id: "ps-pp-card-4",
+      rule: "Present Perfect for a past action with a result now",
+      example: "Look! Somebody ___ (break) the car window!",
+      answer: "has broken",
+      explanation:
+        "Use Present Perfect when a past action has a result that we can see or feel now. The result is important, not the time.",
+      examples: [
+        "I can't log in because I have forgotten my password.",
+        "She has cut her finger, so she can't play the guitar today.",
+      ],
+      ua: "Наслідок видно зараз — has/have + V3: «розбили» (і вікно розбите) — has broken.",
+    },
+    {
+      id: "ps-pp-card-5",
+      rule: "Present Perfect with today, this week, this year",
+      example: "I ___ (write) four reports this week, and it's only Wednesday.",
+      answer: "have written",
+      explanation:
+        "Use Present Perfect for a time period that is not finished yet. This week, today and this year are still going on. Compare: last week is finished, so we use Past Simple.",
+      examples: [
+        "We have had two fire drills this year.",
+        "Has the postman come today?",
+      ],
+      ua: "this week, today — період ще триває: have written, а не «wrote».",
+    },
+    {
+      id: "ps-pp-card-6",
+      rule: "for + period, since + point in time",
+      example: "We've lived in this flat ___ six years, and we still love it.",
+      answer: "for",
+      explanation:
+        "Use Present Perfect for a situation that started in the past and is still true now. Use for with a length of time and since with the starting point.",
+      examples: [
+        "My brother has worked in Warsaw for six years.",
+        "It has rained since early morning.",
+      ],
+      ua: "for + проміжок («шість років»), since + момент («з ранку»): ситуація триває й досі.",
+    },
+    {
+      id: "ps-pp-card-7",
+      rule: "Present Perfect to start, Past Simple for details",
+      example: "We've visited Lisbon twice. Last time, we ___ (stay) in a small hotel near the river.",
+      answer: "stayed",
+      explanation:
+        "We often start with Present Perfect to talk about an experience. When we give details about one time, we switch to Past Simple.",
+      examples: [
+        "I've read that novel. I borrowed it from my sister last month.",
+        "She has been to Italy. She went to Rome in 2019.",
+      ],
+      ua: "Спершу Present Perfect про досвід, потім Past Simple для деталей: last time — stayed.",
+    },
+    {
+      id: "ps-pp-card-8",
+      rule: "yet in questions and negatives",
+      example: "I haven't booked the tickets ___, so I'll do it tonight.",
+      answer: "yet",
+      explanation:
+        "Use yet with Present Perfect in questions and negative sentences. It means 'until now' and goes at the end of the sentence.",
+      examples: [
+        "Has the delivery arrived yet?",
+        "We haven't decided where to go on holiday yet.",
+      ],
+      ua: "yet у питаннях і запереченнях = «ще (не)», стоїть у кінці: haven't booked … yet.",
+    },
+  ],
   rules: [
 
     // ─── GAP-FILL (7) ────────────────────────────────────────────────────────

@@ -506,6 +506,113 @@ export const presentSimpleVsContinuousTopic: GrammarTopic = {
     name: "Present Simple vs Present Continuous",
     description: "Master the difference between Present Simple (habits, routines, facts) and Present Continuous (actions happening now, temporary situations). Learn when to use state verbs with Present Simple only.",
     lesson: "Lesson 2",
+    icon: "🔄",
+    cards: [
+        {
+            id: "ps-pc-card-1",
+            rule: "Present Simple for habits and routines",
+            example: "My brother ___ (go) to the gym every Tuesday and Thursday.",
+            answer: "goes",
+            explanation:
+                "Use Present Simple for things we do regularly. Add -s or -es with he, she and it. Words like every day, usually and never often go with it.",
+            examples: [
+                "We usually have lunch at one o'clock.",
+                "She never drinks coffee after six.",
+            ],
+            ua: "Звички й розклад — Present Simple: every Tuesday = «щовівторка». he/she/it + -s: goes.",
+        },
+        {
+            id: "ps-pc-card-2",
+            rule: "Present Simple for facts and permanent situations",
+            example: "The Dnipro ___ (flow) through Kyiv and into the Black Sea.",
+            answer: "flows",
+            explanation:
+                "Use Present Simple for facts that are always true and for permanent situations. We do not use -ing for them.",
+            examples: [
+                "The sun rises in the east.",
+                "My parents live in a village near Lviv.",
+            ],
+            ua: "Загальні факти — Present Simple: flows = «тече». Не «is flowing».",
+        },
+        {
+            id: "ps-pc-card-3",
+            rule: "am/is/are + -ing for actions happening now",
+            example: "Please be quiet — the baby ___ (sleep) at the moment.",
+            answer: "is sleeping",
+            explanation:
+                "Use Present Continuous for an action that is happening now. Look, listen, now and at the moment often go with it.",
+            examples: [
+                "Listen! Someone is knocking at the door.",
+                "Sorry, I can't talk now. I'm driving.",
+            ],
+            ua: "Present Continuous: am/is/are + -ing, «зараз»: is sleeping = «спить (саме зараз)».",
+        },
+        {
+            id: "ps-pc-card-4",
+            rule: "Present Continuous for temporary situations",
+            example: "This month I ___ (stay) with my cousin while the builders repaint my flat.",
+            answer: "am staying",
+            explanation:
+                "Use Present Continuous for a situation that is temporary. It is true around now, but it will change soon.",
+            examples: [
+                "Our team is working from home this week.",
+                "He is learning to drive at the moment.",
+            ],
+            ua: "Тимчасова ситуація («цього місяця») — am staying. Постійна ситуація — Present Simple.",
+        },
+        {
+            id: "ps-pc-card-5",
+            rule: "usually (Simple) vs today / this week (Continuous)",
+            example: "Lucy normally ___ (wear) jeans to the office, but today she's wearing a suit.",
+            answer: "wears",
+            explanation:
+                "Use Present Simple for what usually happens. Use Present Continuous for what is different today or this week.",
+            examples: [
+                "Our dog usually sleeps all day, but now he is barking at the postman.",
+                "I normally have tea, but this morning I'm drinking coffee.",
+            ],
+            ua: "usually/normally — Present Simple, а today/this week (виняток) — Present Continuous.",
+        },
+        {
+            id: "ps-pc-card-6",
+            rule: "do/does + base verb in questions and negatives",
+            example: "Does your sister ___ (work) on Saturdays?",
+            answer: "work",
+            explanation:
+                "In Present Simple questions and negatives we use do/does and the base verb. The -s goes on does, not on the main verb.",
+            examples: [
+                "Do you take sugar in your tea?",
+                "My manager doesn't answer emails at the weekend.",
+            ],
+            ua: "У питаннях і запереченнях do/does + початкова форма: Does she work? (без -s).",
+        },
+        {
+            id: "ps-pc-card-7",
+            rule: "State verbs (know, need, want, love) are not used with -ing",
+            example: "We ___ (need) a bigger table for the party on Saturday.",
+            answer: "need",
+            explanation:
+                "State verbs describe thoughts, feelings and possession, not actions. We use Present Simple with them, even when we mean now.",
+            examples: [
+                "I don't know her phone number.",
+                "My son loves chocolate ice cream.",
+            ],
+            ua: "Дієслова стану (know, need, want, love) не мають -ing: «нам потрібен» — need.",
+        },
+        {
+            id: "ps-pc-card-8",
+            rule: "have as an action (is having) vs have = own",
+            example: "She ___ (have) a shower, so she can't answer the phone.",
+            answer: "is having",
+            explanation:
+                "Have is a state verb when it means own, so we say I have a car. When have is an action, like eat or take a shower, we can use Present Continuous.",
+            examples: [
+                "We're having a great time in Prague this week.",
+                "My sister has two cats and a small flat.",
+            ],
+            ua: "have = «їсти, приймати душ» — може бути is having; have = «мати» — тільки have.",
+        },
+    ],
     rules: presentSimpleVsContinuous,
 };
 
