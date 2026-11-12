@@ -8,6 +8,7 @@
 import { describe, it, expect } from "vitest";
 import topics from "./index.ts";
 import type { GrammarQuestion } from "../types.ts";
+import { topicCardErrors } from "../cards.ts";
 
 const VALID_TYPES = [
   "gap-fill",
@@ -43,6 +44,11 @@ describe("topic registry", () => {
     expect(bad).toEqual([]);
   });
 
+  it("card ids are unique across all topics", () => {
+    const ids = topics.flatMap((t) => (t.cards ?? []).map((c) => c.id));
+    expect(ids.filter((id, i) => ids.indexOf(id) !== i)).toEqual([]);
+  });
+
   it("ids fit what the database accepts for saved answers", () => {
     for (const topic of topics) {
       expect(topic.id).toMatch(/^[a-z0-9-]{1,80}$/);
@@ -59,6 +65,10 @@ describe.each(topics.map((t) => [t.id, t] as const))("topic: %s", (_id, topic) =
     expect(topic.name.length).toBeGreaterThan(0);
     expect(topic.description.length).toBeGreaterThan(0);
     expect(topic.rules.length).toBeGreaterThanOrEqual(20);
+  });
+
+  it("rule cards and icon follow the rules (when present)", () => {
+    expect(topicCardErrors(topic)).toEqual([]);
   });
 
   describe.each(topic.rules.map((q) => [q.id, q] as const))("question: %s", (_qid, q: GrammarQuestion) => {

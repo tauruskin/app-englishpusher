@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { GRAMMAR_LEVELS, grammarAppId, grammarUrl, levelBySlug, topicsForLevel, isGrammarComingSoon, liveGrammarLevels } from "./levels.ts";
+import { GRAMMAR_LEVELS, grammarAppId, grammarFlashcardsAppId, grammarFlashcardsUrl, grammarTopicsUrl, grammarView, grammarUrl, levelBySlug, topicsForLevel, isGrammarComingSoon, liveGrammarLevels } from "./levels.ts";
 
 test("there are six grammar levels with URL-safe slugs", () => {
   assert.deepEqual(GRAMMAR_LEVELS.map((l) => l.id), ["A2", "A2+", "B1", "B1+", "B2+", "C1"]);
@@ -40,4 +40,21 @@ test("live grammar levels are the levels with topics, in course order, each once
 test("the real registry today has B1 grammar", async () => {
   const { default: topics } = await import("./topics/index.ts");
   assert.ok(liveGrammarLevels(topics).includes("B1"));
+});
+
+test("grammar flashcards and topic list addresses", () => {
+  const a2plus = levelBySlug("a2plus");
+  assert.equal(grammarFlashcardsAppId(a2plus), "a2plus-grammar-flashcards");
+  assert.equal(grammarFlashcardsUrl(a2plus), "/a2plus-grammar-flashcards/");
+  assert.equal(grammarFlashcardsUrl(a2plus, "modifiers"), "/a2plus-grammar-flashcards/?topic=modifiers");
+  assert.equal(grammarTopicsUrl(a2plus), "/a2plus-grammar/?view=topics");
+});
+
+test("grammarView routes /<level>-grammar/ by its query", () => {
+  const ids = ["modifiers", "narrative-tenses"];
+  assert.deepEqual(grammarView("", ids), { kind: "level" });
+  assert.deepEqual(grammarView("?view=topics", ids), { kind: "topics" });
+  assert.deepEqual(grammarView("?topic=modifiers", ids), { kind: "test", topicId: "modifiers" });
+  assert.deepEqual(grammarView("?topic=gone", ids), { kind: "topics" });
+  assert.deepEqual(grammarView("?topic=modifiers&view=topics", ids), { kind: "test", topicId: "modifiers" });
 });
