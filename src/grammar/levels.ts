@@ -41,3 +41,9 @@ export function topicsForLevel<T extends { level: GrammarLevelId }>(topics: T[],
 export function isGrammarComingSoon(topics: { level: GrammarLevelId }[], level: GrammarLevelId): boolean {
   return topicsForLevel(topics, level).length === 0;
 }
+
+// Levels that have at least one grammar topic, in course order. vite.config.ts runs this over the topic
+// registry at build time, so the hub's Grammar card switches on when a level's first topic is published.
+export function liveGrammarLevels(topics: { level: GrammarLevelId }[]): GrammarLevelId[] {
+  return GRAMMAR_LEVELS.map((l) => l.id).filter((id) => topics.some((t) => t.level === id));
+}

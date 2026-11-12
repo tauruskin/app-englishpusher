@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { resolve } from "path";
 import { copyFileSync, mkdirSync, rmSync, existsSync } from "fs";
+import grammarTopics from "./src/grammar/topics/index.ts";
+import { liveGrammarLevels } from "./src/grammar/levels.ts";
 
 const APPS = [
   "account",
@@ -120,6 +122,10 @@ function injectGtm() {
 export default defineConfig({
   plugins: [react(), ViteImageOptimizer({ png: { quality: 80 } }), devRewritePlugin(), remapAppPaths(), injectGtm()],
   base: process.env.VITE_BASE_PATH || "/",
+  // Levels with grammar topics, fixed at build time (hub Grammar cards). See src/globals.d.ts.
+  define: {
+    __GRAMMAR_LIVE_LEVELS__: JSON.stringify(liveGrammarLevels(grammarTopics)),
+  },
   build: {
     rollupOptions: {
       input: {
