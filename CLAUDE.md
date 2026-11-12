@@ -11,8 +11,9 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 |---|---|
 | Main website | https://englishpusher.in.ua |
 | Hub (this project) | https://app.englishpusher.in.ua |
-| Grammar (per level) | https://app.englishpusher.in.ua/<level>-grammar/ (old grammar.englishpusher.in.ua redirects) |
-| Grammar per level (in this repo since stage 1 of the grammar migration; NOT linked from the hub yet) | https://app.englishpusher.in.ua/b1-grammar/ (also a2-, a2plus-, b1plus-, b2plus-, c1-) |
+| Grammar (per level) | https://app.englishpusher.in.ua/<level>-grammar/ = level page with two cards, Flash Cards and Grammar Test (old grammar.englishpusher.in.ua redirects) |
+| Grammar Flash Cards (per level) | https://app.englishpusher.in.ua/b1-grammar-flashcards/ (also a2-, a2plus-, b1plus-, b2plus-, c1-) |
+| Grammar Test topic list / one topic | https://app.englishpusher.in.ua/b1-grammar/?view=topics, `…/b1-grammar/?topic=<id>` (the Moodle links) |
 | Vocabulary Trivia (B1) | https://app.englishpusher.in.ua/b1-trivia/ |
 | Word Connections (B1) | https://app.englishpusher.in.ua/word-connections/ |
 | B1 Vocabulary (chooser page) | https://app.englishpusher.in.ua/b1-vocabulary/ |
@@ -26,7 +27,13 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 | My Account (login + personal page) | https://app.englishpusher.in.ua/account/ |
 | Instagram | https://www.instagram.com/teti_push_english?igsh=MWMxbGxodnJrOHI2 |
 
-**Grammar.** The grammar game lives in `src/grammar/` (topics in `src/grammar/topics/`, one file per topic, each with a `level`), pages `/a2-grammar/` … `/c1-grammar/`. Topics are created by the Telegram bot with the `create-grammar-topic` skill (`.claude/skills/create-grammar-topic/`). The hub shows a Grammar card per level; it is a grey "Coming soon" card until the level has a topic (`__GRAMMAR_LIVE_LEVELS__`, computed in `vite.config.ts` from the topic registry). `grammar.englishpusher.in.ua` is only a redirect page (fixed list of the 12 original B1 topics). Grammar tests: `npm run test:grammar` (Vitest, files named `*.vitest.ts(x)`). A signed-in student's finished grammar session is saved to `public.grammar_answers` (`src/grammar/GrammarSave.tsx`, `src/grammar/answers.ts`) and appears in My progress and the teacher dashboard.
+**Grammar.** The grammar game lives in `src/grammar/` (topics in `src/grammar/topics/`, one file per topic, each with a `level`), pages `/a2-grammar/` … `/c1-grammar/` and `/a2-grammar-flashcards/` … `/c1-grammar-flashcards/`. Topics are created by the Telegram bot with the `create-grammar-topic` skill (`.claude/skills/create-grammar-topic/`). The hub shows a Grammar card per level; it is a grey "Coming soon" card until the level has a topic (`__GRAMMAR_LIVE_LEVELS__`, computed in `vite.config.ts` from the topic registry). `grammar.englishpusher.in.ua` is only a redirect page (fixed list of the 12 original B1 topics). Grammar tests: `npm run test:grammar` (Vitest, files named `*.vitest.ts(x)`). A signed-in student's finished grammar session is saved to `public.grammar_answers` (`src/grammar/GrammarSave.tsx`, `src/grammar/answers.ts`) and appears in My progress and the teacher dashboard.
+
+**Grammar addresses.** `/<level>-grammar/` (no query) is the level page: two cards, Flash Cards (`/<level>-grammar-flashcards/`) and Grammar Test (`/<level>-grammar/?view=topics`, the test topic list). `/<level>-grammar/?topic=<id>` still opens the test directly (the Moodle links); an unknown `?topic` shows the list. A level without topics shows Coming soon, and its flashcards page redirects to `/<level>-grammar/`. `/<level>-grammar-flashcards/` (a2, a2plus, b1, b1plus, b2plus, c1) shows topic tiles ("N cards", "Coming soon" when a topic has no cards), then the rule cards of one topic; `?topic=<id>` opens a topic directly. Card front = rule + a sentence with a gap; back = full sentence, explanation, two examples, Ukrainian by level. The last card links to the topic's test.
+
+**Grammar cards.** A topic file `src/grammar/topics/<id>.ts` has an optional `icon` (one emoji) and `cards` (6-10 `RuleCard`s; type in `src/grammar/types.ts`). `src/grammar/cards.ts` validates them, run by `topics-validation.vitest.ts`. Ukrainian rule: A2/A2+ full explanation up to 400 characters, B1/B1+ one line up to 120, B2+/C1 none. All 12 B1 topics have cards (108). Review page: `node scripts/grammar-cards-preview.mjs B1 <out.html>`. The bot skill writes `icon` + `cards` and its HTML preview has a Flashcards section; the teacher approves questions and cards together. Shared components: `src/shared/TopicTileGrid.tsx`, `ActivityChoicePage.tsx`, `FlashcardDeck.tsx` (vocabulary and grammar both use them).
+
+**Grammar study events.** A signed-in student who opens a topic's cards creates one `public.study_events` row with app `<slug>-grammar-flashcards` (for example `b1-grammar-flashcards`). The account page Recent activity shows it as "<Level> Grammar Flash Cards · <topic>" (`src/account/recentTitles.ts`). Needs analytics SQL part 16 (`deploy/analytics/sql/2026-11-12-analytics-16-grammar-flashcards.sql` in moodle-task-builder) to be run first.
 
 ### Direct topic links — Flash Card apps
 
