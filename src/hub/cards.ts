@@ -42,7 +42,7 @@ export function grammarCard(level: HubLevel, live: boolean): HubCard {
     level,
     kind: "grammar",
     label: `${level} Grammar`,
-    description: live ? "Gap-fill, error-spot, reordering and more" : `Grammar practice for ${level} is on its way`,
+    description: live ? "Rule flashcards and tests: gap-fill, error-spot and more" : `Grammar practice for ${level} is on its way`,
     href: grammarUrl(levelBySlug(g.slug)),
     ...(live ? GRAMMAR_COLORS : GREY_COLORS),
     icon: "book",

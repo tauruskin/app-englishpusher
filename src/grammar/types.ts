@@ -112,6 +112,17 @@ export interface SentenceReorderData {
 /** Course level of a grammar topic. The same ids the App shows for vocabulary. */
 export type GrammarLevelId = "A2" | "A2+" | "B1" | "B1+" | "B2+" | "C1";
 
+/** One "learn" flashcard: a single rule of the topic. */
+export interface RuleCard {
+  id: string;                  // unique within the topic, e.g. "mod-card-1"
+  rule: string;                // front title, e.g. "quite + adjective"
+  example: string;             // front sentence with exactly one ___
+  answer: string;              // fills the ___; the back shows the full sentence
+  explanation: string;         // English, 1-3 short sentences
+  examples: [string, string];  // two more full example sentences
+  ua?: string;                 // Ukrainian: A2/A2+ full explanation, B1/B1+ one short line, B2+/C1 none
+}
+
 /**
  * A complete grammar topic with multiple questions
  */
@@ -121,6 +132,8 @@ export interface GrammarTopic {
   name: string;
   description: string;
   lesson?: string;
+  icon?: string;       // one emoji for the topic tiles
+  cards?: RuleCard[];  // 6-10 rule cards; missing = flashcards "Coming soon" for this topic
   rules: GrammarQuestion[];
 }
 

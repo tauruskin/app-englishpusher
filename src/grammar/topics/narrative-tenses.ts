@@ -14,6 +14,113 @@ export const narrativeTensesTopic: GrammarTopic = {
   name: "Narrative Tenses",
   description:
     "Practise Past Simple, Past Continuous, and Past Perfect — the three tenses used to tell stories in English.",
+  icon: "📖",
+  cards: [
+    {
+      id: "nt-card-1",
+      rule: "Past Simple for finished events in order",
+      example: "Last Friday we ___ (arrive) at the hotel at nine and went straight to bed.",
+      answer: "arrived",
+      explanation:
+        "Use Past Simple for finished actions in the past. When we tell events one after another, each verb is Past Simple.",
+      examples: [
+        "She opened the window, took a deep breath and started to work.",
+        "Our flight landed at noon, and we took a taxi to the city centre.",
+      ],
+      ua: "Завершені дії в минулому, одна за одною: приїхали, пішли спати. Правильні дієслова мають -ed.",
+    },
+    {
+      id: "nt-card-2",
+      rule: "did / didn't + base verb",
+      example: "We didn't ___ (go) out last night because it was raining.",
+      answer: "go",
+      explanation:
+        "After did or didn't, the main verb goes back to the base form. The past is already shown by did.",
+      examples: [
+        "I didn't sleep well last night because of the noise.",
+        "Did you enjoy the concert on Saturday?",
+      ],
+      ua: "Після did/didn't дієслово в початковій формі: didn't go, а не «didn't went».",
+    },
+    {
+      id: "nt-card-3",
+      rule: "was/were + -ing for what was in progress",
+      example: "At nine o'clock last night, my parents ___ (watch) the news on TV.",
+      answer: "were watching",
+      explanation:
+        "Use Past Continuous to say what was happening at a certain moment in the past. The action was not finished at that moment.",
+      examples: [
+        "At eight o'clock this morning, I was waiting for the bus in the rain.",
+        "At midnight, the neighbours were still talking on the balcony.",
+      ],
+      ua: "Past Continuous — «що відбувалося в той момент»: о дев'ятій вони дивилися — were watching.",
+    },
+    {
+      id: "nt-card-4",
+      rule: "was + -ing, when + Past Simple (interrupted action)",
+      example: "We ___ (drive) to the airport when the car broke down.",
+      answer: "were driving",
+      explanation:
+        "A long action in progress uses Past Continuous. A short event that interrupted it uses Past Simple, often after when.",
+      examples: [
+        "I was crossing the street when I saw an old friend.",
+        "She was paying at the till when her card stopped working.",
+      ],
+      ua: "Довга дія — were driving, коротка подія, що її перервала, — Past Simple: «їхали, коли зламалася».",
+    },
+    {
+      id: "nt-card-5",
+      rule: "while + Past Continuous (two actions at the same time)",
+      example: "While the mechanic ___ (check) the engine, I was reading in the waiting room.",
+      answer: "was checking",
+      explanation:
+        "Use while with Past Continuous for actions that went on at the same time. Both actions were in progress together.",
+      examples: [
+        "While we were having lunch, the children were playing in the garden.",
+        "My colleague was typing a report while I was answering emails.",
+      ],
+      ua: "while + Past Continuous: дві дії тривали одночасно — «поки механік перевіряв, я читала».",
+    },
+    {
+      id: "nt-card-6",
+      rule: "had + past participle for the earlier past action",
+      example: "When I opened the fridge, someone ___ (already/eat) all the cheese.",
+      answer: "had already eaten",
+      explanation:
+        "Past Perfect shows that one past action happened before another past action. The earlier action is had + past participle.",
+      examples: [
+        "By the time we found the café, it had already closed.",
+        "When she called him, he had already left the office.",
+      ],
+      ua: "Past Perfect (had + V3) — дія, що сталася раніше за іншу минулу: «відкрив, а сир уже з'їли».",
+    },
+    {
+      id: "nt-card-7",
+      rule: "found out / discovered + Past Perfect",
+      example: "I called the hotel and found out that they ___ (lose) my booking the day before.",
+      answer: "had lost",
+      explanation:
+        "After verbs like find out, discover and realise, use Past Perfect for the thing that happened earlier. First it happened, later you learned about it.",
+      examples: [
+        "We found out that our neighbours had moved to Poland the year before.",
+        "He discovered that someone had borrowed his car without asking.",
+      ],
+      ua: "found out / discovered + had + V3: дізналися пізніше, а подія сталася раніше (the day before).",
+    },
+    {
+      id: "nt-card-8",
+      rule: "had never + past participle (before that moment)",
+      example: "We were surprised, because we ___ (never/see) snow before that day.",
+      answer: "had never seen",
+      explanation:
+        "Use had never + past participle for an experience you did not have before a certain moment in the past. It is the past version of have never.",
+      examples: [
+        "I had never flown before that trip, so I was very nervous.",
+        "She had never met his parents until that weekend.",
+      ],
+      ua: "had never + V3: «ніколи раніше не бачили» — досвід до певного моменту в минулому.",
+    },
+  ],
   rules: [
 
     // ─── GAP-FILL (7) ────────────────────────────────────────────────────────

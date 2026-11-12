@@ -1,18 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { motion } from "motion/react";
 import { RotateCcw, Volume2, VolumeX } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
+import GrammarLevelPage from "./GrammarLevelPage.tsx";
+import TopicTileGrid from "../shared/TopicTileGrid.tsx";
 import allTopics from "./topics/index.ts";
 import type { GrammarQuestion, GrammarTopic } from "./types.ts";
-import { grammarAppId, topicsForLevel, type GrammarLevel } from "./levels.ts";
+import { grammarAppId, grammarView, topicsForLevel, type GrammarLevel } from "./levels.ts";
 import { GrammarSaveStatus } from "./GrammarSave.tsx";
 import { useGrammarGame } from "./useGrammarGame.ts";
 import { useTTS } from "./useTTS.ts";
 import ProgressBar from "./components/ProgressBar.tsx";
 import GrammarQuestionCard from "./components/GrammarQuestionCard.tsx";
-import GameCharacter from "./components/GameCharacter.tsx";
 import EndScreen from "./components/EndScreen.tsx";
-import TopicMenu from "./components/TopicMenu.tsx";
 
 const HEADER_BUTTON =
   "w-9 h-9 flex items-center justify-center rounded-full hover:bg-neutral-800 transition-colors text-neutral-400 hover:text-white";
@@ -21,7 +20,14 @@ export default function GrammarPage({ level }: { level: GrammarLevel }) {
   const topics = useMemo(() => topicsForLevel(allTopics, level.id), [level.id]);
 
   if (topics.length === 0) return <ComingSoon level={level} />;
-  return <GrammarGame level={level} topics={topics} />;
+
+  // no query = the level page; ?view=topics = the test topic list; ?topic=<id> = straight into the test
+  const view = grammarView(
+    window.location.search,
+    topics.map((t) => t.id),
+  );
+  if (view.kind === "level") return <GrammarLevelPage level={level} topics={topics} />;
+  return <GrammarGame level={level} topics={topics} initialTopicId={view.kind === "test" ? view.topicId : null} />;
 }
 
 function ComingSoon({ level }: { level: GrammarLevel }) {
@@ -42,16 +48,19 @@ function ComingSoon({ level }: { level: GrammarLevel }) {
   );
 }
 
-function GrammarGame({ level, topics }: { level: GrammarLevel; topics: GrammarTopic[] }) {
-  // ?topic=<id> opens that topic; an unknown or missing id opens the topic list.
-  const initial = useMemo(() => {
-    const topicId = new URLSearchParams(window.location.search).get("topic");
-    const found = topics.find((t) => t.id === topicId);
-    return { topic: found ?? topics[0], showLanding: !found };
-  }, [topics]);
-
-  const [selectedTopic, setSelectedTopic] = useState<GrammarTopic>(initial.topic);
-  const [showLanding, setShowLanding] = useState(initial.showLanding);
+function GrammarGame({
+  level,
+  topics,
+  initialTopicId,
+}: {
+  level: GrammarLevel;
+  topics: GrammarTopic[];
+  initialTopicId: string | null; // null = start on the topic list
+}) {
+  const [selectedTopic, setSelectedTopic] = useState<GrammarTopic>(
+    () => topics.find((t) => t.id === initialTopicId) ?? topics[0],
+  );
+  const [showLanding, setShowLanding] = useState(initialTopicId === null);
   const game = useGrammarGame(selectedTopic.rules, selectedTopic.id);
   const tts = useTTS();
 
@@ -71,10 +80,26 @@ function GrammarGame({ level, topics }: { level: GrammarLevel; topics: GrammarTo
     window.history.pushState({}, "", `?topic=${topic.id}`);
   };
 
+  // "Topics" goes back to the topic list (?view=topics), not to the level page.
   const handleGoToLanding = () => {
     setShowLanding(true);
-    window.history.pushState({}, "", window.location.pathname);
+    window.history.pushState({}, "", `${window.location.pathname}?view=topics`);
   };
+
+  // Browser Back/Forward between the topic list and a test keeps the screen in step with the URL.
+  useEffect(() => {
+    const onPopState = () => {
+      const view = grammarView(window.location.search, topics.map((t) => t.id));
+      if (view.kind === "test") {
+        setSelectedTopic(topics.find((t) => t.id === view.topicId) ?? topics[0]);
+        setShowLanding(false);
+      } else {
+        setShowLanding(true);
+      }
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [topics]);
 
   const handlePracticeWeak = (weakQuestions: GrammarQuestion[]) => {
     game.restart(weakQuestions);
@@ -85,8 +110,8 @@ function GrammarGame({ level, topics }: { level: GrammarLevel; topics: GrammarTo
   return (
     <div className="relative min-h-screen flex flex-col">
       <AppHeader
-        title={`${level.id} Grammar`}
-        subtitle={playing ? selectedTopic.name : "by Englishpusher"}
+        title={playing ? `${level.id} Grammar` : "Grammar Test"}
+        subtitle={playing ? selectedTopic.name : `${level.id} · by Englishpusher`}
         onTitleClick={playing ? handleGoToLanding : undefined}
         onTopics={handleGoToLanding}
         showTopics={playing}
@@ -116,43 +141,27 @@ function GrammarGame({ level, topics }: { level: GrammarLevel; topics: GrammarTo
         }
       />
 
-      <main className="grammar-app flex-1 flex items-start justify-center px-6 py-6 md:pt-20 bg-background">
+      <main
+        className={`grammar-app flex-1 flex items-start justify-center px-6 ${
+          // the topic list keeps the page background, like the vocabulary lists
+          showLanding ? "py-10" : "py-6 md:pt-20 bg-background"
+        }`}
+      >
         {showLanding ? (
-          <motion.div
-            key="landing"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35 }}
-            className="w-full max-w-4xl flex items-start gap-10"
-          >
-            {/* Teacher + speech bubble, desktop only */}
-            <div className="hidden md:flex flex-col items-center gap-4 flex-shrink-0 mt-32">
-              <motion.div
-                className="relative bg-card border-2 border-border rounded-2xl px-5 py-3 shadow-sm max-w-[200px] text-center"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3, type: "spring", stiffness: 260, damping: 20 }}
-              >
-                <p className="font-body text-sm text-foreground leading-snug">What shall we practise today? 😊</p>
-                <div className="absolute left-1/2 -translate-x-1/2 -bottom-[10px] w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-border" />
-                <div className="absolute left-1/2 -translate-x-1/2 -bottom-[8px] w-0 h-0 border-l-[9px] border-l-transparent border-r-[9px] border-r-transparent border-t-[9px] border-t-card" />
-              </motion.div>
-              <GameCharacter pose="idle" className="w-[180px]" />
-            </div>
-
-            <div className="flex-1 topic-scroll md:overflow-y-auto md:max-h-[calc(100dvh-15rem)] md:overscroll-contain px-1 py-1">
-              <TopicMenu
-                title="Choose a Topic"
-                subtitle="Pick a grammar topic to start practising"
-                items={topics.map((t) => ({
-                  label: t.name,
-                  lesson: t.lesson,
-                  description: `${t.rules.length} questions`,
-                  onClick: () => handleSelectTopic(t),
-                }))}
-              />
-            </div>
-          </motion.div>
+          <TopicTileGrid
+            variant="quiz"
+            badge={`${level.id} Grammar`}
+            heading="Grammar Test"
+            subtitle="Choose a topic to start the test"
+            tiles={topics.map((t) => ({
+              id: t.id,
+              icon: t.icon ?? "📘",
+              title: t.name,
+              description: t.description,
+              count: `${t.rules.length} questions`,
+            }))}
+            onSelect={(id) => handleSelectTopic(topics.find((t) => t.id === id)!)}
+          />
         ) : (
           <div key={selectedTopic.id} className="w-full max-w-3xl space-y-8">
             {game.gameOver ? (

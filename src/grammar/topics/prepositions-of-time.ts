@@ -6,6 +6,106 @@ export const prepositionsOfTimeTopic: GrammarTopic = {
   name: "Prepositions of Time",
   description:
     "Practise using before, after, during, until, between, in, at, and on with time expressions.",
+  icon: "⏰",
+  cards: [
+    {
+      id: "pot-card-1",
+      rule: "at + clock time",
+      example: "The train to Lviv leaves ___ 6.45 every morning.",
+      answer: "at",
+      explanation: "Use at with clock times. We say at 6.45, at 9 a.m. and at five o'clock.",
+      examples: ["The bank opens at half past nine.", "Please call me at 5 o'clock."],
+      ua: "at + година: at 6.45 = «о 6.45».",
+    },
+    {
+      id: "pot-card-2",
+      rule: "on + day or date",
+      example: "My dentist appointment is ___ Thursday, 14 March.",
+      answer: "on",
+      explanation: "Use on with days and dates. We say on Friday, on 3 May and on Monday morning.",
+      examples: ["We usually clean the house on Saturdays.", "Her birthday is on 21 June."],
+      ua: "on + день/дата: on Thursday = «у четвер», on 14 March = «14 березня».",
+    },
+    {
+      id: "pot-card-3",
+      rule: "in + month, year, season",
+      example: "My grandparents got married ___ 1978.",
+      answer: "in",
+      explanation: "Use in with longer periods: months, years, seasons and decades. We say in 1978, in July and in winter.",
+      examples: ["It often snows here in January.", "I'll take my driving test in spring."],
+      ua: "in + місяць, рік, пора року: in 1978 = «у 1978 році», in winter = «взимку».",
+    },
+    {
+      id: "pot-card-4",
+      rule: "at night, at the weekend",
+      example: "Foxes come into our garden ___ night.",
+      answer: "at",
+      explanation:
+        "Some fixed expressions use at: at night and at the weekend. In American English people say on the weekend.",
+      examples: ["I don't like walking alone at night.", "Are you free at the weekend?"],
+      ua: "at night = «вночі», at the weekend = «на вихідних» (британська англійська).",
+    },
+    {
+      id: "pot-card-5",
+      rule: "in + period of time (from now)",
+      example: "Hurry up, the film starts ___ twenty minutes!",
+      answer: "in",
+      explanation:
+        "In + a period of time means 'after that time from now'. We use it for future events.",
+      examples: ["My exam starts in a week.", "I'll finish this report in an hour."],
+      ua: "in + проміжок часу в майбутньому = «через»: in twenty minutes — «через двадцять хвилин».",
+    },
+    {
+      id: "pot-card-6",
+      rule: "before / after + event or time",
+      example: "She took a shower ___ her run, because she was covered in mud.",
+      answer: "after",
+      explanation:
+        "Before means earlier than something. After means later than something. Both can be followed by a time or an event.",
+      examples: ["Please arrive before nine o'clock.", "Let's go for a walk after dinner."],
+      ua: "before = «до, перед», after = «після». Далі йде час або подія: after her run.",
+    },
+    {
+      id: "pot-card-7",
+      rule: "during + noun",
+      example: "The lights went out three times ___ the storm.",
+      answer: "during",
+      explanation:
+        "During + a noun means 'at some point in' an event or period. With a verb we use while instead: while it was raining.",
+      examples: ["Please don't use your phone during the lesson.", "I woke up twice during the night."],
+      ua: "during + іменник = «під час»: during the storm. З дією — while + підмет + дієслово.",
+    },
+    {
+      id: "pot-card-8",
+      rule: "until = up to a point, then it stops",
+      example: "The museum is closed ___ next Monday, and then it reopens.",
+      answer: "until",
+      explanation:
+        "Until shows the end point of a situation. It continues up to that moment and then it stops.",
+      examples: ["We stayed in Prague until Sunday evening.", "Please wait here until I call your name."],
+      ua: "until = «до (певного моменту)»: closed until Monday — «зачинено до понеділка».",
+    },
+    {
+      id: "pot-card-9",
+      rule: "since + point in time, for + period",
+      example: "She has been in hospital ___ Monday morning, but she's feeling better.",
+      answer: "since",
+      explanation:
+        "Use since with the moment when something started. Use for with a length of time. Both go with Present Perfect for situations that are still true.",
+      examples: ["I have lived in Kyiv since 2015.", "He has worked here for six years."],
+      ua: "since + момент = «з», for + період = «протягом»: since Monday, for six years.",
+    },
+    {
+      id: "pot-card-10",
+      rule: "between ... and ...",
+      example: "The museum café is quiet ___ two and four in the afternoon.",
+      answer: "between",
+      explanation:
+        "Between ... and ... gives the start and the end of a time. We say between two and four, not between two to four.",
+      examples: ["The delivery will arrive between ten and twelve.", "Call me between five and six."],
+      ua: "between ... and = «між ... та»: between two and four — «між другою та четвертою».",
+    },
+  ],
   rules: [
     // GAP-FILL (7)
     {

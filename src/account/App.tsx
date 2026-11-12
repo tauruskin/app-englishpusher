@@ -12,6 +12,7 @@ import { useSavedWords } from "../shared/savedWords.tsx";
 import { api } from "../teacher/api.ts";
 import type { Me } from "../teacher/types.ts";
 import TelegramSync from "./TelegramSync.tsx";
+import { isGrammarFlashcardsApp, studyTitle } from "./recentTitles.ts";
 import { TOPICS as C1_TOPICS } from "../c1-flashcards/data.ts";
 import type { LevelConfig } from "../levels/types.ts";
 import { flashcardsAppId, pageUrl, triviaAppId } from "../levels/level.ts";
@@ -54,6 +55,12 @@ const APP_LABEL: Record<AppId | GrammarAppId, string> = {
   "b1plus-flashcards": "B1+ Flash Cards",
   "b2plus-flashcards": "B2+ Flash Cards",
   "c1-flashcards": "C1 Flash Cards",
+  "a2-grammar-flashcards": "A2 Grammar Flash Cards",
+  "a2plus-grammar-flashcards": "A2+ Grammar Flash Cards",
+  "b1-grammar-flashcards": "B1 Grammar Flash Cards",
+  "b1plus-grammar-flashcards": "B1+ Grammar Flash Cards",
+  "b2plus-grammar-flashcards": "B2+ Grammar Flash Cards",
+  "c1-grammar-flashcards": "C1 Grammar Flash Cards",
 };
 
 // ---------------------------------------------------------------------------
@@ -479,11 +486,11 @@ function relativeDay(iso: string): string {
   return then.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
 
-function RecentActivity({ events }: { events: StudyEventRow[] }) {
+function RecentActivity({ events, grammarNames }: { events: StudyEventRow[]; grammarNames: Map<string, string> | null }) {
   const rows = events
     .map((e) => ({
       ...e,
-      title: e.topicId === "my-words" ? "My Words" : topicTitle(e.app, e.topicId),
+      title: studyTitle(e.app, e.topicId, grammarNames, (app, id) => topicTitle(app as AppId, id)),
     }))
     .filter((e) => e.title !== null);
 
@@ -562,10 +569,13 @@ function PersonalPage() {
   const isStaff = me?.role === "teacher" || me?.role === "admin";
 
   // The grammar topic registry holds every question, so it is loaded only when the student has
-  // grammar rounds. Until it arrives only vocabulary rows are shown (no raw ids).
+  // grammar rounds or grammar flashcards activity. Until it arrives only vocabulary rows are shown
+  // (no raw ids).
   const [grammarNames, setGrammarNames] = useState<Map<string, string> | null>(null);
   const grammarResults = progress?.grammarResults;
-  const hasGrammar = (grammarResults?.length ?? 0) > 0;
+  const hasGrammar =
+    (grammarResults?.length ?? 0) > 0 ||
+    (progress?.recentStudy ?? []).some((e) => isGrammarFlashcardsApp(e.app));
   useEffect(() => {
     if (!hasGrammar) return;
     let current = true;
@@ -641,7 +651,7 @@ function PersonalPage() {
       </Section>
 
       <Section icon={<Clock size={16} className="text-brand" />} title="Recent activity">
-        <RecentActivity events={progress?.recentStudy ?? []} />
+        <RecentActivity events={progress?.recentStudy ?? []} grammarNames={grammarNames} />
       </Section>
     </motion.div>
   );
