@@ -11,7 +11,7 @@
   - Header with logo + "Englishpusher **Learning Apps**" title
   - Teacher celebrate character (left, desktop only) with speech bubble
   - 3 animated app cards (stagger slide-in from left):
-    - Grammar Testing → https://grammar.englishpusher.in.ua
+    - Grammar → https://app.englishpusher.in.ua/<level>-grammar/ (grammar.englishpusher.in.ua redirects since 2026-11-12)
     - Vocabulary Trivia → https://trivia.englishpusher.in.ua/
     - Vocabulary Cards → Coming Soon (disabled)
   - Footer: Copyright © 2026 — Developed by Tetiana Pushkar
