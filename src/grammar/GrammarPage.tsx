@@ -142,8 +142,9 @@ function GrammarGame({
       />
 
       <main
-        className={`grammar-app flex-1 flex items-start justify-center px-6 bg-background ${
-          showLanding ? "py-10" : "py-6 md:pt-20"
+        className={`grammar-app flex-1 flex items-start justify-center px-6 ${
+          // the topic list keeps the page background, like the vocabulary lists
+          showLanding ? "py-10" : "py-6 md:pt-20 bg-background"
         }`}
       >
         {showLanding ? (
