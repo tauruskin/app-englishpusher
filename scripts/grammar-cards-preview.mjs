@@ -27,7 +27,8 @@ function withGap(example, answer, fill) {
 
 function renderCard(card, index) {
   const front = withGap(card.example, card.answer, () => `<span class="blank">${GAP}</span>`);
-  const back = withGap(card.example, card.answer, (a) => `<strong>${a}</strong>`);
+  // The back is the full sentence: drop the hint after the gap, e.g. "___ (go)" → "goes".
+  const back = withGap(String(card.example ?? "").replace(/___\s*\([^)]*\)/, GAP), card.answer, (a) => `<strong>${a}</strong>`);
   const examples = (card.examples ?? []).map((e) => `<li>${esc(e)}</li>`).join("");
   const ua = card.ua ? `\n    <p class="ua"><span class="label">UA</span> ${esc(card.ua)}</p>` : "";
   return `  <div class="card">

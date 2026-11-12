@@ -38,3 +38,12 @@ test("escapes html in every field and shows the gap as a visible blank on the fr
   assert.match(html, /<strong>&lt;u&gt;<\/strong>/);
   assert.match(html, /&quot;e&quot;/);
 });
+
+test("the back drops the hint after the gap, the front keeps it", () => {
+  const html = renderLevel("B1", [
+    { id: "t", level: "B1", name: "T", icon: "📏", rules: [], cards: [
+      { id: "c1", rule: "r", example: "He ___ (go) to work.", answer: "goes", explanation: "e", examples: ["A.", "B."], ua: "u" } ] },
+  ]);
+  assert.match(html, /He <strong>goes<\/strong> to work\./);
+  assert.match(html, /<span class="blank">___<\/span> \(go\) to work\./);
+});

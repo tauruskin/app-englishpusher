@@ -52,6 +52,8 @@ export default function RuleCardView({
     : ["#78350f", "#f97316", "#f07c1a"];
   const [before, ...rest] = card.example.split("___");
   const after = rest.join("___");
+  // The back shows the full sentence, so the hint after the gap ("(go)") is dropped there.
+  const afterOnBack = after.replace(/^\s*\([^)]*\)/, "");
 
   // The buttons flip on their own; stopping the click keeps the tap-anywhere handler from flipping back.
   const flipButton = (e: MouseEvent) => {
@@ -103,7 +105,7 @@ export default function RuleCardView({
                   <p className="font-display font-bold text-xl md:text-2xl text-neutral-900 leading-snug">
                     {before}
                     <span className="rounded-md bg-orange-100 px-1.5 text-brand">{card.answer}</span>
-                    {after}
+                    {afterOnBack}
                   </p>
                   <p className="text-neutral-700 text-[15px] leading-relaxed">{card.explanation}</p>
                 </div>
