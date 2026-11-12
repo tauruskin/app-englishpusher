@@ -1,4 +1,4 @@
-import type { MouseEvent } from "react";
+import { useCallback, useRef, type MouseEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { RotateCcw } from "lucide-react";
 import { GradientBorder } from "../../shared/FlashcardDeck.tsx";
@@ -8,10 +8,9 @@ import type { UaRule } from "../cards.ts";
 // The blank of the front sentence: a dashed orange slot, as in the approved mockup.
 function Gap() {
   return (
-    <span
-      className="inline-block align-[-0.25em] w-20 h-[1.35em] mx-1 rounded-md bg-orange-50 border-b-[3px] border-dashed border-brand"
-      aria-label="gap"
-    />
+    <span className="inline-block align-[-0.25em] w-20 h-[1.35em] mx-1 rounded-md bg-orange-50 border-b-[3px] border-dashed border-brand">
+      <span className="sr-only">blank</span>
+    </span>
   );
 }
 
@@ -58,8 +57,19 @@ export default function RuleCardView({
   // The buttons flip on their own; stopping the click keeps the tap-anywhere handler from flipping back.
   const flipButton = (e: MouseEvent) => {
     e.stopPropagation();
+    flippedByButton.current = true;
     onFlip();
   };
+
+  // A flip remounts the face (keyed motion.div), so the focused button disappears. When a button caused
+  // the flip, the new face's button takes focus as it mounts; tapping the card leaves focus alone.
+  const flippedByButton = useRef(false);
+  const focusAfterButtonFlip = useCallback((el: HTMLButtonElement | null) => {
+    if (el && flippedByButton.current) {
+      flippedByButton.current = false;
+      el.focus({ preventScroll: true });
+    }
+  }, []);
 
   return (
     <AnimatePresence mode="wait">
@@ -90,6 +100,7 @@ export default function RuleCardView({
                 <div className="flex flex-col items-center gap-2">
                   <button
                     type="button"
+                    ref={focusAfterButtonFlip}
                     onClick={flipButton}
                     className="rounded-xl bg-brand text-white font-display font-bold px-10 py-3.5 text-base hover:bg-brand/90 transition-colors shadow-sm"
                   >
@@ -124,6 +135,7 @@ export default function RuleCardView({
                 <UkrainianBlock ua={card.ua} uaRule={uaRule} />
                 <button
                   type="button"
+                  ref={focusAfterButtonFlip}
                   onClick={flipButton}
                   className="self-center flex items-center gap-1.5 text-sm text-neutral-400 hover:text-neutral-600 transition-colors"
                 >

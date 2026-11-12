@@ -1,8 +1,9 @@
 import { CreditCard, ListChecks } from "lucide-react";
 import ActivityChoicePage, { type ActivityItem } from "../shared/ActivityChoicePage.tsx";
+import type { GrammarTopic } from "./types.ts";
 import { grammarFlashcardsUrl, grammarTopicsUrl, type GrammarLevel } from "./levels.ts";
 
-function activityItems(level: GrammarLevel): ActivityItem[] {
+function activityItems(level: GrammarLevel, hasCards: boolean): ActivityItem[] {
   return [
     {
       id: 1,
@@ -14,12 +15,13 @@ function activityItems(level: GrammarLevel): ActivityItem[] {
       bgFrom: "#b45309",
       bgTo: "#78350f",
       accentColor: "#fbbf24",
-      disabled: false,
+      disabled: !hasCards,
+      badge: hasCards ? undefined : "Coming soon",
     },
     {
       id: 2,
       label: "Grammar Test",
-      description: "Gap-fill, error-spot, word order and more — 25 questions per topic",
+      description: "Gap-fill, error-spot, word order and more",
       cta: "Start test",
       href: grammarTopicsUrl(level),
       Icon: ListChecks,
@@ -32,12 +34,14 @@ function activityItems(level: GrammarLevel): ActivityItem[] {
 }
 
 // /<level>-grammar/ with no query: choose between the rule flashcards and the grammar test.
-export default function GrammarLevelPage({ level }: { level: GrammarLevel }) {
+// Flash Cards is switched off while no topic of the level has rule cards yet.
+export default function GrammarLevelPage({ level, topics }: { level: GrammarLevel; topics: GrammarTopic[] }) {
+  const hasCards = topics.some((t) => (t.cards?.length ?? 0) > 0);
   return (
     <ActivityChoicePage
       headerTitle={`${level.id} Grammar`}
       badge={`${level.id} Grammar`}
-      items={activityItems(level)}
+      items={activityItems(level, hasCards)}
       comingSoon={false}
       comingSoonText=""
     />

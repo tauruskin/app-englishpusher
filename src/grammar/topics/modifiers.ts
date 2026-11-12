@@ -21,7 +21,7 @@ export const modifiersTopic: GrammarTopic = {
     {
       id: "mod-card-1",
       rule: "quite + adjective",
-      example: "The film wasn't brilliant, but it was ___ entertaining, and we stayed until the end.",
+      example: "The hotel was ___ (quite / very) nice: not bad, but not great either.",
       answer: "quite",
       explanation: "Quite makes an adjective weaker than very. Something is true, but not strongly: quite interesting means interesting, but not very interesting.",
       examples: ["The hotel was quite small, but the rooms were clean.", "My new neighbours seem quite friendly."],
@@ -93,7 +93,7 @@ export const modifiersTopic: GrammarTopic = {
     {
       id: "mod-card-9",
       rule: "hard (= with effort) and hardly (= almost not)",
-      example: "He studies ___ every evening, so he got the best mark in the group.",
+      example: "He studies ___ (hard / hardly) every evening, so he got the best mark in the group.",
       answer: "hard",
       explanation: "Hard means with a lot of effort: work hard, try hard. Hardly means almost not: I hardly know him. The two words have very different meanings.",
       examples: ["My grandmother worked hard all her life.", "I hardly know my new neighbours."],

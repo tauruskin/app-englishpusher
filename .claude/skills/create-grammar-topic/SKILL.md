@@ -267,6 +267,8 @@ Rules:
   hides the bracket hint on the card back. If the rule's key words are interchangeable (quite / fairly /
   pretty), gap a structural part of the pattern instead (the article, `to`, the verb form), not the
   interchangeable word.
+- When the key word has near-synonyms, put the choice in brackets after the gap, e.g.
+  `___ (quite / very)`; the app hides the bracket on the card back.
 - Adult everyday situations, like the questions.
 - `icon` = one simple emoji pictograph (no flags, no keycaps), e.g. `"📏"`.
 
@@ -291,7 +293,7 @@ export const myTopicTopic: GrammarTopic = {
     {
       id: "mt-card-1",
       rule: "quite + adjective",
-      example: "The film wasn't brilliant, but it was ___ entertaining, and we stayed until the end.",
+      example: "The hotel was ___ (quite / very) nice: not bad, but not great either.",
       answer: "quite",
       explanation: "Quite makes an adjective weaker than very. Something is true, but not strongly.",
       examples: ["The hotel was quite small, but the rooms were clean.", "My new neighbours seem quite friendly."],

@@ -91,7 +91,7 @@ export const pastSimplePresentPerfectTopic: GrammarTopic = {
         "Use Present Perfect for a situation that started in the past and is still true now. Use for with a length of time and since with the starting point.",
       examples: [
         "My brother has worked in Warsaw for six years.",
-        "It has rained since early morning.",
+        "We have had this car since 2018.",
       ],
       ua: "for + проміжок («шість років»), since + момент («з ранку»): ситуація триває й досі.",
     },

@@ -26,7 +26,7 @@ export default function GrammarPage({ level }: { level: GrammarLevel }) {
     window.location.search,
     topics.map((t) => t.id),
   );
-  if (view.kind === "level") return <GrammarLevelPage level={level} />;
+  if (view.kind === "level") return <GrammarLevelPage level={level} topics={topics} />;
   return <GrammarGame level={level} topics={topics} initialTopicId={view.kind === "test" ? view.topicId : null} />;
 }
 

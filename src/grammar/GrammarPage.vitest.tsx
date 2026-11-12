@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import GrammarPage from "./GrammarPage.tsx";
 import { levelBySlug } from "./levels.ts";
 import allTopics from "./topics/index.ts";
@@ -30,6 +30,30 @@ describe("/b1-grammar/ routing", () => {
   it("?topic=<id>: straight into the test (old Moodle links)", () => {
     at("?topic=modifiers");
     expect(screen.queryByRole("link", { name: "Flash Cards" })).toBeNull();
+    expect(screen.queryByText("Choose a topic to start the test")).toBeNull();
+    expect(screen.getByText(/Question/)).toBeTruthy();
+  });
+
+  function goTo(search: string) {
+    act(() => {
+      window.history.replaceState({}, "", `/b1-grammar/${search}`);
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+  }
+
+  it("browser Back from a test returns to the topic list", () => {
+    at("?view=topics");
+    fireEvent.click(screen.getByText("Modifiers"));
+    expect(screen.queryByText("Choose a topic to start the test")).toBeNull();
+    expect(screen.getByText(/Question/)).toBeTruthy();
+    goTo("?view=topics");
+    expect(screen.getByText("Choose a topic to start the test")).toBeTruthy();
+  });
+
+  it("browser Forward from the topic list returns to the test", () => {
+    at("?view=topics");
+    expect(screen.getByText("Choose a topic to start the test")).toBeTruthy();
+    goTo("?topic=modifiers");
     expect(screen.queryByText("Choose a topic to start the test")).toBeNull();
     expect(screen.getByText(/Question/)).toBeTruthy();
   });

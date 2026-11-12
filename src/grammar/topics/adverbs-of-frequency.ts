@@ -594,7 +594,7 @@ export const adverbsOfFrequencyTopic: GrammarTopic = {
       {
         id: "aof-card-9",
         rule: "never + positive verb (no don't)",
-        example: "I'm allergic to nuts, so I ___ eat them, not even one.",
+        example: "I'm allergic to nuts, so I ___ (never / don't never) eat them.",
         answer: "never",
         explanation: "Never already makes the sentence negative, so the verb stays positive: I never eat, not I don't never eat.",
         examples: ["My father never drinks coffee after six.", "We never watch TV during dinner."],

@@ -569,7 +569,7 @@ export const presentSimpleVsContinuousTopic: GrammarTopic = {
                 "Use Present Simple for what usually happens. Use Present Continuous for what is different today or this week.",
             examples: [
                 "Our dog usually sleeps all day, but now he is barking at the postman.",
-                "I normally have tea, but this morning I'm drinking coffee.",
+                "I normally walk to work, but this week I'm cycling.",
             ],
             ua: "usually/normally — Present Simple, а today/this week (виняток) — Present Continuous.",
         },
