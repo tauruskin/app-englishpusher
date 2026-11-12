@@ -11,7 +11,7 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 |---|---|
 | Main website | https://englishpusher.in.ua |
 | Hub (this project) | https://app.englishpusher.in.ua |
-| Grammar Testing | https://grammar.englishpusher.in.ua |
+| Grammar (per level) | https://app.englishpusher.in.ua/<level>-grammar/ (old grammar.englishpusher.in.ua redirects) |
 | Grammar per level (in this repo since stage 1 of the grammar migration; NOT linked from the hub yet) | https://app.englishpusher.in.ua/b1-grammar/ (also a2-, a2plus-, b1plus-, b2plus-, c1-) |
 | Vocabulary Trivia (B1) | https://app.englishpusher.in.ua/b1-trivia/ |
 | Word Connections (B1) | https://app.englishpusher.in.ua/word-connections/ |
@@ -26,7 +26,7 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 | My Account (login + personal page) | https://app.englishpusher.in.ua/account/ |
 | Instagram | https://www.instagram.com/teti_push_english?igsh=MWMxbGxodnJrOHI2 |
 
-**Grammar migration in progress.** The grammar game lives in `src/grammar/` (topics in `src/grammar/topics/`, one file per topic, each with a `level`). Until stage 4 of `moodle-task-builder/docs/superpowers/plans/2026-11-11-grammar-migration-roadmap.md` the live grammar site is still `grammar.englishpusher.in.ua`, and since stage 3 new topics are built by @Englishpusher_bot (`grammar <level> <topic>`) with the `create-grammar-topic` skill in this repo, as PRs. Grammar tests: `npm run test:grammar` (Vitest, files named `*.vitest.ts(x)`). Since stage 2 a signed-in student's finished grammar session is saved to `public.grammar_answers` (`src/grammar/GrammarSave.tsx`, `src/grammar/answers.ts`) and appears in My progress and the teacher dashboard.
+**Grammar.** The grammar game lives in `src/grammar/` (topics in `src/grammar/topics/`, one file per topic, each with a `level`), pages `/a2-grammar/` … `/c1-grammar/`. Topics are created by the Telegram bot with the `create-grammar-topic` skill (`.claude/skills/create-grammar-topic/`). The hub shows a Grammar card per level; it is a grey "Coming soon" card until the level has a topic (`__GRAMMAR_LIVE_LEVELS__`, computed in `vite.config.ts` from the topic registry). `grammar.englishpusher.in.ua` is only a redirect page (fixed list of the 12 original B1 topics). Grammar tests: `npm run test:grammar` (Vitest, files named `*.vitest.ts(x)`). A signed-in student's finished grammar session is saved to `public.grammar_answers` (`src/grammar/GrammarSave.tsx`, `src/grammar/answers.ts`) and appears in My progress and the teacher dashboard.
 
 ### Direct topic links — Flash Card apps
 
@@ -578,7 +578,7 @@ Left: copyright + main site link. Right: Instagram icon + handle.
 
 | id | Level | Label | href | Status |
 |---|---|---|---|---|
-| 1 | B1 | B1 Grammar Testing | https://grammar.englishpusher.in.ua | Live |
+| 1 | B1 | B1 Grammar | /b1-grammar/ | Live |
 | 2 | B1 | B1 Vocabulary | /b1-vocabulary/ | Live — crimson `#9f1239` card, chooser page |
 | 3 | C1 | C1 Vocabulary | /c1-business/ | Live — chooser page |
 | 6 | B1+ | B1+ Vocabulary | /b1plus-vocabulary/ | "Coming soon" until `src/b1plus-flashcards/data.ts` has a topic — fuchsia `#a21caf` card, chooser page |
