@@ -45,14 +45,17 @@ treatment of that point at the topic's level and say so.
 1. Pick a kebab-case topic id (e.g. `stative-dynamic-verbs`) and a short question-id prefix (e.g. `sdv`).
    The id must match `^[a-z0-9-]{1,80}$`, every question id `^[A-Za-z0-9_-]{1,80}$`, and the topic id
    must not already exist in the registry (the database checks refuse anything else).
-2. Write `src/grammar/topics/<topic-id>.ts` with 25 questions (mix below).
+2. Write `src/grammar/topics/<topic-id>.ts` with 25 questions (mix below), an `icon` and 6-10 rule
+   `cards` (see "Rule cards").
 3. Register it in `src/grammar/topics/index.ts` — add the import (with the `.ts` extension) and append
    to the `topics` array. The level page lists it automatically
    (`/<slug>-grammar/?topic=<topic-id>`).
 4. Validate: `npx vitest run src/grammar/topics/topics-validation.vitest.ts`, then
    `node --test src/grammar/topics/plain-node.test.ts`, then `npx tsc -p tsconfig.app.json --noEmit`.
    The first covers every registered topic automatically (unique ids, one `___` per blank,
-   error-spot index matches the wrong word, options consistent, etc.). Fix everything they flag.
+   error-spot index matches the wrong word, options consistent, etc.) and now also the cards and
+   the icon (card count, unique card ids, one `___` per card, Ukrainian by level, no card sentence
+   equal to a test question). Fix everything they flag — fix every card error too.
 5. Commit on a branch and open a pull request **(interactive mode only)**. **Never** run
    `npm run deploy` and never push to `main` — the App deploys from `main` through GitHub Actions
    after a merge. In headless mode, skip this step — see "Headless mode" below.
@@ -75,7 +78,9 @@ with:
    Omit `lesson` if the topic has no lesson number.
 2. Write the preview to `docs/grammar-previews/<topic-id>.html` (create the folder if needed) — a static, read-only page for the teacher to
    review before approving. No JavaScript, no interactivity (this is not a mini version of the
-   app). Group questions in this order: Gap Fill, Error Spot, Multiple Choice, Word Transform.
+   app). Group questions in this order: Gap Fill, Error Spot, Multiple Choice, Word Transform,
+   then a final Flashcards section with one block per rule card (the topic icon goes next to the
+   topic name in the header).
    For each question show only the sentence (blank/error visually marked), the correct answer,
    and the `tip` — omit the distractor `options`, `explanation`, and `difficulty`. Use this
    template, filling in the real content already written into `src/grammar/topics/<id>.ts` moments
@@ -107,9 +112,9 @@ with:
    </style>
    </head>
    <body>
-   <h1>REPLACE WITH TOPIC NAME</h1>
+   <h1>REPLACE WITH THE TOPIC ICON EMOJI and TOPIC NAME</h1>
    <div class="meta">REPLACE WITH "Lesson N — " IF PRESENT, ELSE OMIT THIS DIV ENTIRELY<!--
-     -->REPLACE WITH QUESTION COUNT questions</div>
+     -->REPLACE WITH QUESTION COUNT questions · REPLACE WITH CARD COUNT cards</div>
 
    <h2>Gap Fill</h2>
    <div class="question">
@@ -142,6 +147,17 @@ with:
      <p class="tip">...</p>
    </div>
    <!-- repeat this .question block once per word-transform question -->
+
+   <h2>Flashcards</h2>
+   <div class="question">
+     <p class="sentence"><strong>REPLACE WITH rule</strong></p>
+     <p class="sentence">REPLACE WITH example, with the ___ as <span class="blank">___</span></p>
+     <p>Back: REPLACE WITH the full sentence (without the bracket hint), answer as <span class="answer">answer</span></p>
+     <p class="tip">REPLACE WITH explanation</p>
+     <p>REPLACE WITH examples[0] · REPLACE WITH examples[1]</p>
+     <p>REPLACE WITH ua (omit this line when there is no ua)</p>
+   </div>
+   <!-- repeat this .question block once per card -->
 
    </body>
    </html>
@@ -217,6 +233,43 @@ appointments) — not childish or textbook-stilted. Wrong options should be the 
 actually make (wrong tense, missing -s, -ing on a stative verb), not random words. Explanations
 teach the rule, not just "correct!". Keep sentences short enough to scan on a phone.
 
+## Rule cards
+
+Besides the 25 questions, every topic has an `icon` (one emoji) and **6-10 rule `cards`** — flashcards
+the student flips to review the rules. Type (`src/grammar/types.ts`):
+
+```ts
+export interface RuleCard {
+  id: string;                  // unique within the topic, e.g. "mod-card-1"
+  rule: string;                // front title, e.g. "quite + adjective"
+  example: string;             // front sentence with exactly one ___
+  answer: string;              // fills the ___; the back shows the full sentence
+  explanation: string;         // English, 1-3 short sentences
+  examples: [string, string];  // two more full example sentences
+  ua?: string;                 // Ukrainian: A2/A2+ full explanation, B1/B1+ one short line, B2+/C1 none
+}
+```
+
+Rules:
+
+- **Cards teach exactly the rules the 25 questions test** — one rule per card, simplest first.
+- Ids are `<prefix>-card-N` (same prefix as the questions); they must be unique across all topics.
+- The card goes between `lesson` (or `description`) and `rules` in the topic object.
+- **Ukrainian (`ua`) by level:**
+  - A2 / A2+: a full explanation of the rule in natural Ukrainian, up to ~3 sentences, at most 400 characters.
+  - B1 / B1+: one short line, at most 120 characters — a translation of the key word or a contrast with Ukrainian.
+  - B2+ / C1: no `ua` field at all.
+  - Natural Ukrainian, no Russianisms; use « » quotes for translations and quoted words.
+- **Never copy or lightly edit a test sentence.** Cards must not give away answers; the validator rejects
+  a card sentence (`example`, `examples`, or the filled-in example) equal to a test question sentence.
+- **Every gap must have exactly one correct answer in context** (students argue). Add enough context,
+  and for verb forms put the base verb in brackets after the gap: `I really enjoy ___ (cook)` — the app
+  hides the bracket hint on the card back. If the rule's key words are interchangeable (quite / fairly /
+  pretty), gap a structural part of the pattern instead (the article, `to`, the verb form), not the
+  interchangeable word.
+- Adult everyday situations, like the questions.
+- `icon` = one simple emoji pictograph (no flags, no keycaps), e.g. `"📏"`.
+
 ## File skeleton
 
 ```typescript
@@ -233,6 +286,19 @@ export const myTopicTopic: GrammarTopic = {
   name: "My Topic",          // 1-120 characters
   description: "One or two sentences shown on the level page card.",
   lesson: "Lesson 4",        // omit if there is no lesson number
+  icon: "📏",                // one emoji
+  cards: [                   // 6-10 rule cards, between lesson and rules
+    {
+      id: "mt-card-1",
+      rule: "quite + adjective",
+      example: "The film wasn't brilliant, but it was ___ entertaining, and we stayed until the end.",
+      answer: "quite",
+      explanation: "Quite makes an adjective weaker than very. Something is true, but not strongly.",
+      examples: ["The hotel was quite small, but the rooms were clean.", "My new neighbours seem quite friendly."],
+      ua: "quite ≈ «досить» (слабше, ніж very): quite small — «досить маленький».",
+    },
+    // ...
+  ],
   rules: myTopicQuestions,   // the field is `rules`, not `questions`
 };
 ```
