@@ -37,8 +37,8 @@ that curriculum — the user teaches these exact pages in class. From the image,
 - the lesson number if visible — goes into the topic's `lesson` field ("Lesson 4"). If no lesson
   number is available, omit the field; the user adds them later from the book.
 
-If the user only names a grammar point with no image, build the topic from the standard treatment at the topic's level
-treatment of that point and say so.
+If the user only names a grammar point with no image, build the topic from the standard
+treatment of that point at the topic's level and say so.
 
 ## Workflow
 
