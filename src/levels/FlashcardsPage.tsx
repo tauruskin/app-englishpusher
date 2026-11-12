@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo, useRef, type ReactNode } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Volume2, RotateCcw, Zap, ArrowLeftRight } from "lucide-react";
+import { Volume2, RotateCcw, ArrowLeftRight } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import {
   useSavedWords, resolveSavedWords, findOriginTopicId, StarButton, MY_WORDS_TOPIC_ID,
@@ -8,6 +8,7 @@ import {
 import { logStudyEvent } from "../shared/progress.ts";
 import { WordList } from "../shared/WordList.tsx";
 import TopicTileGrid, { type TopicTile } from "../shared/TopicTileGrid.tsx";
+import { DeckLayout, GradientBorder } from "../shared/FlashcardDeck.tsx";
 import type { Topic, Word } from "./types.ts";
 import { useLevel } from "./mount.tsx";
 import { flashcardsAppId, pageUrl } from "./level.ts";
@@ -27,31 +28,6 @@ function speak(text: string) {
   utterance.lang = "en-US";
   utterance.rate = 0.9;
   window.speechSynthesis.speak(utterance);
-}
-
-// ---------------------------------------------------------------------------
-// Animated gradient border wrapper
-// ---------------------------------------------------------------------------
-
-function GradientBorder({
-  children,
-  colors,
-}: {
-  children: ReactNode;
-  colors: [string, string, string];
-}) {
-  return (
-    <div
-      className="gradient-border-rotate rounded-2xl p-[2px] shadow-md"
-      style={{
-        background: `conic-gradient(from var(--gradient-angle), ${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[0]})`,
-      }}
-    >
-      <div className="rounded-[14px] bg-white overflow-hidden">
-        {children}
-      </div>
-    </div>
-  );
 }
 
 // ---------------------------------------------------------------------------
@@ -80,28 +56,6 @@ function SpeakerButton({ word }: { word: string }) {
     >
       <Volume2 size={17} />
     </button>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Progress bar
-// ---------------------------------------------------------------------------
-
-function ProgressBar({ current, total }: { current: number; total: number }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="text-sm text-neutral-400 font-medium tabular-nums shrink-0">
-        {current} / {total}
-      </span>
-      <div className="flex-1 bg-neutral-200 rounded-full h-1.5 overflow-hidden">
-        <motion.div
-          className="h-1.5 rounded-full bg-brand"
-          initial={false}
-          animate={{ width: `${(current / total) * 100}%` }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-        />
-      </div>
-    </div>
   );
 }
 
@@ -348,8 +302,6 @@ export default function FlashcardsPage() {
     setIndex((i) => Math.max(i - 1, 0));
   }
 
-  const teacher = isFlipped ? teacherCorrect : teacherThinking;
-
   return (
     <div className="relative h-viewport flex flex-col">
       {/* Header */}
@@ -378,15 +330,14 @@ export default function FlashcardsPage() {
 
           {phase === "studying" && topic && (
             <motion.div key="studying" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
-              <div className="w-full max-w-4xl flex flex-col gap-6">
-                {/* Topic label + progress + reverse toggle */}
-                <div className="flex items-center gap-3">
-                  <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-brand shrink-0">
-                    {topic.icon} {topic.title}
-                  </span>
-                  <div className="flex-1">
-                    <ProgressBar current={index + 1} total={topic.words.length} />
-                  </div>
+              <DeckLayout
+                badge={`${topic.icon} ${topic.title}`}
+                index={index}
+                total={topic.words.length}
+                teacherFlipped={isFlipped}
+                onPrev={goPrev}
+                onNext={goNext}
+                toolbar={
                   <button
                     onClick={() => { setReversed(r => !r); setIsFlipped(false); }}
                     title="Reverse mode"
@@ -400,102 +351,38 @@ export default function FlashcardsPage() {
                     <ArrowLeftRight size={12} />
                     <span className="hidden sm:inline">Reverse</span>
                   </button>
-                </div>
-
-                {/* Two-column layout */}
-                <div className="flex gap-8 items-start">
-
-                  {/* Teacher — desktop only */}
-                  <div className="hidden md:flex flex-col items-center shrink-0 w-56 pt-2 select-none pointer-events-none">
-                    <AnimatePresence mode="wait">
-                      <motion.img
-                        key={teacher}
-                        src={teacher}
-                        alt="Teacher"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        transition={{ duration: 0.2 }}
-                        className="h-56 w-auto max-w-none"
-                        draggable={false}
-                      />
-                    </AnimatePresence>
+                }
+                prompt={topic.triviaUrl ? {
+                  title: "Ready to test yourself?",
+                  subtitle: "Take the trivia quiz for this topic",
+                  cta: "Take Quiz",
+                  href: topic.triviaUrl,
+                } : undefined}
+              >
+                {starsEnabled && (
+                  <div className="absolute top-3 left-3 z-10">
+                    <StarButton
+                      active={savedSet.has(topic.words[index].word)}
+                      onToggle={() =>
+                        toggle(
+                          topic.words[index].word,
+                          topic.id === MY_WORDS_TOPIC_ID
+                            ? findOriginTopicId(topic.words[index].word, TOPICS)
+                            : topic.id,
+                          "flashcards",
+                        )
+                      }
+                    />
                   </div>
-
-                  {/* Card + navigation */}
-                  <div className="flex-1 flex flex-col gap-4">
-                    <div className="relative">
-                      {starsEnabled && (
-                        <div className="absolute top-3 left-3 z-10">
-                          <StarButton
-                            active={savedSet.has(topic.words[index].word)}
-                            onToggle={() =>
-                              toggle(
-                                topic.words[index].word,
-                                topic.id === MY_WORDS_TOPIC_ID
-                                  ? findOriginTopicId(topic.words[index].word, TOPICS)
-                                  : topic.id,
-                                "flashcards",
-                              )
-                            }
-                          />
-                        </div>
-                      )}
-                      <FlashCard
-                        word={topic.words[index]}
-                        index={index}
-                        isFlipped={isFlipped}
-                        reversed={reversed}
-                        onFlip={() => setIsFlipped((f) => !f)}
-                      />
-                    </div>
-
-                    <div className="flex gap-3">
-                      <button
-                        onClick={goPrev}
-                        disabled={index === 0}
-                        className="flex-1 rounded-xl bg-white border-2 border-neutral-200 text-neutral-700 font-display font-bold py-3.5 text-sm hover:border-neutral-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                      >
-                        ← Previous
-                      </button>
-                      <button
-                        onClick={goNext}
-                        disabled={index === topic.words.length - 1}
-                        className="flex-1 rounded-xl bg-brand text-white font-display font-bold py-3.5 text-sm hover:bg-brand/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                      >
-                        Next →
-                      </button>
-                    </div>
-
-                    {/* Test yourself prompt — shown on last card */}
-                    <AnimatePresence>
-                      {index === topic.words.length - 1 && topic.triviaUrl && (
-                        <motion.a
-                          href={topic.triviaUrl}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          transition={{ duration: 0.35, delay: 0.15, ease: "easeOut" }}
-                          className="flex items-center justify-between gap-4 rounded-2xl border-2 border-dashed border-orange-200 bg-orange-50 px-5 py-4 hover:border-orange-400 hover:bg-orange-100 transition-all duration-200 group"
-                        >
-                          <div className="flex flex-col gap-0.5">
-                            <span className="font-display font-bold text-sm text-brand">
-                              Ready to test yourself?
-                            </span>
-                            <span className="text-xs text-orange-400">
-                              Take the trivia quiz for this topic
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1.5 rounded-xl bg-brand text-white font-display font-bold px-4 py-2.5 text-sm group-hover:bg-brand/90 transition-colors shrink-0">
-                            <Zap size={14} />
-                            Take Quiz
-                          </div>
-                        </motion.a>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </div>
-              </div>
+                )}
+                <FlashCard
+                  word={topic.words[index]}
+                  index={index}
+                  isFlipped={isFlipped}
+                  reversed={reversed}
+                  onFlip={() => setIsFlipped((f) => !f)}
+                />
+              </DeckLayout>
             </motion.div>
           )}
         </AnimatePresence>
