@@ -27,9 +27,9 @@ export interface LevelSummary {
   icon: HubIcon;
 }
 
-// Grammar card colours. Coming-soon cards use GREY (Task 1 "Approved design" may change these values).
+// Grammar card colours. Coming-soon cards use the approved warm stone grey (2026-11-12).
 export const GRAMMAR_COLORS = { bgFrom: "#b45309", bgTo: "#78350f", borderColor: "#f07c1a" };
-export const GREY_COLORS = { bgFrom: "#a3a3a3", bgTo: "#525252", borderColor: "#a3a3a3" };
+export const GREY_COLORS = { bgFrom: "#a8a29e", bgTo: "#57534e", borderColor: "#a8a29e" };
 
 const KIND_PART = { vocabulary: "Vocabulary", grammar: "Grammar" } as const;
 const KIND_ORDER = { vocabulary: 0, grammar: 1 } as const;
@@ -42,7 +42,7 @@ export function grammarCard(level: HubLevel, live: boolean): HubCard {
     level,
     kind: "grammar",
     label: `${level} Grammar`,
-    description: "Gap-fill, error-spot, reordering and more",
+    description: live ? "Gap-fill, error-spot, reordering and more" : `Grammar practice for ${level} is on its way`,
     href: grammarUrl(levelBySlug(g.slug)),
     ...(live ? GRAMMAR_COLORS : GREY_COLORS),
     icon: "book",

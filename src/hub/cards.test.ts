@@ -22,6 +22,9 @@ test("grammar card is a disabled 'Coming soon' card without topics", () => {
   assert.equal(c.label, "C1 Grammar");
   assert.equal(c.disabled, true);
   assert.equal(c.badge, "Coming soon");
+  assert.equal(c.description, "Grammar practice for C1 is on its way");
+  assert.equal(c.bgFrom, "#a8a29e");
+  assert.equal(c.bgTo, "#57534e");
 });
 
 test("a level tab shows vocabulary first, then grammar", () => {
