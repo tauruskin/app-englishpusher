@@ -54,6 +54,12 @@ const APP_LABEL: Record<AppId | GrammarAppId, string> = {
   "b1plus-flashcards": "B1+ Flash Cards",
   "b2plus-flashcards": "B2+ Flash Cards",
   "c1-flashcards": "C1 Flash Cards",
+  "a2-grammar-flashcards": "A2 Grammar Flash Cards",
+  "a2plus-grammar-flashcards": "A2+ Grammar Flash Cards",
+  "b1-grammar-flashcards": "B1 Grammar Flash Cards",
+  "b1plus-grammar-flashcards": "B1+ Grammar Flash Cards",
+  "b2plus-grammar-flashcards": "B2+ Grammar Flash Cards",
+  "c1-grammar-flashcards": "C1 Grammar Flash Cards",
 };
 
 // ---------------------------------------------------------------------------

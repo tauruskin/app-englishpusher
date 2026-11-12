@@ -37,11 +37,16 @@ export function WordList({
   current,
   saved,
   onJump,
+  noun = "word",
+  nounPlural = "words",
 }: {
   items: WordListItem[];
   current: number;
   saved?: Set<string>;
   onJump: (index: number) => void;
+  /** What the list holds, for the button and search texts ("word" for vocabulary, "rule" for grammar cards). */
+  noun?: string;
+  nounPlural?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -83,8 +88,8 @@ export function WordList({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        title="Find a word"
-        aria-label="Find a word"
+        title={`Find a ${noun}`}
+        aria-label={`Find a ${noun}`}
         className="fixed right-4 bottom-20 sm:right-6 sm:bottom-24 z-40 h-14 w-14 rounded-full bg-neutral-800 shadow-lg overflow-hidden transition-transform duration-200 ease-out hover:scale-125 focus-visible:scale-125 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
       >
         <img src={teacherSearch} alt="" className="h-full w-full object-cover object-top pt-1" draggable={false} />
@@ -105,7 +110,7 @@ export function WordList({
             <motion.div
               key="panel"
               role="dialog"
-              aria-label="Words in this topic"
+              aria-label={`${nounPlural[0].toUpperCase()}${nounPlural.slice(1)} in this topic`}
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 24 }}
@@ -128,8 +133,8 @@ export function WordList({
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && shown.length) jump(shown[0].index);
                     }}
-                    placeholder={`Find a word (${items.length})…`}
-                    aria-label="Find a word"
+                    placeholder={`Find a ${noun} (${items.length})…`}
+                    aria-label={`Find a ${noun}`}
                     className="w-full rounded-xl border-2 border-neutral-200 pl-9 pr-3 py-2 text-base focus:outline-none focus:border-brand"
                   />
                 </div>
