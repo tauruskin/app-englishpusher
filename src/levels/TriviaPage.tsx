@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Volume2, VolumeX, RotateCcw } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import { TriviaSaveStatus } from "../shared/TriviaSave.tsx";
+import TopicTileGrid, { type TopicTile } from "../shared/TopicTileGrid.tsx";
 import {
   useSavedWords, resolveSavedWords, findOriginTopicId, StarButton, MY_WORDS_TOPIC_ID,
 } from "../shared/savedWords.tsx";
@@ -525,61 +526,13 @@ function TypeWordInput({
 }
 
 // ---------------------------------------------------------------------------
-// Topic selection screen
+// Topic tile (shared TopicTileGrid)
 // ---------------------------------------------------------------------------
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.15 } },
-};
-const itemVariants = {
-  hidden: { opacity: 0, x: -24 },
-  visible: { opacity: 1, x: 0, transition: { type: "spring" as const, stiffness: 300, damping: 30 } },
-};
-
-function TopicSelectScreen({ topics, onSelect }: { topics: Topic[]; onSelect: (topic: Topic) => void }) {
-  const level = useLevel();
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.35, ease: "easeOut" }}
-      className="w-full max-w-4xl flex flex-col gap-8"
-    >
-      {/* Hero row */}
-      <div className="flex items-end gap-6">
-        <div className="flex-1">
-          <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700 uppercase tracking-wide">
-            {level.id} Vocabulary
-          </span>
-          <h2 className="font-display text-3xl font-bold text-neutral-900 mt-3 mb-1">Vocabulary Trivia</h2>
-          <p className="text-neutral-500 text-base">Choose a topic to start the quiz</p>
-        </div>
-        <div className="hidden md:block shrink-0 select-none pointer-events-none">
-          <img src={teacherThinking} alt="" className="h-36 w-auto animate-character-idle" draggable={false} />
-        </div>
-      </div>
-
-      {/* Topic cards */}
-      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid gap-4 sm:grid-cols-2">
-        {topics.map(topic => (
-          <motion.button
-            key={topic.id} variants={itemVariants} whileHover={{ scale: 1.02 }}
-            onClick={() => onSelect(topic)}
-            disabled={topic.words.length === 0}
-            className="rounded-2xl bg-white border-2 border-neutral-200 px-6 py-5 text-left hover:border-blue-300 hover:shadow-md transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <div className="text-3xl mb-3">{topic.icon}</div>
-            <h3 className="font-display font-bold text-lg text-neutral-900 group-hover:text-blue-700 transition-colors">{topic.title}</h3>
-            <p className="text-sm text-neutral-500 mt-1 leading-snug">{topic.description}</p>
-            <p className="text-xs text-neutral-400 mt-3 font-medium">
-              {topic.words.length > 0 ? `${topic.words.length} words` : "Coming soon"}
-            </p>
-          </motion.button>
-        ))}
-      </motion.div>
-    </motion.div>
-  );
-}
+const toTile = (t: Topic): TopicTile => ({
+  id: t.id, icon: t.icon, title: t.title, description: t.description,
+  count: t.words.length > 0 ? `${t.words.length} words` : null,
+});
 
 // ---------------------------------------------------------------------------
 // End screen
@@ -997,9 +950,13 @@ export default function TriviaPage() {
           {phase === "select" && (
             <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="flex-1 flex items-start justify-center px-6 py-10">
-              <TopicSelectScreen
-                topics={myWordsTopic ? [myWordsTopic, ...TOPICS] : TOPICS}
-                onSelect={handleSelectTopic}
+              <TopicTileGrid
+                variant="quiz"
+                badge={`${level.id} Vocabulary`}
+                heading="Vocabulary Trivia"
+                subtitle="Choose a topic to start the quiz"
+                tiles={(myWordsTopic ? [myWordsTopic, ...TOPICS] : TOPICS).map(toTile)}
+                onSelect={(id) => handleSelectTopic((myWordsTopic ? [myWordsTopic, ...TOPICS] : TOPICS).find((t) => t.id === id)!)}
               />
             </motion.div>
           )}
