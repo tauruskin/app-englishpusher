@@ -1,4 +1,4 @@
-import type { Attention, WrongAnswer } from "./types.ts";
+import type { Attention, QuizLevel, WrongAnswer } from "./types.ts";
 import { kyivToday } from "./charts/columns.ts";
 import { lookup } from "./lookup.ts";
 
@@ -148,6 +148,19 @@ export function archiveError(error: { code?: string; message?: string; status?: 
   if (error.code === "22023" || error.code === "22P02") return "That student doesn't exist or can't be archived.";
   const generic = friendlyError(error);
   return generic === SESSION_EXPIRED ? generic : "Couldn't save the change. Check your connection and try again.";
+}
+
+export type { QuizLevel } from "./types.ts";
+
+/** The Quiz Bot levels, lowest first (the order of the level selector). */
+export const QUIZ_LEVELS = ["A2", "A2+", "B1", "B1+", "B2+", "C1"] as const satisfies readonly QuizLevel[];
+
+/** Like archiveError, but worded for a failed Quiz Bot level change. */
+export function quizLevelError(error: { code?: string; message?: string; status?: number }): string {
+  if (error.code === "42501") return "You're not allowed to change this student.";
+  if (error.code === "22023" && /no quiz bot account/i.test(error.message ?? "")) return "This student has no Quiz Bot account.";
+  const generic = friendlyError(error);
+  return generic === SESSION_EXPIRED ? generic : "Could not save the level. Try again.";
 }
 
 // Account sources (analytics.accounts.source) on the merge screen, in this order.
