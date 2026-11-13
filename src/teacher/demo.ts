@@ -1,4 +1,4 @@
-import type { ArchivedRow, ArchiveResult, Me, MergeCandidates, MergeCard, MergeResult, MoodleAttempt, Overview, RosterRow, StudentDetail, TopicDetail, TopicMatrix } from "./types.ts";
+import type { ArchivedRow, ArchiveResult, Me, MergeCandidates, MergeCard, MergeResult, MoodleAttempt, Overview, QuizLevel, QuizLevelResult, RosterRow, StudentDetail, TopicDetail, TopicMatrix } from "./types.ts";
 
 // Used only when the dev server runs with ?demo in the URL (see api.ts).
 const today = new Date();
@@ -114,6 +114,7 @@ const BASE = {
       // Long answers are cut with "…" (full text in the tooltip).
       { topic_key: "b1:grammar:modifiers", title: "Modifiers", item: "b77", item_label: "Choose the sentence that is correct.", source: "bot", activity: "quiz", occurred_at: iso(3), correct_answer: "If I had known about the delay, I would have taken an earlier train to the station.", your_answer: "If I would have known about the delay, I would have taken an earlier train to the station." },
     ],
+    quiz: { level: "B1" },
     moodle: {
       // 2 lessons shown; the average first try skips the lesson without one.
       lessons: 2, first_try: 50, latest: 90,
@@ -133,6 +134,8 @@ const BASE = {
   archiveResult: (personId: string, archived: boolean): ArchiveResult => ({
     person_id: personId, archived, archived_at: archived ? iso(0) : null,
   }),
+  // Demo does not remember the level either: the student page keeps showing the original one.
+  quizLevelResult: (personId: string, level: QuizLevel): QuizLevelResult => ({ person_id: personId, level }),
   // Demo does not remember a merge either: the candidates stay as they are.
   mergeCandidates: (personId: string): MergeCandidates => ({
     person: { person_id: personId, display_name: "Anna", accounts: ["telegram", "app"], events: 412, last_active: iso(0), archived_at: null, created_at: iso(70) },
@@ -156,6 +159,6 @@ export const DEMO = {
   // The student page of the archived "Test Account" shows the amber archived banner; every other id shows Anna.
   studentFor: (personId: string): StudentDetail =>
     personId === "d5"
-      ? { ...BASE.student, person: { id: "d5", display_name: "Test Account", role: "student" }, archived_at: iso(5) }
+      ? { ...BASE.student, person: { id: "d5", display_name: "Test Account", role: "student" }, archived_at: iso(5), quiz: null }
       : BASE.student,
 };

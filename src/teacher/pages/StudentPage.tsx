@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../api.ts";
 import { addDays, dayLabel } from "../charts/columns.ts";
 import { StackedColumns } from "../charts/StackedColumns.tsx";
-import { archiveConfirmText, dateLabel, daysAgo, levelLabel, pct, personName, scoreText, sourceLabel } from "../format.ts";
+import { archiveConfirmText, dateLabel, daysAgo, levelLabel, pct, personName, QUIZ_LEVELS, scoreText, sourceLabel, type QuizLevel } from "../format.ts";
 import { lookup } from "../lookup.ts";
 import { INK } from "../theme.ts";
 import { useData } from "../useData.ts";
@@ -57,6 +57,27 @@ function useArchive(personId: string, name: string | null, archivedAt: string | 
   return { archived: archivedAt !== null && !restored, saving, failure, save };
 }
 
+// Quiz Bot level of one student. The chosen value stays shown while saving and after a successful save
+// (until the reload brings the same value); a failed save falls back to the stored level.
+function useQuizLevel(personId: string, storedLevel: QuizLevel | null, reload: () => void) {
+  const [saving, setSaving] = useState(false);
+  const [chosen, setChosen] = useState<QuizLevel | null>(null);
+  const [failure, setFailure] = useState<string | null>(null);
+  // Once the reloaded (or otherwise changed) stored level arrives it is the truth again: later reloads
+  // (archive, merge, the student changing the level in the bot) must not keep showing the old choice.
+  useEffect(() => { setChosen(null); }, [storedLevel]);
+  const save = async (level: QuizLevel) => {
+    setChosen(level);
+    setSaving(true);
+    setFailure(null);
+    const r = await api.setQuizLevel(personId, level);
+    setSaving(false);
+    if (r.error !== null) { setChosen(null); setFailure(r.error); return; }
+    reload();
+  };
+  return { saving, chosen, failure, save };
+}
+
 // The page remounts per student, so one student's saving/error state never shows on another's page.
 export function StudentPage(props: PageProps & { personId: string }) {
   return <StudentView key={props.personId} {...props} />;
@@ -69,6 +90,7 @@ function StudentView({ href, personId }: PageProps & { personId: string }) {
     personId, data?.person?.display_name ?? null, data?.archived_at ?? null,
     () => { window.location.hash = href({ page: "students" }); }, retry,
   );
+  const quizLevel = useQuizLevel(personId, data?.quiz?.level ?? null, retry);
   const [merging, setMerging] = useState(false);
   const [mergedNote, setMergedNote] = useState<string | null>(null);
   const back = (
@@ -108,7 +130,20 @@ function StudentView({ href, personId }: PageProps & { personId: string }) {
             </p>
           </div>
           {isStudent && (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              {data.quiz && (
+                <label className="flex items-center gap-2 font-body text-sm text-neutral-600">
+                  Quiz Bot level
+                  <select
+                    className="min-h-[44px] rounded-lg border border-neutral-300 bg-white px-3 py-2 font-body text-sm font-semibold text-neutral-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    value={quizLevel.chosen ?? data.quiz.level}
+                    disabled={quizLevel.saving}
+                    onChange={(e) => void quizLevel.save(e.target.value as QuizLevel)}
+                  >
+                    {QUIZ_LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
+                  </select>
+                </label>
+              )}
               {!merging && (
                 <button type="button" className={SECONDARY_BUTTON} disabled={archive.saving}
                   onClick={() => { setMergedNote(null); setMerging(true); }}>
@@ -147,6 +182,7 @@ function StudentView({ href, personId }: PageProps & { personId: string }) {
         <p role="status" className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 font-body text-sm text-green-900">{mergedNote}</p>
       )}
       {archive.failure && <StateBox error={archive.failure} />}
+      {quizLevel.failure && <StateBox error={quizLevel.failure} />}
       {error && <StateBox error={error} onRetry={retry} />}
       <Dimmed when={loading || !!error}>
         <div className="space-y-5">
