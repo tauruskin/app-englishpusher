@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../api.ts";
 import { addDays, dayLabel } from "../charts/columns.ts";
 import { StackedColumns } from "../charts/StackedColumns.tsx";
@@ -59,10 +59,13 @@ function useArchive(personId: string, name: string | null, archivedAt: string | 
 
 // Quiz Bot level of one student. The chosen value stays shown while saving and after a successful save
 // (until the reload brings the same value); a failed save falls back to the stored level.
-function useQuizLevel(personId: string, reload: () => void) {
+function useQuizLevel(personId: string, storedLevel: QuizLevel | null, reload: () => void) {
   const [saving, setSaving] = useState(false);
   const [chosen, setChosen] = useState<QuizLevel | null>(null);
   const [failure, setFailure] = useState<string | null>(null);
+  // Once the reloaded (or otherwise changed) stored level arrives it is the truth again: later reloads
+  // (archive, merge, the student changing the level in the bot) must not keep showing the old choice.
+  useEffect(() => { setChosen(null); }, [storedLevel]);
   const save = async (level: QuizLevel) => {
     setChosen(level);
     setSaving(true);
@@ -87,7 +90,7 @@ function StudentView({ href, personId }: PageProps & { personId: string }) {
     personId, data?.person?.display_name ?? null, data?.archived_at ?? null,
     () => { window.location.hash = href({ page: "students" }); }, retry,
   );
-  const quizLevel = useQuizLevel(personId, retry);
+  const quizLevel = useQuizLevel(personId, data?.quiz?.level ?? null, retry);
   const [merging, setMerging] = useState(false);
   const [mergedNote, setMergedNote] = useState<string | null>(null);
   const back = (
