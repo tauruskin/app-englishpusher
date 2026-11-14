@@ -24,6 +24,7 @@ import { futurePredictionsTopic } from "./future-predictions.ts";
 import { usedToTopic } from "./used-to.ts";
 import { comparativesAndSuperlativesTopic } from "./comparatives-and-superlatives.ts";
 import { askingGivingOpinionsTopic } from "./asking-giving-opinions.ts";
+import { presentPerfectForSinceYetTopic } from "./present-perfect-for-since-yet.ts";
 
 const topics: GrammarTopic[] = [
   presentSimpleVsContinuousTopic,
@@ -50,6 +51,7 @@ const topics: GrammarTopic[] = [
   usedToTopic,
   comparativesAndSuperlativesTopic,
   askingGivingOpinionsTopic,
+  presentPerfectForSinceYetTopic,
 ];
 
 export default topics;
