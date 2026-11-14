@@ -17,6 +17,7 @@ import { quantifiersTopic } from "./quantifiers.ts";
 import { modalsRulesAdviceTopic } from "./modals-rules-advice.ts";
 import { articlesTopic } from "./articles.ts";
 import { presentPerfectSuperlativeTopic } from "./present-perfect-superlative.ts";
+import { relativeClausesTopic } from "./relative-clauses.ts";
 
 const topics: GrammarTopic[] = [
   presentSimpleVsContinuousTopic,
@@ -36,6 +37,7 @@ const topics: GrammarTopic[] = [
   modalsRulesAdviceTopic,
   articlesTopic,
   presentPerfectSuperlativeTopic,
+  relativeClausesTopic,
 ];
 
 export default topics;
