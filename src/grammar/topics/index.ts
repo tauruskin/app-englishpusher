@@ -15,6 +15,7 @@ import { stativeDynamicVerbsTopic } from "./stative-dynamic-verbs.ts";
 import { possessivePronounsTopic } from "./possessive-pronouns.ts";
 import { quantifiersTopic } from "./quantifiers.ts";
 import { modalsRulesAdviceTopic } from "./modals-rules-advice.ts";
+import { articlesTopic } from "./articles.ts";
 
 const topics: GrammarTopic[] = [
   presentSimpleVsContinuousTopic,
@@ -32,6 +33,7 @@ const topics: GrammarTopic[] = [
   possessivePronounsTopic,
   quantifiersTopic,
   modalsRulesAdviceTopic,
+  articlesTopic,
 ];
 
 export default topics;
