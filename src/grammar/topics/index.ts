@@ -22,6 +22,7 @@ import { reportedSpeechTopic } from "./reported-speech.ts";
 import { personalNewsTopic } from "./personal-news.ts";
 import { futurePredictionsTopic } from "./future-predictions.ts";
 import { usedToTopic } from "./used-to.ts";
+import { comparativesAndSuperlativesTopic } from "./comparatives-and-superlatives.ts";
 
 const topics: GrammarTopic[] = [
   presentSimpleVsContinuousTopic,
@@ -46,6 +47,7 @@ const topics: GrammarTopic[] = [
   personalNewsTopic,
   futurePredictionsTopic,
   usedToTopic,
+  comparativesAndSuperlativesTopic,
 ];
 
 export default topics;
