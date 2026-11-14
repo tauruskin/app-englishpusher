@@ -21,6 +21,7 @@ import { relativeClausesTopic } from "./relative-clauses.ts";
 import { reportedSpeechTopic } from "./reported-speech.ts";
 import { personalNewsTopic } from "./personal-news.ts";
 import { futurePredictionsTopic } from "./future-predictions.ts";
+import { usedToTopic } from "./used-to.ts";
 
 const topics: GrammarTopic[] = [
   presentSimpleVsContinuousTopic,
@@ -44,6 +45,7 @@ const topics: GrammarTopic[] = [
   reportedSpeechTopic,
   personalNewsTopic,
   futurePredictionsTopic,
+  usedToTopic,
 ];
 
 export default topics;
