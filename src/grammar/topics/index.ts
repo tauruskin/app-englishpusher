@@ -26,6 +26,7 @@ import { comparativesAndSuperlativesTopic } from "./comparatives-and-superlative
 import { askingGivingOpinionsTopic } from "./asking-giving-opinions.ts";
 import { presentPerfectForSinceYetTopic } from "./present-perfect-for-since-yet.ts";
 import { firstAndSecondConditionalsTopic } from "./first-and-second-conditionals.ts";
+import { expressingAmountsTopic } from "./expressing-amounts.ts";
 
 const topics: GrammarTopic[] = [
   presentSimpleVsContinuousTopic,
@@ -54,6 +55,7 @@ const topics: GrammarTopic[] = [
   askingGivingOpinionsTopic,
   presentPerfectForSinceYetTopic,
   firstAndSecondConditionalsTopic,
+  expressingAmountsTopic,
 ];
 
 export default topics;
