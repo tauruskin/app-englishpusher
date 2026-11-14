@@ -28,6 +28,7 @@ import { presentPerfectForSinceYetTopic } from "./present-perfect-for-since-yet.
 import { firstAndSecondConditionalsTopic } from "./first-and-second-conditionals.ts";
 import { expressingAmountsTopic } from "./expressing-amounts.ts";
 import { makingRespondingRecommendationsTopic } from "./making-responding-recommendations.ts";
+import { reflexivePronounsTopic } from "./reflexive-pronouns.ts";
 
 const topics: GrammarTopic[] = [
   presentSimpleVsContinuousTopic,
@@ -58,6 +59,7 @@ const topics: GrammarTopic[] = [
   firstAndSecondConditionalsTopic,
   expressingAmountsTopic,
   makingRespondingRecommendationsTopic,
+  reflexivePronounsTopic,
 ];
 
 export default topics;
