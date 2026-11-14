@@ -29,6 +29,7 @@ import { firstAndSecondConditionalsTopic } from "./first-and-second-conditionals
 import { expressingAmountsTopic } from "./expressing-amounts.ts";
 import { makingRespondingRecommendationsTopic } from "./making-responding-recommendations.ts";
 import { reflexivePronounsTopic } from "./reflexive-pronouns.ts";
+import { canCouldBeAbleToTopic } from "./can-could-be-able-to.ts";
 
 const topics: GrammarTopic[] = [
   presentSimpleVsContinuousTopic,
@@ -60,6 +61,7 @@ const topics: GrammarTopic[] = [
   expressingAmountsTopic,
   makingRespondingRecommendationsTopic,
   reflexivePronounsTopic,
+  canCouldBeAbleToTopic,
 ];
 
 export default topics;
