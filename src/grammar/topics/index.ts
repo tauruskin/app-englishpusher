@@ -19,6 +19,7 @@ import { articlesTopic } from "./articles.ts";
 import { presentPerfectSuperlativeTopic } from "./present-perfect-superlative.ts";
 import { relativeClausesTopic } from "./relative-clauses.ts";
 import { reportedSpeechTopic } from "./reported-speech.ts";
+import { personalNewsTopic } from "./personal-news.ts";
 
 const topics: GrammarTopic[] = [
   presentSimpleVsContinuousTopic,
@@ -40,6 +41,7 @@ const topics: GrammarTopic[] = [
   presentPerfectSuperlativeTopic,
   relativeClausesTopic,
   reportedSpeechTopic,
+  personalNewsTopic,
 ];
 
 export default topics;
