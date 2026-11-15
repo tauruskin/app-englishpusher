@@ -31,6 +31,7 @@ import { makingRespondingRecommendationsTopic } from "./making-responding-recomm
 import { reflexivePronounsTopic } from "./reflexive-pronouns.ts";
 import { canCouldBeAbleToTopic } from "./can-could-be-able-to.ts";
 import { ingFormTopic } from "./ing-form.ts";
+import { verbsWithTwoObjectsTopic } from "./verbs-with-two-objects.ts";
 
 const topics: GrammarTopic[] = [
   presentSimpleVsContinuousTopic,
@@ -64,6 +65,7 @@ const topics: GrammarTopic[] = [
   reflexivePronounsTopic,
   canCouldBeAbleToTopic,
   ingFormTopic,
+  verbsWithTwoObjectsTopic,
 ];
 
 export default topics;
