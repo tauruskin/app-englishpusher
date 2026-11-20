@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { resolve } from "path";
 import { copyFileSync, mkdirSync, rmSync, existsSync } from "fs";
+import grammarTopics from "./src/grammar/topics/index.ts";
+import { liveGrammarLevels } from "./src/grammar/levels.ts";
 
 const APPS = [
   "account",
@@ -33,6 +35,12 @@ const APPS = [
   "b1plus-grammar",
   "b2plus-grammar",
   "c1-grammar",
+  "a2-grammar-flashcards",
+  "a2plus-grammar-flashcards",
+  "b1-grammar-flashcards",
+  "b1plus-grammar-flashcards",
+  "b2plus-grammar-flashcards",
+  "c1-grammar-flashcards",
 ];
 
 // Dev server middleware: rewrite /<app>/* → /apps/<app>/*
@@ -120,6 +128,10 @@ function injectGtm() {
 export default defineConfig({
   plugins: [react(), ViteImageOptimizer({ png: { quality: 80 } }), devRewritePlugin(), remapAppPaths(), injectGtm()],
   base: process.env.VITE_BASE_PATH || "/",
+  // Levels with grammar topics, fixed at build time (hub Grammar cards). See src/globals.d.ts.
+  define: {
+    __GRAMMAR_LIVE_LEVELS__: JSON.stringify(liveGrammarLevels(grammarTopics)),
+  },
   build: {
     rollupOptions: {
       input: {
@@ -134,6 +146,12 @@ export default defineConfig({
         b1plusGrammar:   resolve(__dirname, "apps/b1plus-grammar/index.html"),
         b2plusGrammar:   resolve(__dirname, "apps/b2plus-grammar/index.html"),
         c1Grammar:       resolve(__dirname, "apps/c1-grammar/index.html"),
+        a2GrammarFlashcards: resolve(__dirname, "apps/a2-grammar-flashcards/index.html"),
+        a2plusGrammarFlashcards: resolve(__dirname, "apps/a2plus-grammar-flashcards/index.html"),
+        b1GrammarFlashcards: resolve(__dirname, "apps/b1-grammar-flashcards/index.html"),
+        b1plusGrammarFlashcards: resolve(__dirname, "apps/b1plus-grammar-flashcards/index.html"),
+        b2plusGrammarFlashcards: resolve(__dirname, "apps/b2plus-grammar-flashcards/index.html"),
+        c1GrammarFlashcards: resolve(__dirname, "apps/c1-grammar-flashcards/index.html"),
         c1Trivia:        resolve(__dirname, "apps/c1-trivia/index.html"),
         c1Business:      resolve(__dirname, "apps/c1-business/index.html"),
         c1Flashcards:    resolve(__dirname, "apps/c1-flashcards/index.html"),

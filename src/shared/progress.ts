@@ -15,7 +15,8 @@ export { grammarSessionResults, type GrammarSessionResult };
 
 export type AppId =
   | "a2-trivia" | "a2plus-trivia" | "b1-trivia" | "b1plus-trivia" | "b2plus-trivia" | "c1-trivia"
-  | "a2-flashcards" | "a2plus-flashcards" | "b1-flashcards" | "b1plus-flashcards" | "b2plus-flashcards" | "c1-flashcards";
+  | "a2-flashcards" | "a2plus-flashcards" | "b1-flashcards" | "b1plus-flashcards" | "b2plus-flashcards" | "c1-flashcards"
+  | "a2-grammar-flashcards" | "a2plus-grammar-flashcards" | "b1-grammar-flashcards" | "b1plus-grammar-flashcards" | "b2plus-grammar-flashcards" | "c1-grammar-flashcards";
 export type Level = "A2" | "A2+" | "B1" | "B1+" | "B2+" | "C1";
 
 export interface SavedWord {

@@ -9,6 +9,6 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./src/grammar/test/setup.ts"],
-    include: ["src/grammar/**/*.vitest.{ts,tsx}"],
+    include: ["src/grammar/**/*.vitest.{ts,tsx}", "src/shared/**/*.vitest.{ts,tsx}", "src/levels/**/*.vitest.{ts,tsx}"],
   },
 });

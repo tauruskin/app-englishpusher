@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  accountsText, archiveConfirmText, archiveError, attemptsText, attentionText, dateLabel, daysAgo, delta, filterCandidates, friendlyError, levelLabel, mergeError, mergeWarning, moodleRange, pct, periodLabel, personName, scoreText, shorten, sourceLabel, wrongAnswersText,
+  accountsText, archiveConfirmText, archiveError, attemptsText, attentionText, dateLabel, daysAgo, delta, filterCandidates, friendlyError, levelLabel, mergeError, mergeWarning, moodleRange, pct, periodLabel, personName, QUIZ_LEVELS, quizLevelError, scoreText, shorten, sourceLabel, wrongAnswersText,
 } from "./format.ts";
 
 test("moodleRange shows first try and latest", () => {
@@ -96,6 +96,13 @@ test("archiveError words a failed save", () => {
   assert.equal(archiveError({ code: "22023" }), "That student doesn't exist or can't be archived.");
   assert.equal(archiveError({ code: "PGRST301" }), "Your session has expired. Please sign in again.");
   assert.equal(archiveError({ message: "fetch failed" }), "Couldn't save the change. Check your connection and try again.");
+});
+
+test("quiz levels and their error text", () => {
+  assert.deepEqual(QUIZ_LEVELS, ["A2", "A2+", "B1", "B1+", "B2+", "C1"]);
+  assert.match(quizLevelError({ code: "22023", message: "analytics: no quiz bot account" }), /Quiz Bot/);
+  assert.match(quizLevelError({ code: "42501", message: "x" }), /not allowed|permission/i);
+  assert.match(quizLevelError({ code: "XX000", message: "boom" }), /Could not save the level/);
 });
 
 test("pct and delta round to whole numbers and reject NaN", () => {

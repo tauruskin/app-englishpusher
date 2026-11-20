@@ -105,6 +105,12 @@ export interface StudentTopic {
   answers: number; accuracy: number | null; mastery: Mastery; last_at: string | null;
 }
 
+/** The Quiz Bot levels a subscriber can be set to (same ids as the App levels). */
+export type QuizLevel = "A2" | "A2+" | "B1" | "B1+" | "B2+" | "C1";
+
+/** Result of `analytics_set_quiz_level`. */
+export interface QuizLevelResult { person_id: string; level: QuizLevel }
+
 export interface StudentDetail {
   person: { id: string; display_name: string | null; role: Role } | null;
   summary: {
@@ -125,6 +131,8 @@ export interface StudentDetail {
   moodle?: MoodleStudent | null;
   /** When the teacher archived this student; null or missing = active. */
   archived_at?: string | null;
+  /** The student's Quiz Bot level; null = no Quiz Bot account. Missing on an older backend (treat like null). */
+  quiz?: { level: QuizLevel } | null;
 }
 
 /** One archived student in `analytics_teacher_archived` (newest archive first). */

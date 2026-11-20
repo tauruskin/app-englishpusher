@@ -1,8 +1,8 @@
 import { rpc, type RpcError } from "./rpc.ts";
-import { archiveError, mergeError } from "./format.ts";
+import { archiveError, mergeError, quizLevelError } from "./format.ts";
 import type { Filters } from "./route.ts";
 import type {
-  ArchivedRow, ArchiveResult, Me, MergeCandidates, MergeResult, MoodleAttempt, Overview, RosterRow, StudentDetail, TopicDetail, TopicMatrix,
+  ArchivedRow, ArchiveResult, Me, MergeCandidates, MergeResult, MoodleAttempt, Overview, QuizLevel, QuizLevelResult, RosterRow, StudentDetail, TopicDetail, TopicMatrix,
 } from "./types.ts";
 
 export { isDemo } from "./rpc.ts";
@@ -33,6 +33,10 @@ export const api = {
   setArchived: (personId: string, archived: boolean) =>
     call<ArchiveResult>(
       "analytics_set_archived", { p_person: personId, p_archived: archived }, (d) => d.archiveResult(personId, archived), archiveError,
+    ),
+  setQuizLevel: (personId: string, level: QuizLevel) =>
+    call<QuizLevelResult>(
+      "analytics_set_quiz_level", { p_person: personId, p_level: level }, (d) => d.quizLevelResult(personId, level), quizLevelError,
     ),
   mergeCandidates: (personId: string) =>
     call<MergeCandidates>("analytics_merge_candidates", { p_person: personId }, (d) => d.mergeCandidates(personId)),
