@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { planAudio } from "./generate-audio.ts";
+import { planAudio, tooLong } from "./generate-audio.ts";
 import { audioFileName } from "../src/shared/audioName.ts";
 
 const opts = { all: false, limit: 5000 };
@@ -45,4 +45,13 @@ test("--all voices everything regardless of the limit", () => {
   const plan = planAudio(["abcdef", "ghijkl"], [], { all: true, limit: 10 });
   assert.equal(plan.overLimit, false);
   assert.equal(plan.create.length, 2);
+});
+
+test("tooLong: normal clips pass, clips with extra speech are caught", () => {
+  // Real sizes from the first full run (≈6.5 KB per second of speech).
+  assert.equal(tooLong("own", 4027), false);      // fixed clip, 0.62 s
+  assert.equal(tooLong("own", 15552), true);      // clip with extra speech, 2.61 s
+  assert.equal(tooLong("boring", 16277), true);   // clip with extra speech, 2.41 s
+  assert.equal(tooLong("get on with", 7802), false);
+  assert.equal(tooLong("light (colour)", 19666), false); // real long phrase, 3.3 s, is fine
 });
