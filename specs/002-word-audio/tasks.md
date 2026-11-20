@@ -83,7 +83,7 @@
 - [X] T018 [P] Delete the sample `scripts/tts-sample.mjs` and the `tts-sample/` folder, and remove the `tts-sample/` line from `.gitignore` (never committed)
 - [ ] T019 Commit code; open a PR from `feat/word-audio` to `main`
 - [ ] T020 Owner: create a separate OpenRouter key with a ~$3 limit and add it as repo secret `OPENROUTER_API_KEY` (Settings → Secrets and variables → Actions)
-- [ ] T021 First full run with the owner's key in the shell: `node scripts/generate-audio.ts --all` → ~2,270 files, ~14 MB; run again → `0 new`; spot-listen to `blond(e)`, `waiter/waitress`, `light (weight)`; commit `public/audio/jane/` to the PR
+- [ ] T021 First full run, after merge: GitHub → Actions → Deploy to GitHub Pages → Run workflow on `main` with "full run" ticked (equivalent to `node scripts/generate-audio.ts --all`; button added in `.github/workflows/deploy.yml` via `workflow_dispatch`, job limited to `main`) → ~2,270 files, ~14 MB; run again → `0 new`; spot-listen to `blond(e)`, `waiter/waitress`, `light (weight)`; commit `public/audio/jane/` to the PR
 - [ ] T022 After merge: confirm the deploy run on GitHub Actions, then a speaker button on the live site loads `/audio/jane/*.mp3`; merge `main` into `beta`
 
 ---

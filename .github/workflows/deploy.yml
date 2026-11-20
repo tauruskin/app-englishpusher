@@ -3,6 +3,14 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # Manual "Run workflow" button (Actions → Deploy to GitHub Pages). Tick "full run" once to
+  # voice every word that has no recording yet, past the 5,000-character safety limit.
+  workflow_dispatch:
+    inputs:
+      full_run:
+        description: "Voice ALL missing words (one-off, about $0.37 for the whole library)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -13,6 +21,8 @@ concurrency:
 
 jobs:
   build-and-deploy:
+    # The manual button must never publish another branch to the live site.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,7 +36,7 @@ jobs:
       # Recorded word pronunciation (specs/002-word-audio): voice new words, drop deleted ones.
       # Never fails the deploy; words without a recording use the device voice.
       - name: Generate word audio
-        run: node scripts/generate-audio.ts
+        run: node scripts/generate-audio.ts ${{ inputs.full_run && '--all' || '' }}
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
 
