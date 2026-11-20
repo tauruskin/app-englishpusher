@@ -552,7 +552,8 @@ Speaker buttons in all flashcards (A2–C1) and level trivia play a pre-recorded
 - **Playback**: `speakWord(word, opts)` plays the file; if it's missing or won't load it uses the device voice (same as before the feature). One word at a time; `stopSpeaking()` stops it. Trivia keeps its own mute + "after interaction" checks.
 - **Generator**: `node scripts/generate-audio.ts [--all] [--dry-run]` (env `OPENROUTER_API_KEY`). Voices only missing words, deletes files of deleted words, refuses more than 5,000 characters per run unless `--all`, never fails on API errors. Full library ≈ 23,300 characters ≈ $0.37; a topic ≈ $0.005.
 - **Deploy**: `deploy.yml` runs the generator before the build with repo secret `OPENROUTER_API_KEY` and commits new files back to `main` as `github-actions[bot]` ("Audio: update word recordings [skip ci]"). So new topics get audio automatically, however they were added. Beta gets the files via the usual `main` → `beta` merge.
-- **Switching voice later**: change `AUDIO_VOICE_DIR` + `MODEL`/`VOICE` in the generator, run `--all` once.
+- **Full run button**: GitHub → Actions → "Deploy to GitHub Pages" → Run workflow (branch `main`) → tick "full run" voices every missing word past the 5,000-character limit. Used once for the initial library; also after switching voice. The job only runs on `main`, so the button can never publish another branch.
+- **Switching voice later**: change `AUDIO_VOICE_DIR` + `MODEL`/`VOICE` in the generator, then use the full-run button once.
 
 ## Seasonal decorations — `src/shared/seasonal/` + `src/shared/Seasonal.tsx`
 
