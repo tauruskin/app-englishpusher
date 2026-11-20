@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { useSessionUser } from "./auth.tsx";
 import { isSupabaseConfigured } from "./supabase.ts";
+import { SignInPopup } from "./SignInPopup.tsx";
 import { saveTriviaResult, type TriviaResultInput } from "./progress.ts";
 
 // ---------------------------------------------------------------------------
 // TriviaSaveStatus — drop into a trivia end screen. Saves the finished
 // session exactly once (after the auth session resolves), then renders:
-//   guest          → subtle "sign in to save" hint
+//   guest          → subtle "sign in to save" hint + closable "Keep your results" popup
 //   save failed    → small dismissible notice (never blocks anything)
 //   saved / idle   → nothing
 // "My Words" sessions are not saved: their topic id doesn't resolve to a
@@ -31,12 +32,15 @@ export function TriviaSaveStatus({ input }: { input: TriviaResultInput }) {
 
   if (!user) {
     return (
-      <p className="text-center text-xs text-neutral-400 shrink-0">
-        <a href="/account/" className="underline hover:text-brand transition-colors">
-          Sign in
-        </a>{" "}
-        to save your progress
-      </p>
+      <>
+        <p className="text-center text-xs text-neutral-400 shrink-0">
+          <a href="/account/" className="underline hover:text-brand transition-colors">
+            Sign in
+          </a>{" "}
+          to save your progress
+        </p>
+        <SignInPopup message="Sign in and your results are saved to My progress, so you can see which words to practise." />
+      </>
     );
   }
 

@@ -11,19 +11,33 @@ Lives at **app.englishpusher.in.ua**, links out to all sub-apps.
 |---|---|
 | Main website | https://englishpusher.in.ua |
 | Hub (this project) | https://app.englishpusher.in.ua |
-| Grammar Testing | https://grammar.englishpusher.in.ua |
+| Grammar (per level) | https://app.englishpusher.in.ua/<level>-grammar/ = level page with two cards, Flash Cards and Grammar Test (old grammar.englishpusher.in.ua redirects) |
+| Grammar Flash Cards (per level) | https://app.englishpusher.in.ua/b1-grammar-flashcards/ (also a2-, a2plus-, b1plus-, b2plus-, c1-) |
+| Grammar Test topic list / one topic | https://app.englishpusher.in.ua/b1-grammar/?view=topics, `…/b1-grammar/?topic=<id>` (the Moodle links) |
 | Vocabulary Trivia (B1) | https://app.englishpusher.in.ua/b1-trivia/ |
 | Word Connections (B1) | https://app.englishpusher.in.ua/word-connections/ |
 | B1 Vocabulary (chooser page) | https://app.englishpusher.in.ua/b1-vocabulary/ |
 | B1 Vocabulary Cards | https://app.englishpusher.in.ua/b1-flashcards/ |
 | C1 Flash Cards | https://app.englishpusher.in.ua/c1-flashcards/ |
 | C1 Vocabulary Trivia | https://app.englishpusher.in.ua/c1-trivia/ |
+| A2 Vocabulary (chooser page) | https://app.englishpusher.in.ua/a2-vocabulary/ |
+| A2+ Vocabulary (chooser page) | https://app.englishpusher.in.ua/a2plus-vocabulary/ |
+| B1+ Vocabulary (chooser page) | https://app.englishpusher.in.ua/b1plus-vocabulary/ |
+| B2+ Vocabulary (chooser page) | https://app.englishpusher.in.ua/b2plus-vocabulary/ |
 | My Account (login + personal page) | https://app.englishpusher.in.ua/account/ |
 | Instagram | https://www.instagram.com/teti_push_english?igsh=MWMxbGxodnJrOHI2 |
 
+**Grammar.** The grammar game lives in `src/grammar/` (topics in `src/grammar/topics/`, one file per topic, each with a `level`), pages `/a2-grammar/` … `/c1-grammar/` and `/a2-grammar-flashcards/` … `/c1-grammar-flashcards/`. Topics are created by the Telegram bot with the `create-grammar-topic` skill (`.claude/skills/create-grammar-topic/`). The hub shows a Grammar card per level; it is a grey "Coming soon" card until the level has a topic (`__GRAMMAR_LIVE_LEVELS__`, computed in `vite.config.ts` from the topic registry). `grammar.englishpusher.in.ua` is only a redirect page (fixed list of the 12 original B1 topics). Grammar tests: `npm run test:grammar` (Vitest, files named `*.vitest.ts(x)`). A signed-in student's finished grammar session is saved to `public.grammar_answers` (`src/grammar/GrammarSave.tsx`, `src/grammar/answers.ts`) and appears in My progress and the teacher dashboard.
+
+**Grammar addresses.** `/<level>-grammar/` (no query) is the level page: two cards, Flash Cards (`/<level>-grammar-flashcards/`) and Grammar Test (`/<level>-grammar/?view=topics`, the test topic list). `/<level>-grammar/?topic=<id>` still opens the test directly (the Moodle links); an unknown `?topic` shows the list. A level without topics shows Coming soon, and its flashcards page redirects to `/<level>-grammar/`. `/<level>-grammar-flashcards/` (a2, a2plus, b1, b1plus, b2plus, c1) shows topic tiles ("N cards", "Coming soon" when a topic has no cards), then the rule cards of one topic; `?topic=<id>` opens a topic directly. Card front = rule + a sentence with a gap; back = full sentence, explanation, two examples, Ukrainian by level. The last card links to the topic's test.
+
+**Grammar cards.** A topic file `src/grammar/topics/<id>.ts` has an optional `icon` (one emoji) and `cards` (6-10 `RuleCard`s; type in `src/grammar/types.ts`). `src/grammar/cards.ts` validates them, run by `topics-validation.vitest.ts`. Ukrainian rule: A2/A2+ full explanation up to 400 characters, B1/B1+ one line up to 120, B2+/C1 none. All 12 B1 topics have cards (108). Review page: `node scripts/grammar-cards-preview.mjs B1 <out.html>`. The bot skill writes `icon` + `cards` and its HTML preview has a Flashcards section; the teacher approves questions and cards together. Shared components: `src/shared/TopicTileGrid.tsx`, `ActivityChoicePage.tsx`, `FlashcardDeck.tsx` (vocabulary and grammar both use them).
+
+**Grammar study events.** A signed-in student who opens a topic's cards creates one `public.study_events` row with app `<slug>-grammar-flashcards` (for example `b1-grammar-flashcards`). The account page Recent activity shows it as "<Level> Grammar Flash Cards · <topic>" (`src/account/recentTitles.ts`). Needs analytics SQL part 16 (`deploy/analytics/sql/2026-11-12-analytics-16-grammar-flashcards.sql` in moodle-task-builder) to be run first.
+
 ### Direct topic links — Flash Card apps
 
-Both flash card apps support `?topic=<id>` deep links. The teacher can copy and share these to send students directly to a specific topic.
+All flash card apps support `?topic=<id>` deep links. The teacher can copy and share these to send students directly to a specific topic.
 
 **B1 Vocabulary Cards** (`/b1-flashcards/`):
 
@@ -38,6 +52,30 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-flashcards/?topic=collocations-get-make |
 | Lesson 18: Unit 2 Review | https://app.englishpusher.in.ua/b1-flashcards/?topic=lesson-18-review |
 | Lesson 19: Facts and Figures | https://app.englishpusher.in.ua/b1-flashcards/?topic=lesson-19-facts-figures |
+| Common Phrases | https://app.englishpusher.in.ua/b1-flashcards/?topic=common-phrases |
+| Conversation Topics | https://app.englishpusher.in.ua/b1-flashcards/?topic=conversation-topics |
+| Decisions | https://app.englishpusher.in.ua/b1-flashcards/?topic=decisions |
+| University Facilities | https://app.englishpusher.in.ua/b1-flashcards/?topic=university-facilities |
+| Places in a City | https://app.englishpusher.in.ua/b1-flashcards/?topic=places-in-a-city |
+| Success | https://app.englishpusher.in.ua/b1-flashcards/?topic=success |
+| Technology Collocations | https://app.englishpusher.in.ua/b1-flashcards/?topic=technology-collocations |
+| Word Building: Suffixes | https://app.englishpusher.in.ua/b1-flashcards/?topic=word-building-suffixes |
+| Sports and Games | https://app.englishpusher.in.ua/b1-flashcards/?topic=sports-and-games |
+| Sport: People, Places and Actions | https://app.englishpusher.in.ua/b1-flashcards/?topic=sport-people-places-actions |
+| News and Social Media | https://app.englishpusher.in.ua/b1-flashcards/?topic=news-and-social-media |
+| Social Issues and the Environment | https://app.englishpusher.in.ua/b1-flashcards/?topic=social-issues-and-the-environment |
+| Creativity: Word Building | https://app.englishpusher.in.ua/b1-flashcards/?topic=creativity-word-building |
+| Events and Occasions | https://app.englishpusher.in.ua/b1-flashcards/?topic=events-and-occasions |
+| Extreme Adjectives | https://app.englishpusher.in.ua/b1-flashcards/?topic=extreme-adjectives |
+| The Arts | https://app.englishpusher.in.ua/b1-flashcards/?topic=the-arts |
+| Travel and Tourism | https://app.englishpusher.in.ua/b1-flashcards/?topic=travel-and-tourism |
+| New Experiences | https://app.englishpusher.in.ua/b1-flashcards/?topic=new-experiences |
+| The Natural World | https://app.englishpusher.in.ua/b1-flashcards/?topic=the-natural-world |
+| Describing Places | https://app.englishpusher.in.ua/b1-flashcards/?topic=describing-places |
+| Practical Abilities | https://app.englishpusher.in.ua/b1-flashcards/?topic=practical-abilities |
+| Video Collocations | https://app.englishpusher.in.ua/b1-flashcards/?topic=video-collocations |
+| Using Technology | https://app.englishpusher.in.ua/b1-flashcards/?topic=using-technology |
+| Technical Problems | https://app.englishpusher.in.ua/b1-flashcards/?topic=technical-problems |
 
 **B1 Vocabulary Trivia** (`/b1-trivia/`):
 
@@ -52,6 +90,30 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-trivia/?topic=collocations-get-make |
 | Lesson 18: Unit 2 Review | https://app.englishpusher.in.ua/b1-trivia/?topic=lesson-18-review |
 | Lesson 19: Facts and Figures | https://app.englishpusher.in.ua/b1-trivia/?topic=lesson-19-facts-figures |
+| Common Phrases | https://app.englishpusher.in.ua/b1-trivia/?topic=common-phrases |
+| Conversation Topics | https://app.englishpusher.in.ua/b1-trivia/?topic=conversation-topics |
+| Decisions | https://app.englishpusher.in.ua/b1-trivia/?topic=decisions |
+| University Facilities | https://app.englishpusher.in.ua/b1-trivia/?topic=university-facilities |
+| Places in a City | https://app.englishpusher.in.ua/b1-trivia/?topic=places-in-a-city |
+| Success | https://app.englishpusher.in.ua/b1-trivia/?topic=success |
+| Technology Collocations | https://app.englishpusher.in.ua/b1-trivia/?topic=technology-collocations |
+| Word Building: Suffixes | https://app.englishpusher.in.ua/b1-trivia/?topic=word-building-suffixes |
+| Sports and Games | https://app.englishpusher.in.ua/b1-trivia/?topic=sports-and-games |
+| Sport: People, Places and Actions | https://app.englishpusher.in.ua/b1-trivia/?topic=sport-people-places-actions |
+| News and Social Media | https://app.englishpusher.in.ua/b1-trivia/?topic=news-and-social-media |
+| Social Issues and the Environment | https://app.englishpusher.in.ua/b1-trivia/?topic=social-issues-and-the-environment |
+| Creativity: Word Building | https://app.englishpusher.in.ua/b1-trivia/?topic=creativity-word-building |
+| Events and Occasions | https://app.englishpusher.in.ua/b1-trivia/?topic=events-and-occasions |
+| Extreme Adjectives | https://app.englishpusher.in.ua/b1-trivia/?topic=extreme-adjectives |
+| The Arts | https://app.englishpusher.in.ua/b1-trivia/?topic=the-arts |
+| Travel and Tourism | https://app.englishpusher.in.ua/b1-trivia/?topic=travel-and-tourism |
+| New Experiences | https://app.englishpusher.in.ua/b1-trivia/?topic=new-experiences |
+| The Natural World | https://app.englishpusher.in.ua/b1-trivia/?topic=the-natural-world |
+| Describing Places | https://app.englishpusher.in.ua/b1-trivia/?topic=describing-places |
+| Practical Abilities | https://app.englishpusher.in.ua/b1-trivia/?topic=practical-abilities |
+| Video Collocations | https://app.englishpusher.in.ua/b1-trivia/?topic=video-collocations |
+| Using Technology | https://app.englishpusher.in.ua/b1-trivia/?topic=using-technology |
+| Technical Problems | https://app.englishpusher.in.ua/b1-trivia/?topic=technical-problems |
 
 **C1 Flash Cards** (`/c1-flashcards/`):
 
@@ -70,6 +132,298 @@ Both flash card apps support `?topic=<id>` deep links. The teacher can copy and 
 | Writing CEO Communication | https://app.englishpusher.in.ua/c1-trivia/?topic=ceo-communication |
 | Leadership & Equality | https://app.englishpusher.in.ua/c1-trivia/?topic=leadership-equality |
 | Innovation & Leadership | https://app.englishpusher.in.ua/c1-trivia/?topic=innovation-leadership |
+
+**A2 Vocabulary Cards** (`/a2-flashcards/`):
+
+| Topic | Direct link |
+|---|---|
+| Lesson 51: Clothes & Appearance | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-51-clothes-appearance |
+| Lesson 56: Directions | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-56-directions |
+| Lesson 5: Adjectives for Feelings | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-5-adjectives-feelings |
+| Lesson 53: Types of Transport | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-53-types-of-transport |
+| Lesson 53: Transport Collocations | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-53-transport-collocations |
+| Lesson 59: Skills and Qualities | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-59-skills-and-qualities |
+| Lesson 35: Shops | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-35-shops |
+| Common Adjectives | https://app.englishpusher.in.ua/a2-flashcards/?topic=common-adjectives |
+| Eating Out | https://app.englishpusher.in.ua/a2-flashcards/?topic=eating-out |
+| Food and Drinks | https://app.englishpusher.in.ua/a2-flashcards/?topic=food-and-drinks |
+| Lesson 2: Professions | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-2-professions |
+| Rooms and Furniture | https://app.englishpusher.in.ua/a2-flashcards/?topic=rooms-and-furniture |
+| Lesson 1: Hello! | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-1-hello |
+| Everyday Objects | https://app.englishpusher.in.ua/a2-flashcards/?topic=everyday-objects |
+| Colours | https://app.englishpusher.in.ua/a2-flashcards/?topic=colours |
+| Countries and Nationalities | https://app.englishpusher.in.ua/a2-flashcards/?topic=countries-and-nationalities |
+| Days of the Week | https://app.englishpusher.in.ua/a2-flashcards/?topic=days-of-the-week |
+| Common Verb Phrases | https://app.englishpusher.in.ua/a2-flashcards/?topic=common-verb-phrases |
+| Family | https://app.englishpusher.in.ua/a2-flashcards/?topic=family |
+| Everyday Activities | https://app.englishpusher.in.ua/a2-flashcards/?topic=everyday-activities |
+| Social Phrases and Excuses | https://app.englishpusher.in.ua/a2-flashcards/?topic=social-phrases-and-excuses |
+| Months and Dates | https://app.englishpusher.in.ua/a2-flashcards/?topic=months-and-dates |
+| Ordinal Numbers | https://app.englishpusher.in.ua/a2-flashcards/?topic=ordinal-numbers |
+| Amounts | https://app.englishpusher.in.ua/a2-flashcards/?topic=amounts |
+| Big Numbers | https://app.englishpusher.in.ua/a2-flashcards/?topic=big-numbers |
+| Weather and Seasons | https://app.englishpusher.in.ua/a2-flashcards/?topic=weather-and-seasons |
+| Time Phrases | https://app.englishpusher.in.ua/a2-flashcards/?topic=time-phrases |
+| Life Events | https://app.englishpusher.in.ua/a2-flashcards/?topic=life-events |
+| Saying the Time | https://app.englishpusher.in.ua/a2-flashcards/?topic=saying-the-time |
+| Places in Town | https://app.englishpusher.in.ua/a2-flashcards/?topic=places-in-town |
+| Phrasal Verbs | https://app.englishpusher.in.ua/a2-flashcards/?topic=phrasal-verbs |
+| Phoning | https://app.englishpusher.in.ua/a2-flashcards/?topic=phoning |
+| Describing Places | https://app.englishpusher.in.ua/a2-flashcards/?topic=describing-places |
+| Travel Activities | https://app.englishpusher.in.ua/a2-flashcards/?topic=travel-activities |
+| Hotels | https://app.englishpusher.in.ua/a2-flashcards/?topic=hotels |
+
+**A2 Vocabulary Trivia** (`/a2-trivia/`):
+
+| Topic | Direct link |
+|---|---|
+| Lesson 51: Clothes & Appearance | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-51-clothes-appearance |
+| Lesson 56: Directions | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-56-directions |
+| Lesson 5: Adjectives for Feelings | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-5-adjectives-feelings |
+| Lesson 53: Types of Transport | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-53-types-of-transport |
+| Lesson 53: Transport Collocations | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-53-transport-collocations |
+| Lesson 59: Skills and Qualities | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-59-skills-and-qualities |
+| Lesson 35: Shops | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-35-shops |
+| Common Adjectives | https://app.englishpusher.in.ua/a2-trivia/?topic=common-adjectives |
+| Eating Out | https://app.englishpusher.in.ua/a2-trivia/?topic=eating-out |
+| Food and Drinks | https://app.englishpusher.in.ua/a2-trivia/?topic=food-and-drinks |
+| Lesson 2: Professions | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-2-professions |
+| Rooms and Furniture | https://app.englishpusher.in.ua/a2-trivia/?topic=rooms-and-furniture |
+| Lesson 1: Hello! | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-1-hello |
+| Everyday Objects | https://app.englishpusher.in.ua/a2-trivia/?topic=everyday-objects |
+| Colours | https://app.englishpusher.in.ua/a2-trivia/?topic=colours |
+| Countries and Nationalities | https://app.englishpusher.in.ua/a2-trivia/?topic=countries-and-nationalities |
+| Days of the Week | https://app.englishpusher.in.ua/a2-trivia/?topic=days-of-the-week |
+| Common Verb Phrases | https://app.englishpusher.in.ua/a2-trivia/?topic=common-verb-phrases |
+| Family | https://app.englishpusher.in.ua/a2-trivia/?topic=family |
+| Everyday Activities | https://app.englishpusher.in.ua/a2-trivia/?topic=everyday-activities |
+| Social Phrases and Excuses | https://app.englishpusher.in.ua/a2-trivia/?topic=social-phrases-and-excuses |
+| Months and Dates | https://app.englishpusher.in.ua/a2-trivia/?topic=months-and-dates |
+| Ordinal Numbers | https://app.englishpusher.in.ua/a2-trivia/?topic=ordinal-numbers |
+| Amounts | https://app.englishpusher.in.ua/a2-trivia/?topic=amounts |
+| Big Numbers | https://app.englishpusher.in.ua/a2-trivia/?topic=big-numbers |
+| Weather and Seasons | https://app.englishpusher.in.ua/a2-trivia/?topic=weather-and-seasons |
+| Time Phrases | https://app.englishpusher.in.ua/a2-trivia/?topic=time-phrases |
+| Life Events | https://app.englishpusher.in.ua/a2-trivia/?topic=life-events |
+| Saying the Time | https://app.englishpusher.in.ua/a2-trivia/?topic=saying-the-time |
+| Places in Town | https://app.englishpusher.in.ua/a2-trivia/?topic=places-in-town |
+| Phrasal Verbs | https://app.englishpusher.in.ua/a2-trivia/?topic=phrasal-verbs |
+| Phoning | https://app.englishpusher.in.ua/a2-trivia/?topic=phoning |
+| Describing Places | https://app.englishpusher.in.ua/a2-trivia/?topic=describing-places |
+| Travel Activities | https://app.englishpusher.in.ua/a2-trivia/?topic=travel-activities |
+| Hotels | https://app.englishpusher.in.ua/a2-trivia/?topic=hotels |
+
+**A2+ Vocabulary Cards** (`/a2plus-flashcards/`):
+
+| Topic | Direct link |
+|---|---|
+| Lesson 14: Actions | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=lesson-14-actions |
+| Air Travel | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=air-travel |
+| Everyday Activities | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=everyday-activities |
+| Jobs | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=jobs |
+| Location and Position | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=location-and-position |
+| Positive Adjectives | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=positive-adjectives |
+| School and University Subjects | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=school-and-university-subjects |
+| School Rules | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=school-rules |
+| Feelings | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=feelings |
+| Animals | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=animals |
+| At the Airport | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=at-the-airport |
+| Knowing and Understanding | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=knowing-and-understanding |
+| Irregular Past Participles | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=irregular-past-participles |
+| Travel | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=travel |
+| Giving Gifts | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=giving-gifts |
+| Money and Value | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=money-and-value |
+| Countable and Uncountable Nouns | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=countable-and-uncountable-nouns |
+| Common Adjectives | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=common-adjectives |
+| Sports Collocations | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=sports-collocations |
+| Physical Actions | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=physical-actions |
+| Health and Illness | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=health-and-illness |
+| The Body and Symptoms | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=the-body-and-symptoms |
+| Going Out and Staying In | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=going-out-and-staying-in |
+| Eating In | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=eating-in |
+| Containers | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=containers |
+| Permission | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=permission |
+| Technology and Change | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=technology-and-change |
+| Attitudes | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=attitudes |
+| The Environment | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=the-environment |
+
+**A2+ Vocabulary Trivia** (`/a2plus-trivia/`):
+
+| Topic | Direct link |
+|---|---|
+| Lesson 14: Actions | https://app.englishpusher.in.ua/a2plus-trivia/?topic=lesson-14-actions |
+| Air Travel | https://app.englishpusher.in.ua/a2plus-trivia/?topic=air-travel |
+| Everyday Activities | https://app.englishpusher.in.ua/a2plus-trivia/?topic=everyday-activities |
+| Jobs | https://app.englishpusher.in.ua/a2plus-trivia/?topic=jobs |
+| Location and Position | https://app.englishpusher.in.ua/a2plus-trivia/?topic=location-and-position |
+| Positive Adjectives | https://app.englishpusher.in.ua/a2plus-trivia/?topic=positive-adjectives |
+| School and University Subjects | https://app.englishpusher.in.ua/a2plus-trivia/?topic=school-and-university-subjects |
+| School Rules | https://app.englishpusher.in.ua/a2plus-trivia/?topic=school-rules |
+| Feelings | https://app.englishpusher.in.ua/a2plus-trivia/?topic=feelings |
+| Animals | https://app.englishpusher.in.ua/a2plus-trivia/?topic=animals |
+| At the Airport | https://app.englishpusher.in.ua/a2plus-trivia/?topic=at-the-airport |
+| Knowing and Understanding | https://app.englishpusher.in.ua/a2plus-trivia/?topic=knowing-and-understanding |
+| Irregular Past Participles | https://app.englishpusher.in.ua/a2plus-trivia/?topic=irregular-past-participles |
+| Travel | https://app.englishpusher.in.ua/a2plus-trivia/?topic=travel |
+| Giving Gifts | https://app.englishpusher.in.ua/a2plus-trivia/?topic=giving-gifts |
+| Money and Value | https://app.englishpusher.in.ua/a2plus-trivia/?topic=money-and-value |
+| Countable and Uncountable Nouns | https://app.englishpusher.in.ua/a2plus-trivia/?topic=countable-and-uncountable-nouns |
+| Common Adjectives | https://app.englishpusher.in.ua/a2plus-trivia/?topic=common-adjectives |
+| Sports Collocations | https://app.englishpusher.in.ua/a2plus-trivia/?topic=sports-collocations |
+| Physical Actions | https://app.englishpusher.in.ua/a2plus-trivia/?topic=physical-actions |
+| Health and Illness | https://app.englishpusher.in.ua/a2plus-trivia/?topic=health-and-illness |
+| The Body and Symptoms | https://app.englishpusher.in.ua/a2plus-trivia/?topic=the-body-and-symptoms |
+| Going Out and Staying In | https://app.englishpusher.in.ua/a2plus-trivia/?topic=going-out-and-staying-in |
+| Eating In | https://app.englishpusher.in.ua/a2plus-trivia/?topic=eating-in |
+| Containers | https://app.englishpusher.in.ua/a2plus-trivia/?topic=containers |
+| Permission | https://app.englishpusher.in.ua/a2plus-trivia/?topic=permission |
+| Technology and Change | https://app.englishpusher.in.ua/a2plus-trivia/?topic=technology-and-change |
+| Attitudes | https://app.englishpusher.in.ua/a2plus-trivia/?topic=attitudes |
+| The Environment | https://app.englishpusher.in.ua/a2plus-trivia/?topic=the-environment |
+
+**B1+ Vocabulary Cards** (`/b1plus-flashcards/`):
+
+| Topic | Direct link |
+|---|---|
+| Collocations | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=collocations |
+| Describing Possessions | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=describing-possessions |
+| Materials | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=materials |
+| Personal Preferences | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=personal-preferences |
+| Phrasal Verbs: Housework | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=phrasal-verbs-housework |
+| Making Changes | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=making-changes |
+| Collocations: Feelings and Be | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=collocations-feelings-and-be |
+| Pet Hates | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=pet-hates |
+| Work | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=work |
+| Personality Adjectives | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=personality-adjectives |
+| Negative Prefixes | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=negative-prefixes |
+| Truth and Lies | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=truth-and-lies |
+| Films and Film-making | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=films-and-film-making |
+| The News | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=the-news |
+| Advertising | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=advertising |
+| Money | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=money |
+| Describing Products | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=describing-products |
+| City Life and Transport | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=city-life-and-transport |
+| Challenges | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=challenges |
+| Reporting Verbs | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=reporting-verbs |
+| Ways of Speaking | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=ways-of-speaking |
+| Computers and the Internet | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=computers-and-the-internet |
+| Adverbs | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=adverbs |
+| Phrases of Advice | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=phrases-of-advice |
+| Learning | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=learning |
+| Phrasal Verbs | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=phrasal-verbs |
+| Presenting | https://app.englishpusher.in.ua/b1plus-flashcards/?topic=presenting |
+
+**B1+ Vocabulary Trivia** (`/b1plus-trivia/`):
+
+| Topic | Direct link |
+|---|---|
+| Collocations | https://app.englishpusher.in.ua/b1plus-trivia/?topic=collocations |
+| Describing Possessions | https://app.englishpusher.in.ua/b1plus-trivia/?topic=describing-possessions |
+| Materials | https://app.englishpusher.in.ua/b1plus-trivia/?topic=materials |
+| Personal Preferences | https://app.englishpusher.in.ua/b1plus-trivia/?topic=personal-preferences |
+| Phrasal Verbs: Housework | https://app.englishpusher.in.ua/b1plus-trivia/?topic=phrasal-verbs-housework |
+| Making Changes | https://app.englishpusher.in.ua/b1plus-trivia/?topic=making-changes |
+| Collocations: Feelings and Be | https://app.englishpusher.in.ua/b1plus-trivia/?topic=collocations-feelings-and-be |
+| Pet Hates | https://app.englishpusher.in.ua/b1plus-trivia/?topic=pet-hates |
+| Work | https://app.englishpusher.in.ua/b1plus-trivia/?topic=work |
+| Personality Adjectives | https://app.englishpusher.in.ua/b1plus-trivia/?topic=personality-adjectives |
+| Negative Prefixes | https://app.englishpusher.in.ua/b1plus-trivia/?topic=negative-prefixes |
+| Truth and Lies | https://app.englishpusher.in.ua/b1plus-trivia/?topic=truth-and-lies |
+| Films and Film-making | https://app.englishpusher.in.ua/b1plus-trivia/?topic=films-and-film-making |
+| The News | https://app.englishpusher.in.ua/b1plus-trivia/?topic=the-news |
+| Advertising | https://app.englishpusher.in.ua/b1plus-trivia/?topic=advertising |
+| Money | https://app.englishpusher.in.ua/b1plus-trivia/?topic=money |
+| Describing Products | https://app.englishpusher.in.ua/b1plus-trivia/?topic=describing-products |
+| City Life and Transport | https://app.englishpusher.in.ua/b1plus-trivia/?topic=city-life-and-transport |
+| Challenges | https://app.englishpusher.in.ua/b1plus-trivia/?topic=challenges |
+| Reporting Verbs | https://app.englishpusher.in.ua/b1plus-trivia/?topic=reporting-verbs |
+| Ways of Speaking | https://app.englishpusher.in.ua/b1plus-trivia/?topic=ways-of-speaking |
+| Computers and the Internet | https://app.englishpusher.in.ua/b1plus-trivia/?topic=computers-and-the-internet |
+| Adverbs | https://app.englishpusher.in.ua/b1plus-trivia/?topic=adverbs |
+| Phrases of Advice | https://app.englishpusher.in.ua/b1plus-trivia/?topic=phrases-of-advice |
+| Learning | https://app.englishpusher.in.ua/b1plus-trivia/?topic=learning |
+| Phrasal Verbs | https://app.englishpusher.in.ua/b1plus-trivia/?topic=phrasal-verbs |
+| Presenting | https://app.englishpusher.in.ua/b1plus-trivia/?topic=presenting |
+
+**B2+ Vocabulary Cards** (`/b2plus-flashcards/`):
+
+| Topic | Direct link |
+|---|---|
+| Everyday Phrases | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=everyday-phrases |
+| Relationships and Friendships | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=relationships |
+| Transforming Places | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=transforming-places |
+| Idioms: Hobbies and Interests | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=hobbies-idioms |
+| The Taste of Food | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=taste-of-food |
+| Winning and Losing | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=winning-and-losing |
+| Industry Competition | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=industry-competition |
+| Business and Work Benefits | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=business-and-work-benefits |
+| Competing | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=competing |
+| Opinions and Reactions | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=opinions-and-reactions |
+| Idioms: Emotions | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=emotions-idioms |
+| Persuading and Motivating | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=persuading-and-motivating |
+| Describing Inspiring People | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=inspiring-people |
+| Rules | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=rules |
+| Photography | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=photography |
+| Advertising and Marketing | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=advertising-and-marketing |
+| Skills and Abilities | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=skills-and-abilities |
+| Decision and Indecision | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=decisions |
+| The Natural World | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=the-natural-world |
+| Social Issues | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=social-issues |
+| Environmental Issues | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=environmental-issues |
+| Habits | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=habits |
+| Algorithms | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=algorithms |
+| Mistakes, Right and Wrong | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=right-and-wrong |
+| Buildings and Homes | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=buildings-and-homes |
+| Technology | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=technology |
+| Explaining Meaning | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=explaining-meaning |
+| Trends | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=trends |
+| Food and Drink | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=food-and-drink |
+| Shopping and Clothes | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=shopping-and-clothes |
+| Memories | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=memories |
+| Dystopia and Utopia | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=dystopia-and-utopia |
+| Science and Technology | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=science-and-technology |
+| Money | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=money |
+| Machines | https://app.englishpusher.in.ua/b2plus-flashcards/?topic=machines |
+
+**B2+ Vocabulary Trivia** (`/b2plus-trivia/`):
+
+| Topic | Direct link |
+|---|---|
+| Everyday Phrases | https://app.englishpusher.in.ua/b2plus-trivia/?topic=everyday-phrases |
+| Relationships and Friendships | https://app.englishpusher.in.ua/b2plus-trivia/?topic=relationships |
+| Transforming Places | https://app.englishpusher.in.ua/b2plus-trivia/?topic=transforming-places |
+| Idioms: Hobbies and Interests | https://app.englishpusher.in.ua/b2plus-trivia/?topic=hobbies-idioms |
+| The Taste of Food | https://app.englishpusher.in.ua/b2plus-trivia/?topic=taste-of-food |
+| Winning and Losing | https://app.englishpusher.in.ua/b2plus-trivia/?topic=winning-and-losing |
+| Industry Competition | https://app.englishpusher.in.ua/b2plus-trivia/?topic=industry-competition |
+| Business and Work Benefits | https://app.englishpusher.in.ua/b2plus-trivia/?topic=business-and-work-benefits |
+| Competing | https://app.englishpusher.in.ua/b2plus-trivia/?topic=competing |
+| Opinions and Reactions | https://app.englishpusher.in.ua/b2plus-trivia/?topic=opinions-and-reactions |
+| Idioms: Emotions | https://app.englishpusher.in.ua/b2plus-trivia/?topic=emotions-idioms |
+| Persuading and Motivating | https://app.englishpusher.in.ua/b2plus-trivia/?topic=persuading-and-motivating |
+| Describing Inspiring People | https://app.englishpusher.in.ua/b2plus-trivia/?topic=inspiring-people |
+| Rules | https://app.englishpusher.in.ua/b2plus-trivia/?topic=rules |
+| Photography | https://app.englishpusher.in.ua/b2plus-trivia/?topic=photography |
+| Advertising and Marketing | https://app.englishpusher.in.ua/b2plus-trivia/?topic=advertising-and-marketing |
+| Skills and Abilities | https://app.englishpusher.in.ua/b2plus-trivia/?topic=skills-and-abilities |
+| Decision and Indecision | https://app.englishpusher.in.ua/b2plus-trivia/?topic=decisions |
+| The Natural World | https://app.englishpusher.in.ua/b2plus-trivia/?topic=the-natural-world |
+| Social Issues | https://app.englishpusher.in.ua/b2plus-trivia/?topic=social-issues |
+| Environmental Issues | https://app.englishpusher.in.ua/b2plus-trivia/?topic=environmental-issues |
+| Habits | https://app.englishpusher.in.ua/b2plus-trivia/?topic=habits |
+| Algorithms | https://app.englishpusher.in.ua/b2plus-trivia/?topic=algorithms |
+| Mistakes, Right and Wrong | https://app.englishpusher.in.ua/b2plus-trivia/?topic=right-and-wrong |
+| Buildings and Homes | https://app.englishpusher.in.ua/b2plus-trivia/?topic=buildings-and-homes |
+| Technology | https://app.englishpusher.in.ua/b2plus-trivia/?topic=technology |
+| Explaining Meaning | https://app.englishpusher.in.ua/b2plus-trivia/?topic=explaining-meaning |
+| Trends | https://app.englishpusher.in.ua/b2plus-trivia/?topic=trends |
+| Food and Drink | https://app.englishpusher.in.ua/b2plus-trivia/?topic=food-and-drink |
+| Shopping and Clothes | https://app.englishpusher.in.ua/b2plus-trivia/?topic=shopping-and-clothes |
+| Memories | https://app.englishpusher.in.ua/b2plus-trivia/?topic=memories |
+| Dystopia and Utopia | https://app.englishpusher.in.ua/b2plus-trivia/?topic=dystopia-and-utopia |
+| Science and Technology | https://app.englishpusher.in.ua/b2plus-trivia/?topic=science-and-technology |
+| Money | https://app.englishpusher.in.ua/b2plus-trivia/?topic=money |
+| Machines | https://app.englishpusher.in.ua/b2plus-trivia/?topic=machines |
 
 **How it works:** `?topic=<id>` is read on mount via `URLSearchParams`. The URL updates automatically when the user selects a topic, and clears when they go back to the topic list. The `id` field in `TOPICS` in `data.ts` is the canonical key — keep it stable, never rename it after publishing.
 
@@ -116,9 +470,12 @@ src/
     AppShell.tsx                  ← ⭐ Shared AppHeader + AppFooter components (incl. account icon)
     supabase.ts                   ← Supabase client singleton + isSupabaseConfigured
     auth.tsx                      ← AuthProvider/useAuth + provider-free useSessionUser
-    progress.ts                   ← trivia results / saved words / study events data access
+    progress.ts                   ← trivia results / saved words / study events / grammar answers data access
     savedWords.tsx                ← useSavedWords, StarButton, My Words topic resolution
     TriviaSave.tsx                ← end-screen auto-save + guest hint + failure notice
+    SignInPopup.tsx               ← guest "Keep your results" popup on grammar + trivia end screens
+    audioName.ts                  ← word → recording file name (shared by app + scripts/generate-audio.ts)
+    speakWord.ts                  ← plays a word's recording, falls back to the device voice
   index.css                       ← Tailwind imports + character animations
   main.tsx                        ← hub React entry
   Index.tsx                       ← entire hub landing page (single file)
@@ -183,19 +540,44 @@ import { AppFooter } from "../shared/AppShell.tsx";
 3. Pass app-specific controls (score badge, mute button, restart) via the `controls` prop
 4. The landing page (`Index.tsx`) has its own header/footer — do not use `AppShell` there
 
+## Shared component — `src/shared/WordList.tsx` (flashcards word list)
+
+Floating teacher-with-magnifier button (`src/assets/teacher-search.png`, same picture as the Moodle lesson-search button) shown on A2, A2+, B1 and C1 flashcard topics, My Words included. Opens a searchable list of the topic's words (word + translation, or C1 definition clamped to 2 lines; current card highlighted, starred words marked). Tap / Enter jumps to the card (`onJump` sets `index`, unflips). Bottom sheet on phones, panel above the button on desktop. Props: `items` ({word, hint}), `current`, `saved?`, `onJump`. Added 2026-10-22 at the teacher's request.
+
+## Recorded word pronunciation — `public/audio/jane/` + `src/shared/speakWord.ts`
+
+Speaker buttons in all flashcards (A2–C1) and level trivia play a pre-recorded MP3 in one voice (Mistral Voxtral "Jane", `gb_jane_neutral`, via OpenRouter, chosen by ear 2026-11-20). Words only, no example sentences. Spec/plan: `specs/002-word-audio/`.
+
+- **Files**: one per unique word at `public/audio/jane/<slug>-<hash>.mp3`; the name comes from `audioFileName(word)` in `src/shared/audioName.ts` (lowercase text → case variants share a file; a corrected word gets a new file). No lookup list.
+- **Playback**: `speakWord(word, opts)` plays the file; if it's missing or won't load it uses the device voice (same as before the feature). One word at a time; `stopSpeaking()` stops it. Trivia keeps its own mute + "after interaction" checks.
+- **Generator**: `node scripts/generate-audio.ts [--all] [--dry-run]` (env `OPENROUTER_API_KEY`). Voices only missing words, deletes files of deleted words, refuses more than 5,000 characters per run unless `--all`, never fails on API errors. Full library ≈ 23,300 characters ≈ $0.37; a topic ≈ $0.005.
+- **Deploy**: `deploy.yml` runs the generator before the build with repo secret `OPENROUTER_API_KEY` and commits new files back to `main` as `github-actions[bot]` ("Audio: update word recordings [skip ci]"). So new topics get audio automatically, however they were added. Beta gets the files via the usual `main` → `beta` merge.
+- **Full run button**: GitHub → Actions → "Deploy to GitHub Pages" → Run workflow (branch `main`) → tick "full run" voices every missing word past the 5,000-character limit. Used once for the initial library; also after switching voice. The job only runs on `main`, so the button can never publish another branch.
+- **Switching voice later**: change `AUDIO_VOICE_DIR` + `MODEL`/`VOICE` in the generator, then use the full-run button once.
+
+## Seasonal decorations — `src/shared/seasonal/` + `src/shared/Seasonal.tsx`
+
+Holiday decorations switched on by date (Halloween 24 Oct – 1 Nov so far; winter and Easter later). Same themes and rules as the Moodle snippet (moodle-task-builder `seasonal-decorations/`, whose README explains how to add a theme; copy art, words and dates to `themes.ts` here too).
+
+- `<Seasonal />` is rendered in `AppFooter` and in the hub footer, so every page gets it; `<SeasonalGreeting />` is the "Happy Halloween!" chip next to the hub badge (opens the "Did you know?" card).
+- `pageLevel(pathname)`: hub, level/chooser pages and account = everything (moving spider, bats, pop-up card); flash cards, trivia and games = the same pictures completely still, and nothing at all on phones.
+- Students choose Animated / Still / Off with the round button bottom-left (saved in localStorage); "reduce motion" devices start on Still. Bats: three waves on the first page of the day, then one wave at most every 15 minutes.
+- Test any theme on any date with `?ep-season=halloween`. Tests: `src/shared/seasonal/themes.test.ts`.
+
 ## Architecture decisions
 
 - **Vite MPA**: `vite.config.ts` uses `build.rollupOptions.input` with one entry per app. Each builds to its own path in `dist/`. Source HTML lives in `apps/<name>/index.html`; a post-build plugin moves them to `dist/<name>/index.html` so deployed URLs stay as `/<name>/`.
 - **Dev rewrite plugin**: `configureServer` middleware rewrites `/<app>/*` → `/apps/<app>/*` in dev so local URLs match deployed URLs exactly.
 - Hub lives in a **single `Index.tsx`** — no routing, no sub-pages.
-- App cards data lives in the `ITEMS` array at the top of `Index.tsx` — easy to update. Each item has a `level: "B1" | "C1"` field used by the level tabs.
+- App cards data lives in the `ITEMS` array at the top of `Index.tsx` — easy to update. Each item has a `level: "A2" | "A2+" | "B1" | "B1+" | "B2+" | "C1"` field used by the level tabs. Tab and card order comes from `src/hub/order.ts`: levels with topics first, easiest first (A2, A2+, B1, B1+, B2+, C1), then levels still "Coming soon" (their cards are disabled with a badge while their `TOPICS` list is empty).
+- **Level pages (A2, A2+, B1, B1+, B2+):** one shared set of pages in `src/levels/` (`VocabularyPage`, `FlashcardsPage`, `TriviaPage`), mounted per level by `src/<slug>-<page>/main.tsx` via `mountLevelPage()`. Words live in `src/<slug>-flashcards/data.ts` (`a2`, `a2plus`, `b1`, `b1plus`, `b2plus`); the level config is next to it in `level.ts`. C1 keeps its own separate pages. Flashcards/Trivia of a level with no topics redirect to its Vocabulary page, which shows "Coming soon".
 - **Background colour must be set on `body` in `index.css`**, NOT on the `motion.div` wrapper — otherwise motion's transform creates a stacking context that hides any background layer behind it.
 - **WSL HMR fix**: `server: { watch: { usePolling: true } }` in `vite.config.ts` — inotify can't watch Windows filesystem from WSL.
 
 ## Page layout
 
 ### Header
-Dark (`bg-neutral-900`), logo + "Englishpusher Learning Apps" title.
+Dark (`bg-neutral-900`), logo + "Englishpusher App" title.
 
 ### Main section
 Two-column on desktop, single-column on mobile:
@@ -216,13 +598,15 @@ Left: copyright + main site link. Right: Instagram icon + handle.
 
 | id | Level | Label | href | Status |
 |---|---|---|---|---|
-| 1 | B1 | B1 Grammar Testing | https://grammar.englishpusher.in.ua | Live |
+| 1 | B1 | B1 Grammar | /b1-grammar/ | Live |
 | 2 | B1 | B1 Vocabulary | /b1-vocabulary/ | Live — crimson `#9f1239` card, chooser page |
 | 3 | C1 | C1 Vocabulary | /c1-business/ | Live — chooser page |
+| 6 | B1+ | B1+ Vocabulary | /b1plus-vocabulary/ | "Coming soon" until `src/b1plus-flashcards/data.ts` has a topic — fuchsia `#a21caf` card, chooser page |
+| 7 | B2+ | B2+ Vocabulary | /b2plus-vocabulary/ | "Coming soon" until `src/b2plus-flashcards/data.ts` has a topic — green `#15803d` card, chooser page |
 
 Hub has level tabs (All / B1 / C1) above the accordion — filters `filteredItems`.
 
-Both vocabulary cards open a **chooser page** (`/b1-vocabulary/`, `/c1-business/`) listing that level's activities. Word Connections lives inside the B1 chooser but is `hidden: true` (teacher request) — re-enable in `src/b1-vocabulary/App.tsx`; the app itself stays reachable at `/word-connections/`.
+Both vocabulary cards open a **chooser page** (`/b1-vocabulary/`, `/c1-business/`) listing that level's activities. Word Connections lives inside the B1 chooser but is `hidden: true` (teacher request) — re-enable in `src/levels/VocabularyPage.tsx`; the app itself stays reachable at `/word-connections/`.
 
 **CTA convention:** main hub cards always say "Start practicing"; chooser-page cards say "Study now" (flash cards), "Start quiz" (trivia), "Start playing" (games).
 
@@ -270,6 +654,7 @@ The `gh-pages` package **replaces the entire `gh-pages` branch** with the conten
   4. Match word → definition (4 options)
 - End screen: score %, word lists side-by-side, "Practice weak words" button rebuilds session from missed words
 - All screens: `max-w-4xl`, teacher sidebar `w-56 max-w-none` (prevents squeeze)
+- **Unambiguous examples (all trivia apps):** fill-in-the-blank options are 3 random words from the same topic, so every `example` must fit ONLY its own word. For true synonyms, add `similar: ["other word"]` to the word in `data.ts` (A2, A2+, B1 and C1). `getDistractors` then never offers them as wrong options. It already skips words with an identical translation/definition.
 - Purple colour scheme (`bg-purple-600`) distinguishes C1 from B1 apps
 
 ## Claude Code skills — `.claude/skills/`
@@ -280,6 +665,9 @@ Project skills auto-discovered by Claude Code (each must live at `.claude/skills
 |---|---|
 | `add-b1-topic` | Add a new B1 vocabulary topic (feeds b1-flashcards + b1-trivia) from a teacher wordlist |
 | `add-c1-topic` | Add a new C1 vocabulary topic (feeds c1-flashcards + c1-trivia); definition or translation mode |
+| `add-a2-topic` | Add a new A2 or A2+ vocabulary topic (level is the first argument; feeds a2- or a2plus-flashcards + trivia) |
+| `add-b1plus-topic` | Add a new B1+ vocabulary topic (feeds b1plus-flashcards + trivia; Claude Code only — not connected to the Telegram bot yet) |
+| `add-b2plus-topic` | Add a new B2+ vocabulary topic (feeds b2plus-flashcards + trivia; Claude Code only — not connected to the Telegram bot yet) |
 | `flashcards` | Build guide for creating a NEW flash-card app from scratch |
 
 The old `SKIILS/` folder was removed (2026-07-08) — its content was migrated/superseded here.

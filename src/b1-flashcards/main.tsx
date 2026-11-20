@@ -1,10 +1,5 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "../c1-shared.css";
-import App from "./App.tsx";
+import FlashcardsPage from "../levels/FlashcardsPage.tsx";
+import { mountLevelPage } from "../levels/mount.tsx";
+import { B1 } from "./level.ts";
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+mountLevelPage(FlashcardsPage, B1, { needsTopics: true });

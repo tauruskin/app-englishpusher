@@ -6,24 +6,13 @@ import {
   useSavedWords, resolveSavedWords, findOriginTopicId, StarButton, MY_WORDS_TOPIC_ID,
 } from "../shared/savedWords.tsx";
 import { logStudyEvent } from "../shared/progress.ts";
+import { WordList } from "../shared/WordList.tsx";
+import { speakWord } from "../shared/speakWord.ts";
 import { TOPICS, type Topic, type C1Word } from "./data.ts";
 import teacherThinking from "../assets/teacher-thinking.png";
 import teacherCorrect from "../assets/teacher-correct.png";
 
 type Phase = "select" | "studying";
-
-// ---------------------------------------------------------------------------
-// Speech synthesis
-// ---------------------------------------------------------------------------
-
-function speak(text: string) {
-  if (!("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-US";
-  utterance.rate = 0.9;
-  window.speechSynthesis.speak(utterance);
-}
 
 // ---------------------------------------------------------------------------
 // Animated gradient border wrapper
@@ -58,7 +47,7 @@ function SpeakerButton({ word }: { word: string }) {
   const [active, setActive] = useState(false);
 
   function handleClick() {
-    speak(word);
+    speakWord(word);
     setActive(true);
     setTimeout(() => setActive(false), 800);
   }
@@ -528,6 +517,15 @@ export default function App() {
           )}
         </AnimatePresence>
       </main>
+
+      {phase === "studying" && topic && (
+        <WordList
+          items={topic.words.map((w) => ({ word: w.word, hint: w.translation ?? w.definition ?? "" }))}
+          current={index}
+          saved={starsEnabled ? savedSet : undefined}
+          onJump={(i) => { setIsFlipped(false); setIndex(i); }}
+        />
+      )}
 
       <AppFooter onTopics={handleBackToSelect} showTopics={phase === "studying"} />
     </div>

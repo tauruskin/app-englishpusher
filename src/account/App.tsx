@@ -1,29 +1,66 @@
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { motion } from "motion/react";
-import { LogOut, BarChart3, Star, Clock, Eye, EyeOff } from "lucide-react";
+import { LogOut, BarChart3, Star, Clock, Eye, EyeOff, LayoutDashboard, TrendingUp } from "lucide-react";
 import { AppHeader, AppFooter } from "../shared/AppShell.tsx";
 import { useAuth } from "../shared/auth.tsx";
 import { supabase, isSupabaseConfigured } from "../shared/supabase.ts";
 import {
   fetchProgress,
-  type AppId, type Level, type TriviaResultRow, type WeakWord, type StudyEventRow,
+  type AppId, type GrammarAppId, type GrammarSessionResult, type Level, type WeakWord, type StudyEventRow,
 } from "../shared/progress.ts";
 import { useSavedWords } from "../shared/savedWords.tsx";
-import { TOPICS as B1_TOPICS } from "../b1-flashcards/data.ts";
+import { api } from "../teacher/api.ts";
+import type { Me } from "../teacher/types.ts";
+import TelegramSync from "./TelegramSync.tsx";
+import { isGrammarFlashcardsApp, studyTitle } from "./recentTitles.ts";
 import { TOPICS as C1_TOPICS } from "../c1-flashcards/data.ts";
+import type { LevelConfig } from "../levels/types.ts";
+import { flashcardsAppId, pageUrl, triviaAppId } from "../levels/level.ts";
+import { A2 } from "../a2-flashcards/level.ts";
+import { A2PLUS } from "../a2plus-flashcards/level.ts";
+import { B1 } from "../b1-flashcards/level.ts";
+import { B1PLUS } from "../b1plus-flashcards/level.ts";
+import { B2PLUS } from "../b2plus-flashcards/level.ts";
+
+// Levels whose words carry a Ukrainian translation and share the level pages; C1 is separate.
+const TRANSLATION_LEVELS: LevelConfig[] = [A2, A2PLUS, B1, B1PLUS, B2PLUS];
+
+function topicsForApp(app: AppId): { id: string; title: string }[] {
+  const level = TRANSLATION_LEVELS.find((l) => app === flashcardsAppId(l) || app === triviaAppId(l));
+  return level ? level.topics : C1_TOPICS;
+}
 
 // Resolve a stored topic reference against app content; null when the topic
 // no longer exists (renamed/removed) — callers drop those rows silently.
 function topicTitle(app: AppId, topicId: string): string | null {
-  const topics = app.startsWith("b1") ? B1_TOPICS : C1_TOPICS;
-  return topics.find((t) => t.id === topicId)?.title ?? null;
+  return topicsForApp(app).find((t) => t.id === topicId)?.title ?? null;
 }
 
-const APP_LABEL: Record<AppId, string> = {
+const APP_LABEL: Record<AppId | GrammarAppId, string> = {
+  "a2-grammar": "A2 Grammar",
+  "a2plus-grammar": "A2+ Grammar",
+  "b1-grammar": "B1 Grammar",
+  "b1plus-grammar": "B1+ Grammar",
+  "b2plus-grammar": "B2+ Grammar",
+  "c1-grammar": "C1 Grammar",
+  "a2-trivia": "A2 Trivia",
+  "a2plus-trivia": "A2+ Trivia",
   "b1-trivia": "B1 Trivia",
+  "b1plus-trivia": "B1+ Trivia",
+  "b2plus-trivia": "B2+ Trivia",
   "c1-trivia": "C1 Trivia",
+  "a2-flashcards": "A2 Flash Cards",
+  "a2plus-flashcards": "A2+ Flash Cards",
   "b1-flashcards": "B1 Flash Cards",
+  "b1plus-flashcards": "B1+ Flash Cards",
+  "b2plus-flashcards": "B2+ Flash Cards",
   "c1-flashcards": "C1 Flash Cards",
+  "a2-grammar-flashcards": "A2 Grammar Flash Cards",
+  "a2plus-grammar-flashcards": "A2+ Grammar Flash Cards",
+  "b1-grammar-flashcards": "B1 Grammar Flash Cards",
+  "b1plus-grammar-flashcards": "B1+ Grammar Flash Cards",
+  "b2plus-grammar-flashcards": "B2+ Grammar Flash Cards",
+  "c1-grammar-flashcards": "C1 Grammar Flash Cards",
 };
 
 // ---------------------------------------------------------------------------
@@ -264,7 +301,7 @@ function EmptyState({ children }: { children: ReactNode }) {
 }
 
 interface TopicSummary {
-  app: AppId;
+  app: AppId | GrammarAppId;
   topicId: string;
   title: string;
   best: number;
@@ -273,11 +310,21 @@ interface TopicSummary {
   attempts: number;
 }
 
-function summarizeResults(results: TriviaResultRow[]): TopicSummary[] {
+interface ResultLike {
+  app: AppId | GrammarAppId;
+  topicId: string;
+  scorePct: number;
+  createdAt: string;
+}
+
+function summarizeResults(
+  results: ResultLike[],
+  resolveTitle: (app: AppId | GrammarAppId, topicId: string) => string | null,
+): TopicSummary[] {
   const byTopic = new Map<string, TopicSummary>();
   // results arrive newest-first; the first row seen per topic is the latest
   for (const r of results) {
-    const title = topicTitle(r.app, r.topicId);
+    const title = resolveTitle(r.app, r.topicId);
     if (!title) continue; // topic removed from content — drop silently
     const key = `${r.app}::${r.topicId}`;
     const existing = byTopic.get(key);
@@ -297,7 +344,7 @@ function summarizeResults(results: TriviaResultRow[]): TopicSummary[] {
 
 function ProgressSection({ summaries }: { summaries: TopicSummary[] }) {
   if (summaries.length === 0) {
-    return <EmptyState>Nothing here yet — finish a trivia round and your scores will appear.</EmptyState>;
+    return <EmptyState>Nothing here yet — finish a trivia or grammar round and your scores will appear.</EmptyState>;
   }
   return (
     <div className="divide-y divide-neutral-100">
@@ -348,30 +395,37 @@ function WeakWordsList({ weakWords }: { weakWords: WeakWord[] }) {
   );
 }
 
-// Meaning shown next to a saved word: B1 words carry a Ukrainian
+// Meaning shown next to a saved word: A2, A2+, B1, B1+ and B2+ words carry a Ukrainian
 // translation; C1 words follow the definition-or-translation convention.
 function wordMeaning(level: Level, topicId: string, word: string): string | null {
-  if (level === "B1") {
-    return B1_TOPICS.find((t) => t.id === topicId)?.words.find((w) => w.word === word)?.translation ?? null;
+  const translationLevel = TRANSLATION_LEVELS.find((l) => l.id === level);
+  if (translationLevel) {
+    return translationLevel.topics.find((t) => t.id === topicId)?.words.find((w) => w.word === word)?.translation ?? null;
   }
   const w = C1_TOPICS.find((t) => t.id === topicId)?.words.find((x) => x.word === word);
   return w ? (w.definition ?? w.translation ?? null) : null;
 }
 
 function MyWordsSection() {
-  const b1 = useSavedWords("B1");
-  const c1 = useSavedWords("C1");
+  // Hooks run unconditionally, in a fixed order.
+  const saved: Record<Level, ReturnType<typeof useSavedWords>> = {
+    A2: useSavedWords("A2"),
+    "A2+": useSavedWords("A2+"),
+    B1: useSavedWords("B1"),
+    "B1+": useSavedWords("B1+"),
+    "B2+": useSavedWords("B2+"),
+    C1: useSavedWords("C1"),
+  };
+  const LEVELS: Level[] = ["A2", "A2+", "B1", "B1+", "B2+", "C1"];
 
-  const rows = [
-    ...b1.savedWords.map((s) => ({ ...s, meaning: wordMeaning("B1", s.topicId, s.word) })),
-    ...c1.savedWords.map((s) => ({ ...s, meaning: wordMeaning("C1", s.topicId, s.word) })),
-  ].filter((r) => r.meaning !== null); // unresolvable references dropped silently
+  const rows = LEVELS.flatMap((level) =>
+    saved[level].savedWords.map((s) => ({ ...s, meaning: wordMeaning(level, s.topicId, s.word) })),
+  ).filter((r) => r.meaning !== null); // unresolvable references dropped silently
 
   if (rows.length === 0) {
     return <EmptyState>No saved words yet — tap the star on any flashcard to save a word.</EmptyState>;
   }
 
-  const hasB1 = rows.some((r) => r.level === "B1");
   const hasC1 = rows.some((r) => r.level === "C1");
 
   return (
@@ -389,7 +443,7 @@ function MyWordsSection() {
               <p className="truncate font-body text-xs text-neutral-400">{r.meaning}</p>
             </div>
             <button
-              onClick={() => (r.level === "B1" ? b1 : c1).toggle(r.word, r.topicId, r.source)}
+              onClick={() => saved[r.level].toggle(r.word, r.topicId, r.source)}
               className="shrink-0 font-body text-xs text-neutral-400 hover:text-red-500 transition-colors"
             >
               Remove
@@ -398,16 +452,16 @@ function MyWordsSection() {
         ))}
       </div>
       <div className="mt-3 flex flex-wrap gap-2 border-t border-neutral-100 pt-3">
-        {hasB1 && (
-          <>
-            <a href="/b1-flashcards/?topic=my-words" className="rounded-lg bg-brand/10 px-3 py-1.5 font-body text-xs font-semibold text-brand hover:bg-brand/20 transition-colors">
-              Study B1 deck
+        {TRANSLATION_LEVELS.filter((l) => rows.some((r) => r.level === l.id)).map((l) => (
+          <Fragment key={l.id}>
+            <a href={`${pageUrl(l, "flashcards")}?topic=my-words`} className="rounded-lg bg-brand/10 px-3 py-1.5 font-body text-xs font-semibold text-brand hover:bg-brand/20 transition-colors">
+              Study {l.id} deck
             </a>
-            <a href="/b1-trivia/?topic=my-words" className="rounded-lg bg-brand/10 px-3 py-1.5 font-body text-xs font-semibold text-brand hover:bg-brand/20 transition-colors">
-              Quiz B1 deck
+            <a href={`${pageUrl(l, "trivia")}?topic=my-words`} className="rounded-lg bg-brand/10 px-3 py-1.5 font-body text-xs font-semibold text-brand hover:bg-brand/20 transition-colors">
+              Quiz {l.id} deck
             </a>
-          </>
-        )}
+          </Fragment>
+        ))}
         {hasC1 && (
           <>
             <a href="/c1-flashcards/?topic=my-words" className="rounded-lg bg-purple-100 px-3 py-1.5 font-body text-xs font-semibold text-purple-700 hover:bg-purple-200 transition-colors">
@@ -432,11 +486,11 @@ function relativeDay(iso: string): string {
   return then.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
 
-function RecentActivity({ events }: { events: StudyEventRow[] }) {
+function RecentActivity({ events, grammarNames }: { events: StudyEventRow[]; grammarNames: Map<string, string> | null }) {
   const rows = events
     .map((e) => ({
       ...e,
-      title: e.topicId === "my-words" ? "My Words" : topicTitle(e.app, e.topicId),
+      title: studyTitle(e.app, e.topicId, grammarNames, (app, id) => topicTitle(app as AppId, id)),
     }))
     .filter((e) => e.title !== null);
 
@@ -476,7 +530,73 @@ function PersonalPage() {
     fetchProgress().then(setProgress);
   }, [user]);
 
-  const summaries = progress ? summarizeResults(progress.results) : [];
+  // Staff (teacher/admin) get a link to the dashboard. Errors and students leave it hidden;
+  // the database enforces access either way, this only decides whether to show the link.
+  // The same call tells us whether Telegram is linked; it is repeated when the student comes back
+  // to this tab (e.g. from the Quiz Bot) so the card flips to "connected" without a reload.
+  const [me, setMe] = useState<Me | null>(null);
+  const recheckMe = useRef<() => void>(() => {});
+  // Keyed on the user id, not the user object: token refreshes hand out a new object for the
+  // same person, which must not re-query or make the link flicker.
+  const userId = user?.id;
+  useEffect(() => {
+    if (!userId) return;
+    let current = true; // ignore a response that arrives after unmount or after the user changed
+    let inFlight = false;
+    const load = () => {
+      if (inFlight) return;
+      inFlight = true;
+      api.me().then((r) => {
+        inFlight = false;
+        if (current && r.data) setMe(r.data);
+      });
+    };
+    recheckMe.current = load;
+    load();
+    const onVisible = () => {
+      if (document.visibilityState === "visible") load();
+    };
+    window.addEventListener("focus", load);
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      current = false;
+      recheckMe.current = () => {};
+      window.removeEventListener("focus", load);
+      document.removeEventListener("visibilitychange", onVisible);
+      setMe(null);
+    };
+  }, [userId]);
+  const isStaff = me?.role === "teacher" || me?.role === "admin";
+
+  // The grammar topic registry holds every question, so it is loaded only when the student has
+  // grammar rounds or grammar flashcards activity. Until it arrives only vocabulary rows are shown
+  // (no raw ids).
+  const [grammarNames, setGrammarNames] = useState<Map<string, string> | null>(null);
+  const grammarResults = progress?.grammarResults;
+  const hasGrammar =
+    (grammarResults?.length ?? 0) > 0 ||
+    (progress?.recentStudy ?? []).some((e) => isGrammarFlashcardsApp(e.app));
+  useEffect(() => {
+    if (!hasGrammar) return;
+    let current = true;
+    import("../grammar/topics/index.ts")
+      .then((m) => {
+        if (current) setGrammarNames(new Map(m.default.map((t) => [t.id, t.name])));
+      })
+      .catch(() => {}); // registry unavailable — keep showing vocabulary only
+    return () => {
+      current = false;
+    };
+  }, [hasGrammar]);
+
+  const summaries = progress
+    ? [
+        ...summarizeResults(progress.results, (app, id) => topicTitle(app as AppId, id)),
+        ...(grammarNames
+          ? summarizeResults(grammarResults as GrammarSessionResult[], (_app, id) => grammarNames.get(id) ?? null)
+          : []),
+      ]
+    : [];
 
   return (
     <motion.div
@@ -501,6 +621,26 @@ function PersonalPage() {
         </button>
       </div>
 
+      <a
+        href="/progress/"
+        className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-5 py-4 font-display text-sm font-bold text-neutral-900 hover:border-brand/40 transition-colors"
+      >
+        <span className="flex items-center gap-2"><TrendingUp size={16} className="text-brand" /> All my progress (Quiz Bot + App)</span>
+        <span aria-hidden>→</span>
+      </a>
+
+      <TelegramSync linked={me ? me.telegram_linked : null} onRecheck={() => recheckMe.current()} />
+
+      {isStaff && (
+        <a
+          href="/teacher/"
+          className="flex items-center justify-between rounded-xl border border-brand/30 bg-brand/5 px-5 py-4 font-display text-sm font-bold text-neutral-900 hover:bg-brand/10 transition-colors"
+        >
+          <span className="flex items-center gap-2"><LayoutDashboard size={16} className="text-brand" /> Teacher dashboard</span>
+          <span aria-hidden>→</span>
+        </a>
+      )}
+
       <Section icon={<BarChart3 size={16} className="text-brand" />} title="My progress">
         <ProgressSection summaries={summaries} />
         {progress && <WeakWordsList weakWords={progress.weakWords} />}
@@ -511,7 +651,7 @@ function PersonalPage() {
       </Section>
 
       <Section icon={<Clock size={16} className="text-brand" />} title="Recent activity">
-        <RecentActivity events={progress?.recentStudy ?? []} />
+        <RecentActivity events={progress?.recentStudy ?? []} grammarNames={grammarNames} />
       </Section>
     </motion.div>
   );

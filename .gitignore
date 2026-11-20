@@ -11,3 +11,7 @@ token.json
 # Claude Code local settings
 .claude/settings.local.json
 .superpowers/
+
+# Headless mode artifacts
+.topic-summary.json
+.staging/

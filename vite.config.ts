@@ -3,16 +3,44 @@ import react from "@vitejs/plugin-react";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { resolve } from "path";
 import { copyFileSync, mkdirSync, rmSync, existsSync } from "fs";
+import grammarTopics from "./src/grammar/topics/index.ts";
+import { liveGrammarLevels } from "./src/grammar/levels.ts";
 
 const APPS = [
   "account",
+  "teacher",
+  "progress",
+  "a2-flashcards",
+  "a2-trivia",
+  "a2-vocabulary",
+  "a2plus-flashcards",
+  "a2plus-trivia",
+  "a2plus-vocabulary",
   "b1-trivia",
   "b1-flashcards",
   "b1-vocabulary",
+  "b1plus-flashcards",
+  "b1plus-trivia",
+  "b1plus-vocabulary",
+  "b2plus-flashcards",
+  "b2plus-trivia",
+  "b2plus-vocabulary",
   "c1-business",
   "c1-flashcards",
   "c1-trivia",
   "word-connections",
+  "a2-grammar",
+  "a2plus-grammar",
+  "b1-grammar",
+  "b1plus-grammar",
+  "b2plus-grammar",
+  "c1-grammar",
+  "a2-grammar-flashcards",
+  "a2plus-grammar-flashcards",
+  "b1-grammar-flashcards",
+  "b1plus-grammar-flashcards",
+  "b2plus-grammar-flashcards",
+  "c1-grammar-flashcards",
 ];
 
 // Dev server middleware: rewrite /<app>/* → /apps/<app>/*
@@ -56,21 +84,92 @@ function remapAppPaths() {
   };
 }
 
+// Inject the Google Tag Manager container (GA4 + Clarity live inside it) into
+// every HTML entry point. Build-only, so local dev visits are not tracked.
+// Private pages show a person's results (teacher dashboard: student names and accuracy;
+// progress: the student's own results), so they must never load GTM / Clarity session recording.
+const GTM_ID = "GTM-KJVX8GRG";
+// Keep in sync with PRIVATE_PAGES in scripts/check-private-pages.mjs (the build asserts these pages have no GTM).
+const PRIVATE_APPS = ["teacher", "progress"];
+// Matches a private entry exactly: the absolute file, or the server path /apps/<name>[/index.html].
+// Nothing looser, so a checkout folder named "teacher" cannot strip GTM from other pages.
+// Only the server path (ctx.path) can carry a query/hash; a file name may legally contain '#'.
+const normPath = (p: string) => p.replace(/\\/g, "/");
+const PRIVATE_ENTRIES = new Set(
+  PRIVATE_APPS.map((app) => normPath(resolve(__dirname, `apps/${app}/index.html`)).toLowerCase()),
+);
+const PRIVATE_PATH = new RegExp(`^/apps/(${PRIVATE_APPS.join("|")})(/(index\\.html)?)?$`);
+function isPrivatePage(ctx?: { filename?: string; path?: string }): boolean {
+  if (ctx?.filename && PRIVATE_ENTRIES.has(normPath(ctx.filename).toLowerCase())) return true;
+  return ctx?.path !== undefined && PRIVATE_PATH.test(normPath(ctx.path).split(/[?#]/)[0]);
+}
+function injectGtm() {
+  return {
+    name: "inject-gtm",
+    apply: "build" as const,
+    transformIndexHtml(_html: string, ctx?: { filename?: string; path?: string }) {
+      if (isPrivatePage(ctx)) return [];
+      return [
+        {
+          tag: "script",
+          injectTo: "head-prepend" as const,
+          children: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`,
+        },
+        {
+          tag: "noscript",
+          injectTo: "body-prepend" as const,
+          children: `<iframe src="https://www.googletagmanager.com/ns.html?id=${GTM_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`,
+        },
+      ];
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), ViteImageOptimizer({ png: { quality: 80 } }), devRewritePlugin(), remapAppPaths()],
+  plugins: [react(), ViteImageOptimizer({ png: { quality: 80 } }), devRewritePlugin(), remapAppPaths(), injectGtm()],
   base: process.env.VITE_BASE_PATH || "/",
+  // Levels with grammar topics, fixed at build time (hub Grammar cards). See src/globals.d.ts.
+  define: {
+    __GRAMMAR_LIVE_LEVELS__: JSON.stringify(liveGrammarLevels(grammarTopics)),
+  },
   build: {
     rollupOptions: {
       input: {
         main:            resolve(__dirname, "index.html"),
         account:         resolve(__dirname, "apps/account/index.html"),
+        teacher:         resolve(__dirname, "apps/teacher/index.html"),
+        progress:        resolve(__dirname, "apps/progress/index.html"),
         wordConnections: resolve(__dirname, "apps/word-connections/index.html"),
+        a2Grammar:       resolve(__dirname, "apps/a2-grammar/index.html"),
+        a2plusGrammar:   resolve(__dirname, "apps/a2plus-grammar/index.html"),
+        b1Grammar:       resolve(__dirname, "apps/b1-grammar/index.html"),
+        b1plusGrammar:   resolve(__dirname, "apps/b1plus-grammar/index.html"),
+        b2plusGrammar:   resolve(__dirname, "apps/b2plus-grammar/index.html"),
+        c1Grammar:       resolve(__dirname, "apps/c1-grammar/index.html"),
+        a2GrammarFlashcards: resolve(__dirname, "apps/a2-grammar-flashcards/index.html"),
+        a2plusGrammarFlashcards: resolve(__dirname, "apps/a2plus-grammar-flashcards/index.html"),
+        b1GrammarFlashcards: resolve(__dirname, "apps/b1-grammar-flashcards/index.html"),
+        b1plusGrammarFlashcards: resolve(__dirname, "apps/b1plus-grammar-flashcards/index.html"),
+        b2plusGrammarFlashcards: resolve(__dirname, "apps/b2plus-grammar-flashcards/index.html"),
+        c1GrammarFlashcards: resolve(__dirname, "apps/c1-grammar-flashcards/index.html"),
         c1Trivia:        resolve(__dirname, "apps/c1-trivia/index.html"),
         c1Business:      resolve(__dirname, "apps/c1-business/index.html"),
         c1Flashcards:    resolve(__dirname, "apps/c1-flashcards/index.html"),
         b1Flashcards:    resolve(__dirname, "apps/b1-flashcards/index.html"),
+        a2Flashcards:    resolve(__dirname, "apps/a2-flashcards/index.html"),
+        a2Trivia:        resolve(__dirname, "apps/a2-trivia/index.html"),
+        a2Vocabulary:    resolve(__dirname, "apps/a2-vocabulary/index.html"),
+        a2plusFlashcards: resolve(__dirname, "apps/a2plus-flashcards/index.html"),
+        a2plusTrivia:    resolve(__dirname, "apps/a2plus-trivia/index.html"),
+        a2plusVocabulary: resolve(__dirname, "apps/a2plus-vocabulary/index.html"),
         b1Trivia:        resolve(__dirname, "apps/b1-trivia/index.html"),
         b1Vocabulary:    resolve(__dirname, "apps/b1-vocabulary/index.html"),
+        b1plusFlashcards: resolve(__dirname, "apps/b1plus-flashcards/index.html"),
+        b1plusTrivia:    resolve(__dirname, "apps/b1plus-trivia/index.html"),
+        b1plusVocabulary: resolve(__dirname, "apps/b1plus-vocabulary/index.html"),
+        b2plusFlashcards: resolve(__dirname, "apps/b2plus-flashcards/index.html"),
+        b2plusTrivia:    resolve(__dirname, "apps/b2plus-trivia/index.html"),
+        b2plusVocabulary: resolve(__dirname, "apps/b2plus-vocabulary/index.html"),
       },
     },
   },

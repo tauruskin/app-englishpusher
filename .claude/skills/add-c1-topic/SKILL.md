@@ -140,6 +140,7 @@ Read `CLAUDE.md` and add the new topic to **both** tables under "Direct topic li
 - [ ] Every word has `definition` or `translation` (one mode per topic, never neither)
 - [ ] Every `example` contains exactly one `___`
 - [ ] Replacing `___` with the word produces a grammatical sentence
+- [ ] **Each example fits ONLY its own word.** Trivia shows the sentence with 3 random other words from the same topic as options, so try every other word of the topic in the blank. If another word also fits, rewrite the sentence with a clear clue (a number or schedule, a fixed phrase, a collocation, grammar like `a`/`an` or `absolutely` + strong adjective). If two words are true synonyms that no sentence can separate, add `similar: ["other word"]` to one of them; trivia then never offers it as a wrong option
 - [ ] Definitions are distinct enough to work as multiple-choice options
 - [ ] `triviaUrl` matches the `id` exactly
 - [ ] `id` is unique — checked against the current `TOPICS` array in `data.ts`
@@ -150,17 +151,38 @@ Read `CLAUDE.md` and add the new topic to **both** tables under "Direct topic li
 
 ## Step 7 — Build and deploy
 
+**Headless mode (orchestrator bridge):** if the environment variable
+`APP_TOPIC_HEADLESS=1` is set, skip `npm run deploy` entirely. Instead:
+
+1. Write `.topic-summary.json` at the repo root with exactly these fields:
+   ```json
+   {
+     "id": "<id>",
+     "title": "<title>",
+     "wordCount": <number>,
+     "sampleWords": [
+       { "word": "<word>", "meaning": "<translation or definition>" }
+     ]
+   }
+   ```
+   Include 3-5 entries in `sampleWords`, picked to represent the topic.
+2. Leave the working tree as-is (uncommitted) — the caller handles
+   branching, committing, and pushing.
+3. Stop here. Do not run Step 8.
+
+**Interactive mode (normal Claude Code session):** run
+
 ```bash
 npm run deploy
 ```
 
 This runs TypeScript check → Vite build → publishes to GitHub Pages with CNAME (`predeploy` handles the build). **Never strip the `--cname` flag from the deploy script.**
 
-Confirm the deploy command succeeds (exit 0) before declaring done.
+Confirm the deploy command succeeds (exit 0) before declaring done, then continue to Step 8.
 
 ---
 
-## Step 8 — Report to user
+## Step 8 — Report to user (interactive mode only — headless mode stops at Step 7)
 
 After deploy, show:
 - Topic title, ID, word count, mode (definition or translation)

@@ -4,6 +4,7 @@ export interface C1Word {
   definition?: string; // use ___ as a placeholder for the word/phrase in the sentence
   translation?: string; // Ukrainian — used instead of definition for translation-mode topics
   example: string;
+  similar?: string[]; // near-synonyms in the same topic — trivia never offers them as wrong options for this word
 }
 
 export interface Topic {
@@ -52,7 +53,7 @@ export const TOPICS: Topic[] = [
         word: "innovation-driven",
         partOfSpeech: "adjective",
         definition: "focused on creating new ideas and solutions as a core strategic value",
-        example: "An ___ culture encourages employees to question existing processes and propose improvements.",
+        example: "As an ___ company, we reinvest a fifth of our profits into developing new products every year.",
       },
       {
         word: "leverage",
@@ -64,7 +65,7 @@ export const TOPICS: Topic[] = [
         word: "iterate",
         partOfSpeech: "verb",
         definition: "to improve a product or process step by step through repeated cycles of testing and feedback",
-        example: "The development team ___ on each version of the app until the experience felt seamless.",
+        example: "The team will ___ on the design, releasing small improvements every week based on user feedback.",
       },
       {
         word: "cutting-edge",
@@ -101,7 +102,7 @@ export const TOPICS: Topic[] = [
         word: "read up on",
         partOfSpeech: "phrasal verb",
         definition: "to study a subject thoroughly by reading a lot about it",
-        example: "She spent the weekend ___ the latest developments in machine learning.",
+        example: "Before the interview, she decided to ___ the company's latest products and projects.",
       },
       {
         word: "catch on",
@@ -113,13 +114,14 @@ export const TOPICS: Topic[] = [
         word: "get into",
         partOfSpeech: "phrasal verb",
         definition: "to become interested or involved in something",
-        example: "He first ___ programming during a school hackathon and never looked back.",
+        example: "He didn't ___ programming until university, but now he is passionate about it.",
       },
       {
         word: "dream up",
         partOfSpeech: "phrasal verb",
         definition: "to think of a creative or unusual idea",
-        example: "It took months to ___ a solution that was both practical and affordable.",
+        example: "Only a child could ___ such a wild story about elephants that fly to the moon.",
+        similar: ["come up with"],
       },
       {
         word: "come up with",
@@ -197,19 +199,19 @@ export const TOPICS: Topic[] = [
         word: "drive sustainable growth",
         partOfSpeech: "phrase",
         definition: "to create conditions that allow a business to expand steadily without compromising future potential (instead of: help us grow)",
-        example: "Our five-year strategy is designed to ___ by investing in people and technology.",
+        example: "Our five-year strategy is designed to ___, expanding steadily year after year without putting our future at risk.",
       },
       {
         word: "leverage innovative solutions",
         partOfSpeech: "phrase",
         definition: "to use new ideas and tools to maximum advantage (instead of: use new ideas)",
-        example: "We must ___ to stay ahead in a rapidly changing market.",
+        example: "We must ___ such as AI and automation to stay ahead in a rapidly changing market.",
       },
       {
         word: "maintain a competitive edge",
         partOfSpeech: "phrase",
         definition: "to keep an advantage over rivals; to stay ahead of competitors (instead of: stay competitive)",
-        example: "Companies must ___ by continuously improving their products and services.",
+        example: "In a crowded market, companies must ___ over their rivals by continuously improving their products.",
       },
       {
         word: "address key challenges",
@@ -245,14 +247,14 @@ export const TOPICS: Topic[] = [
     triviaUrl: "/c1-trivia/?topic=innovation-leadership",
     words: [
       // ── Innovation & Leadership ──────────────────────────────────────────────
-      { word: "geek out about something", partOfSpeech: "phrasal verb", translation: "захоплено говорити про щось / занурюватися в тему", example: "It is easy to ___ when you are surrounded by curious, enthusiastic people." },
-      { word: "drive something towards the future", partOfSpeech: "phrase", translation: "рухати щось у майбутнє / розвивати", example: "Good leaders inspire their teams to ___ by making bold, creative decisions." },
+      { word: "geek out about something", partOfSpeech: "phrasal verb", translation: "захоплено говорити про щось / занурюватися в тему", example: "Ask my brother one question about space rockets and he will ___ for hours — he simply can't stop talking!", similar: ["show passion for something"] },
+      { word: "drive something towards the future", partOfSpeech: "phrase", translation: "рухати щось у майбутнє / розвивати", example: "A leader's job is not only to run the company today but also to ___." },
       { word: "new developments are happening", partOfSpeech: "phrase", translation: "з'являються нові розробки", example: "In the field of artificial intelligence, ___ so fast that it is hard to keep up." },
-      { word: "apply something to people's lives", partOfSpeech: "phrase", translation: "застосовувати щось у реальному житті", example: "The real challenge is not inventing solutions but knowing how to ___." },
-      { word: "make an impact", partOfSpeech: "phrase", translation: "мати вплив / впливати", example: "To truly ___, you need both a great idea and the determination to follow it through." },
+      { word: "apply something to people's lives", partOfSpeech: "phrase", translation: "застосовувати щось у реальному житті", example: "Scientists make the discoveries, but it is engineers who ___ — turning research into things we use at home every day.", similar: ["deploy an idea"] },
+      { word: "make an impact", partOfSpeech: "phrase", translation: "мати вплив / впливати", example: "To truly ___, you need both a great idea and the determination to follow it through.", similar: ["make a difference"] },
       { word: "think more broadly", partOfSpeech: "phrase", translation: "мислити ширше", example: "To solve complex problems, leaders need to ___ and consider perspectives from many different fields." },
       { word: "on this journey", partOfSpeech: "phrase", translation: "на цьому шляху", example: "We are grateful to have so many talented, passionate people with us ___." },
-      { word: "chase your passion", partOfSpeech: "phrase", translation: "слідувати своїй пристрасті", example: "It can be scary to ___, but those who do often find the most fulfilment." },
+      { word: "chase your passion", partOfSpeech: "phrase", translation: "слідувати своїй пристрасті", example: "Don't choose a job just for the money — ___ and do what you truly love." },
       { word: "take someone all over the world", partOfSpeech: "phrase", translation: "дати можливість побувати по всьому світу", example: "A career in international business can ___ and expose you to new cultures every year." },
       { word: "get into technology", partOfSpeech: "phrasal verb", translation: "почати займатися технологіями", example: "She decided to ___ after building her first website at the age of twelve." },
       { word: "get your hands dirty", partOfSpeech: "idiom", translation: "братися до справи на практиці / не боятися складної роботи", example: "You can read all the theory you want, but at some point you need to ___." },
@@ -260,16 +262,16 @@ export const TOPICS: Topic[] = [
       { word: "come along on a journey", partOfSpeech: "phrase", translation: "приєднатися до когось у його справі", example: "We invite all curious minds to ___ as we explore the future of sustainable technology." },
       // ── Problem Solving & Innovation ─────────────────────────────────────────
       { word: "like-minded people", partOfSpeech: "noun phrase", translation: "однодумці", example: "Working with ___ makes collaboration easier and keeps everyone motivated." },
-      { word: "brainstorm together", partOfSpeech: "phrase", translation: "генерувати ідеї разом", example: "When facing a complex challenge, it always helps to ___ before committing to a single solution." },
-      { word: "tackle a challenge", partOfSpeech: "phrase", translation: "братися за складне завдання", example: "You will never know what you are truly capable of until you ___ that seems impossible." },
+      { word: "brainstorm together", partOfSpeech: "phrase", translation: "генерувати ідеї разом", example: "Let's all sit down in the meeting room and ___ — every idea goes on the whiteboard, no matter how crazy." },
+      { word: "tackle a challenge", partOfSpeech: "phrase", translation: "братися за складне завдання", example: "You will never know what you are truly capable of until you ___ that seems impossible.", similar: ["tackle a problem"] },
       { word: "tackle a problem", partOfSpeech: "phrase", translation: "вирішувати проблему", example: "The most effective way to ___ is to break it down into smaller, manageable steps." },
       { word: "make a difference", partOfSpeech: "phrase", translation: "змінювати щось на краще", example: "Even small everyday actions can ___ when enough people are committed to change." },
       { word: "gain insight", partOfSpeech: "phrase", translation: "отримати глибше розуміння", example: "Spending time with real users is the best way to ___ into what they actually need." },
-      { word: "get to the heart of the problem", partOfSpeech: "idiom", translation: "дістатися суті проблеми", example: "Good leaders ask the right questions because they know how to ___." },
+      { word: "get to the heart of the problem", partOfSpeech: "idiom", translation: "дістатися суті проблеми", example: "Stop focusing on the symptoms — we need to ___ and understand what is really causing it." },
       { word: "face a problem", partOfSpeech: "phrase", translation: "зіткнутися з проблемою", example: "Every entrepreneur will ___ at some point — what matters most is how you respond." },
       { word: "find a workaround", partOfSpeech: "phrase", translation: "знайти обхідне рішення", example: "When the main approach failed, the team had to quickly ___ to keep the project on track." },
       { word: "create prototypes", partOfSpeech: "phrase", translation: "створювати прототипи", example: "Before launching the final product, engineers need to ___ and test them with real users." },
-      { word: "try out ideas", partOfSpeech: "phrasal verb", translation: "тестувати ідеї", example: "The best innovation labs give employees time to ___ without any fear of failure." },
+      { word: "try out ideas", partOfSpeech: "phrasal verb", translation: "тестувати ідеї", example: "The best innovation labs give employees time to ___ and see which ones actually work, without any fear of failure." },
       { word: "deploy an idea", partOfSpeech: "phrase", translation: "впровадити ідею", example: "Having a great concept is only the beginning — the real challenge is to ___ at scale." },
       { word: "get the biggest bang for your buck", partOfSpeech: "idiom", translation: "отримати максимальний результат за вкладені ресурси", example: "When resources are limited, always focus on solutions that will help you ___." },
     ],

@@ -1,0 +1,71 @@
+// src/data/topics/index.ts
+import type { GrammarTopic } from "../types.ts";
+import { presentSimpleVsContinuousTopic } from "./present-simple-vs-continuous.ts";
+import { irregularVerbsTopic } from "./irregular-verbs.ts";
+import { verbPatternsTopic } from "./verb-patterns.ts";
+import { narrativeTensesTopic } from "./narrative-tenses.ts";
+import { modifiersTopic } from "./modifiers.ts";
+import { pastSimplePresentPerfectTopic } from "./past-simple-present-perfect.ts";
+import { apologiseAndGiveReasonsTopic } from "./apologise-and-give-reasons.ts";
+import { prepositionsOfTimeTopic } from "./prepositions-of-time.ts";
+import { questionFormsTopic } from "./question-forms.ts";
+import { startingEndingConversationsTopic } from "./starting-ending-conversations.ts";
+import { adverbsOfFrequencyTopic } from "./adverbs-of-frequency.ts";
+import { stativeDynamicVerbsTopic } from "./stative-dynamic-verbs.ts";
+import { possessivePronounsTopic } from "./possessive-pronouns.ts";
+import { quantifiersTopic } from "./quantifiers.ts";
+import { modalsRulesAdviceTopic } from "./modals-rules-advice.ts";
+import { articlesTopic } from "./articles.ts";
+import { presentPerfectSuperlativeTopic } from "./present-perfect-superlative.ts";
+import { relativeClausesTopic } from "./relative-clauses.ts";
+import { reportedSpeechTopic } from "./reported-speech.ts";
+import { personalNewsTopic } from "./personal-news.ts";
+import { futurePredictionsTopic } from "./future-predictions.ts";
+import { usedToTopic } from "./used-to.ts";
+import { comparativesAndSuperlativesTopic } from "./comparatives-and-superlatives.ts";
+import { askingGivingOpinionsTopic } from "./asking-giving-opinions.ts";
+import { presentPerfectForSinceYetTopic } from "./present-perfect-for-since-yet.ts";
+import { firstAndSecondConditionalsTopic } from "./first-and-second-conditionals.ts";
+import { expressingAmountsTopic } from "./expressing-amounts.ts";
+import { makingRespondingRecommendationsTopic } from "./making-responding-recommendations.ts";
+import { reflexivePronounsTopic } from "./reflexive-pronouns.ts";
+import { canCouldBeAbleToTopic } from "./can-could-be-able-to.ts";
+import { ingFormTopic } from "./ing-form.ts";
+import { verbsWithTwoObjectsTopic } from "./verbs-with-two-objects.ts";
+
+const topics: GrammarTopic[] = [
+  presentSimpleVsContinuousTopic,
+  irregularVerbsTopic,
+  verbPatternsTopic,
+  narrativeTensesTopic,
+  modifiersTopic,
+  pastSimplePresentPerfectTopic,
+  apologiseAndGiveReasonsTopic,
+  prepositionsOfTimeTopic,
+  questionFormsTopic,
+  startingEndingConversationsTopic,
+  adverbsOfFrequencyTopic,
+  stativeDynamicVerbsTopic,
+  possessivePronounsTopic,
+  quantifiersTopic,
+  modalsRulesAdviceTopic,
+  articlesTopic,
+  presentPerfectSuperlativeTopic,
+  relativeClausesTopic,
+  reportedSpeechTopic,
+  personalNewsTopic,
+  futurePredictionsTopic,
+  usedToTopic,
+  comparativesAndSuperlativesTopic,
+  askingGivingOpinionsTopic,
+  presentPerfectForSinceYetTopic,
+  firstAndSecondConditionalsTopic,
+  expressingAmountsTopic,
+  makingRespondingRecommendationsTopic,
+  reflexivePronounsTopic,
+  canCouldBeAbleToTopic,
+  ingFormTopic,
+  verbsWithTwoObjectsTopic,
+];
+
+export default topics;

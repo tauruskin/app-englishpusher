@@ -11,7 +11,7 @@
   - Header with logo + "Englishpusher **Learning Apps**" title
   - Teacher celebrate character (left, desktop only) with speech bubble
   - 3 animated app cards (stagger slide-in from left):
-    - Grammar Testing → https://grammar.englishpusher.in.ua
+    - Grammar → https://app.englishpusher.in.ua/<level>-grammar/ (grammar.englishpusher.in.ua redirects since 2026-11-12)
     - Vocabulary Trivia → https://trivia.englishpusher.in.ua/
     - Vocabulary Cards → Coming Soon (disabled)
   - Footer: Copyright © 2026 — Developed by Tetiana Pushkar
@@ -251,3 +251,19 @@ Teacher approved the beta after trying it live. Released:
 - `beta` branch + Cloudflare Worker deployment kept alive for testing future changes to this feature; one Supabase project still serves both
 - Test account `claude.prod.verify@englishpusher.in.ua` left in Supabase Auth — delete via dashboard if not wanted
 - Saved a memory (`project_reminder_feature_idea.md`) for the teacher's next ask: interval/spaced-repetition reminders to revisit old topics, building on `trivia_results`/`study_events`. Not started — run through brainstorming first when picked up.
+
+## 2026-09-24 — Trivia: ambiguous example sentences fixed
+
+Teacher report: B1 Adverbs of Frequency sentence "She meets her tutor ___ to practise..." marked 'frequently' wrong although it fit better than 'two times a fortnight'. Root cause: trivia distractors are 3 random words from the same topic, and many examples fit several topic words.
+
+- Audited all 13 topics (B1 + C1); rewrote ~100 example sentences so each fits only its own word (numeric/schedule clues, fixed phrases, a/an, absolutely + extreme adjective, etc.). Also fixed grammar-broken examples (C1 'iterate', 'read up on', 'get into' were in past tense / -ing with a base-form blank)
+- New optional `similar?: string[]` field on `B1Word` / `C1Word`: true synonyms never shown as wrong options for each other
+- `getDistractors` in both trivia apps now skips interchangeable words: same translation/definition or listed in `similar`. This also fixes true/false and translation questions for identical-translation pairs (own/possess, seem/appear, involve/include, mind/deny, astonish/surprise)
+- add-b1-topic / add-c1-topic skills: new checklist item, "each example fits ONLY its own word"
+- Open: type-word questions (B1) still accept only one answer for identical translations such as "володіти" (own vs possess); translations need the teacher's input
+
+## 2026-10-22 — Rename to "Englishpusher App" + flashcards word list
+
+- Site title "Englishpusher Learning Apps" → "Englishpusher App" (header, tab/og title, manifest, B1/C1 subtitles); merged and live
+- Teacher asked for a list of words in Flash Cards so students needn't click through every card. New `src/shared/WordList.tsx`: teacher-with-magnifier floating button → searchable word list, tap to jump; wired into b1-flashcards and c1-flashcards. Verified locally at desktop and 390px (search 'ann' → Enter → card 7/27). Branch `flashcards-word-list`, PR for the user to merge
+- Same avatar is used for the Moodle lesson-search button (moodle-task-builder `moodle-snippets/lesson-search.html`)
