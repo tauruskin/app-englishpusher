@@ -17,6 +17,16 @@ const PRICE_PER_CHAR = 0.000016; // OpenRouter price for MODEL, 2026-11-20
 const LIMIT = 5000;
 const MAX_FAILS_IN_A_ROW = 5;
 const LEVELS = ["a2", "a2plus", "b1", "b1plus", "b2plus", "c1"];
+// The voice sometimes adds extra speech after short words (e.g. "own" came back as 2.6 s).
+// Clips are ~50 kbps mono, about 6.5 KB per second, so size tells the length without ffprobe.
+const BYTES_PER_SECOND = 6500;
+const MAX_ATTEMPTS = 3;
+
+/** Pure: is this clip much longer than the text could take to say? */
+export function tooLong(text: string, bytes: number): boolean {
+  const seconds = bytes / BYTES_PER_SECOND;
+  return seconds > Math.max(1.1, 0.18 * text.trim().length + 0.6);
+}
 
 export interface AudioPlan {
   create: { file: string; text: string }[];
@@ -69,6 +79,17 @@ async function voice(text: string, key: string): Promise<Buffer> {
   return bytes;
 }
 
+/** Voice a word, retrying when the clip is too long; keeps the shortest attempt. */
+async function voiceChecked(text: string, key: string): Promise<{ bytes: Buffer; attempts: number; ok: boolean }> {
+  let best: Buffer | null = null;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const bytes = await voice(text, key);
+    if (!best || bytes.length < best.length) best = bytes;
+    if (!tooLong(text, bytes.length)) return { bytes, attempts: attempt, ok: true };
+  }
+  return { bytes: best!, attempts: MAX_ATTEMPTS, ok: false };
+}
+
 const cost = (chars: number) => `~$${(chars * PRICE_PER_CHAR).toFixed(2)}`;
 
 async function main(): Promise<void> {
@@ -110,8 +131,14 @@ async function main(): Promise<void> {
         break;
       }
       try {
-        writeFileSync(resolve(dir, item.file), await voice(item.text, key!));
-        made++; chars += item.text.length; failsInARow = 0;
+        const result = await voiceChecked(item.text, key!);
+        writeFileSync(resolve(dir, item.file), result.bytes);
+        made++; chars += item.text.length * result.attempts; failsInARow = 0;
+        if (result.attempts > 1) {
+          console.log(result.ok
+            ? `  "${item.text}": clip was too long, fixed on try ${result.attempts}`
+            : `::warning::Audio: "${item.text}" still sounds too long after ${MAX_ATTEMPTS} tries, kept the shortest. Please listen to it.`);
+        }
         if (made % 100 === 0) console.log(`  … ${made} made`);
       } catch (err) {
         skipped++; failsInARow++;
