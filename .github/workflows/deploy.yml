@@ -19,9 +19,29 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - run: npm install
+
+      # Recorded word pronunciation (specs/002-word-audio): voice new words, drop deleted ones.
+      # Never fails the deploy; words without a recording use the device voice.
+      - name: Generate word audio
+        run: node scripts/generate-audio.ts
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+
+      - name: Commit new audio
+        run: |
+          if [ -z "$(git status --porcelain public/audio)" ]; then
+            echo "No audio changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add public/audio
+          git commit -m "Audio: update word recordings [skip ci]"
+          git pull --rebase origin main && git push origin HEAD:main \
+            || echo "::warning::Could not push new audio; the next deploy will make it again."
 
       - run: echo "VITE_BASE_PATH=/" >> $GITHUB_ENV
 

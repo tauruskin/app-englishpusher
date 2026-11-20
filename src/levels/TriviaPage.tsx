@@ -18,6 +18,7 @@ import teacherThinking from "../assets/teacher-thinking.png";
 import teacherCorrect from "../assets/teacher-correct.png";
 import teacherSad from "../assets/teacher-sad.png";
 import teacherCelebrate from "../assets/teacher-celebrate.png";
+import { speakWord, stopSpeaking } from "../shared/speakWord.ts";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -97,29 +98,14 @@ function playWrongSound() {
 }
 
 // ---------------------------------------------------------------------------
-// Web Speech API — TTS
+// Word pronunciation: recorded voice, device voice as fallback (src/shared/speakWord.ts)
 // ---------------------------------------------------------------------------
 
-const PREFERRED_VOICES = ["Daniel", "Karen", "Samantha"];
-
-function getEnVoice(): SpeechSynthesisVoice | null {
-  const voices = window.speechSynthesis?.getVoices() ?? [];
-  for (const name of PREFERRED_VOICES) {
-    const v = voices.find(v => v.name.includes(name) && v.lang.startsWith("en"));
-    if (v) return v;
-  }
-  return voices.find(v => v.lang === "en-US") ?? voices.find(v => v.lang.startsWith("en")) ?? null;
-}
+const SPEAK_OPTIONS = { rate: 0.85, preferredVoices: ["Daniel", "Karen", "Samantha"] };
 
 function speakText(text: string, muted: boolean) {
-  if (muted || !window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-US";
-  utterance.rate = 0.85;
-  const voice = getEnVoice();
-  if (voice) utterance.voice = voice;
-  window.speechSynthesis.speak(utterance);
+  if (muted) return;
+  speakWord(text, SPEAK_OPTIONS);
 }
 
 // ---------------------------------------------------------------------------
@@ -933,7 +919,7 @@ export default function TriviaPage() {
               </button>
             )}
             <button
-              onClick={() => { if (!muted) window.speechSynthesis?.cancel(); setMuted(m => !m); }}
+              onClick={() => { if (!muted) stopSpeaking(); setMuted(m => !m); }}
               className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-neutral-800 transition-colors text-neutral-400 hover:text-white"
               title={muted ? "Unmute" : "Mute"}
             >

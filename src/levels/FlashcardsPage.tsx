@@ -9,6 +9,7 @@ import { logStudyEvent } from "../shared/progress.ts";
 import { WordList } from "../shared/WordList.tsx";
 import TopicTileGrid, { type TopicTile } from "../shared/TopicTileGrid.tsx";
 import { DeckLayout, GradientBorder } from "../shared/FlashcardDeck.tsx";
+import { speakWord } from "../shared/speakWord.ts";
 import type { Topic, Word } from "./types.ts";
 import { useLevel } from "./mount.tsx";
 import { flashcardsAppId, pageUrl } from "./level.ts";
@@ -18,19 +19,6 @@ import teacherCorrect from "../assets/teacher-correct.png";
 type Phase = "select" | "studying";
 
 // ---------------------------------------------------------------------------
-// Speech synthesis
-// ---------------------------------------------------------------------------
-
-function speak(text: string) {
-  if (!("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "en-US";
-  utterance.rate = 0.9;
-  window.speechSynthesis.speak(utterance);
-}
-
-// ---------------------------------------------------------------------------
 // Speaker button
 // ---------------------------------------------------------------------------
 
@@ -38,7 +26,7 @@ function SpeakerButton({ word }: { word: string }) {
   const [active, setActive] = useState(false);
 
   function handleClick() {
-    speak(word);
+    speakWord(word);
     setActive(true);
     setTimeout(() => setActive(false), 800);
   }

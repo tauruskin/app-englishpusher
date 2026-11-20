@@ -474,6 +474,8 @@ src/
     savedWords.tsx                ← useSavedWords, StarButton, My Words topic resolution
     TriviaSave.tsx                ← end-screen auto-save + guest hint + failure notice
     SignInPopup.tsx               ← guest "Keep your results" popup on grammar + trivia end screens
+    audioName.ts                  ← word → recording file name (shared by app + scripts/generate-audio.ts)
+    speakWord.ts                  ← plays a word's recording, falls back to the device voice
   index.css                       ← Tailwind imports + character animations
   main.tsx                        ← hub React entry
   Index.tsx                       ← entire hub landing page (single file)
@@ -541,6 +543,16 @@ import { AppFooter } from "../shared/AppShell.tsx";
 ## Shared component — `src/shared/WordList.tsx` (flashcards word list)
 
 Floating teacher-with-magnifier button (`src/assets/teacher-search.png`, same picture as the Moodle lesson-search button) shown on A2, A2+, B1 and C1 flashcard topics, My Words included. Opens a searchable list of the topic's words (word + translation, or C1 definition clamped to 2 lines; current card highlighted, starred words marked). Tap / Enter jumps to the card (`onJump` sets `index`, unflips). Bottom sheet on phones, panel above the button on desktop. Props: `items` ({word, hint}), `current`, `saved?`, `onJump`. Added 2026-10-22 at the teacher's request.
+
+## Recorded word pronunciation — `public/audio/jane/` + `src/shared/speakWord.ts`
+
+Speaker buttons in all flashcards (A2–C1) and level trivia play a pre-recorded MP3 in one voice (Mistral Voxtral "Jane", `gb_jane_neutral`, via OpenRouter, chosen by ear 2026-11-20). Words only, no example sentences. Spec/plan: `specs/002-word-audio/`.
+
+- **Files**: one per unique word at `public/audio/jane/<slug>-<hash>.mp3`; the name comes from `audioFileName(word)` in `src/shared/audioName.ts` (lowercase text → case variants share a file; a corrected word gets a new file). No lookup list.
+- **Playback**: `speakWord(word, opts)` plays the file; if it's missing or won't load it uses the device voice (same as before the feature). One word at a time; `stopSpeaking()` stops it. Trivia keeps its own mute + "after interaction" checks.
+- **Generator**: `node scripts/generate-audio.ts [--all] [--dry-run]` (env `OPENROUTER_API_KEY`). Voices only missing words, deletes files of deleted words, refuses more than 5,000 characters per run unless `--all`, never fails on API errors. Full library ≈ 23,300 characters ≈ $0.37; a topic ≈ $0.005.
+- **Deploy**: `deploy.yml` runs the generator before the build with repo secret `OPENROUTER_API_KEY` and commits new files back to `main` as `github-actions[bot]` ("Audio: update word recordings [skip ci]"). So new topics get audio automatically, however they were added. Beta gets the files via the usual `main` → `beta` merge.
+- **Switching voice later**: change `AUDIO_VOICE_DIR` + `MODEL`/`VOICE` in the generator, run `--all` once.
 
 ## Seasonal decorations — `src/shared/seasonal/` + `src/shared/Seasonal.tsx`
 
