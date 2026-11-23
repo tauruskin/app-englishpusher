@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { api } from "../api.ts";
-import { daysAgo, delta, personName } from "../format.ts";
+import { daysAgo, delta, moodleVisitText, personName } from "../format.ts";
 import { sortRows, type SortDir } from "../sort.ts";
 import { useData } from "../useData.ts";
 import { AccuracyCell, Card, Dimmed, FiltersRow, SourceDots, StateBox } from "../ui.tsx";
@@ -72,6 +72,7 @@ export function Students({ filters, setFilters, href }: PageProps) {
                 <tbody>
                   {rows.map((r) => {
                     const d = delta(r.accuracy, r.accuracy_prev);
+                    const visit = moodleVisitText(r.moodle_last_visit);
                     return (
                       <tr key={r.person_id} className="border-b border-neutral-100 hover:bg-neutral-50">
                         <td className="py-2 pr-3">
@@ -84,7 +85,10 @@ export function Students({ filters, setFilters, href }: PageProps) {
                           {d && d.direction !== "flat" && <span className="ml-2 text-xs text-neutral-500">{d.text}</span>}
                         </td>
                         <td className="py-2 pr-3 text-right tabular-nums">{r.answers}</td>
-                        <td className="py-2 pr-3 text-neutral-600">{daysAgo(r.last_active)}</td>
+                        <td className="py-2 pr-3 text-neutral-600">
+                          {daysAgo(r.last_active)}
+                          {visit && <span className="block text-xs text-neutral-400">{visit}</span>}
+                        </td>
                         <td className="py-2 pr-3">
                           {r.weakest_topic ? (
                             <a href={href({ page: "topic", topicKey: r.weakest_topic.topic_key })} className="hover:text-brand hover:underline">
