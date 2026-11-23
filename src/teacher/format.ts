@@ -81,6 +81,12 @@ export function daysAgo(iso: string | null, now: number = Date.now()): string {
   return `${days} days ago`;
 }
 
+/** "Moodle: today" for a student's last Moodle visit; null when there is none (show nothing). */
+export function moodleVisitText(iso: string | null | undefined, now: number = Date.now()): string | null {
+  if (!iso || !Number.isFinite(Date.parse(iso))) return null;
+  return `Moodle: ${daysAgo(iso, now)}`;
+}
+
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 /** "6 Nov 2026" in Kyiv time; "an unknown date" for missing or unparseable input. */
