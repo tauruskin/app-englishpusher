@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { resolve } from "path";
-import { copyFileSync, mkdirSync, rmSync, existsSync } from "fs";
+import { copyFileSync, mkdirSync, rmSync, existsSync, writeFileSync } from "fs";
 import grammarTopics from "./src/grammar/topics/index.ts";
 import { liveGrammarLevels } from "./src/grammar/levels.ts";
 
@@ -125,8 +125,22 @@ function injectGtm() {
   };
 }
 
+// Beta only: keep search engines away from the beta site. Cloudflare Workers Builds sets
+// WORKERS_CI=1 and its static-assets server reads dist/_headers. GitHub Actions (production)
+// never sets it, so the live site stays indexable.
+function betaNoindex() {
+  return {
+    name: "beta-noindex",
+    apply: "build" as const,
+    closeBundle() {
+      if (!process.env.WORKERS_CI) return;
+      writeFileSync(resolve(__dirname, "dist/_headers"), "/*\n  X-Robots-Tag: noindex, nofollow\n");
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), ViteImageOptimizer({ png: { quality: 80 } }), devRewritePlugin(), remapAppPaths(), injectGtm()],
+  plugins: [react(), ViteImageOptimizer({ png: { quality: 80 } }), devRewritePlugin(), remapAppPaths(), injectGtm(), betaNoindex()],
   base: process.env.VITE_BASE_PATH || "/",
   // Levels with grammar topics, fixed at build time (hub Grammar cards). See src/globals.d.ts.
   define: {
