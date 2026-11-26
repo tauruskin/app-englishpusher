@@ -1,7 +1,11 @@
 import { type ReactNode } from "react";
-import { Home, User } from "lucide-react";
+import { Home, Instagram, User } from "lucide-react";
 import { useSessionUser } from "./auth.tsx";
 import { Seasonal } from "./Seasonal.tsx";
+
+// Page frame: every page (the hub included) puts header, content and footer in
+// `mx-auto max-w-page` (90rem, tailwind.config.js), so the logo and account button never jump between pages.
+// Keep the literal class (Tailwind needs it) in sync with Index.tsx if it changes.
 
 // Account entry point, shared by the hub header and AppShell. Guests get an
 // explicit "Sign in" pill. Signed-in users get an initial avatar plus their
@@ -66,10 +70,10 @@ export function AppHeader({
 }: AppHeaderProps) {
   return (
     <header className="bg-neutral-900 border-b border-neutral-700/50 px-6 py-4">
-      <div className="mx-auto flex max-w-4xl items-center justify-between gap-3">
+      <div className="mx-auto flex max-w-page items-center justify-between gap-3">
         {/* Left: logo + title */}
         <div className="flex items-center gap-3">
-          <img src="/logo.png" alt="Englishpusher logo" className="h-8 w-auto" />
+          <img src="/logo.png" alt="Englishpusher logo" className="h-9 w-auto" />
           <div>
             {onTitleClick ? (
               <button
@@ -123,7 +127,7 @@ export function AppHeader({
 // AppFooter — shared dark footer for all activity apps (not the landing page)
 //
 // On mobile: shows "‹ Topics" (if showTopics + onTopics) on left, "Home" on right
-// On desktop: footer shows only copyright; nav lives in the header
+// On desktop: copyright left, Instagram right (same as the hub footer); nav lives in the header
 // ---------------------------------------------------------------------------
 
 interface AppFooterProps {
@@ -133,10 +137,10 @@ interface AppFooterProps {
 
 export function AppFooter({ onTopics, showTopics }: AppFooterProps) {
   return (
-    <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-3">
+    <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-4">
       <Seasonal />
       {/* Mobile nav — hidden on desktop */}
-      <div className="md:hidden mx-auto max-w-4xl flex items-center justify-between gap-4 text-sm mb-3">
+      <div className="md:hidden mx-auto max-w-page flex items-center justify-between gap-4 text-sm mb-3">
         {showTopics && onTopics ? (
           <button
             onClick={onTopics}
@@ -156,16 +160,28 @@ export function AppFooter({ onTopics, showTopics }: AppFooterProps) {
         </a>
       </div>
 
-      {/* Copyright */}
-      <div className="mx-auto max-w-4xl text-center text-sm text-neutral-400">
-        Copyright &copy; 2026 &mdash;{" "}
+      {/* Copyright + Instagram, laid out like the hub footer (phones: copyright only, to keep study space) */}
+      <div className="mx-auto flex max-w-page flex-col items-center gap-2 sm:flex-row sm:justify-between">
+        <span className="text-xs sm:text-sm text-neutral-400">
+          Copyright &copy; 2026 &mdash; Developed by{" "}
+          <a
+            href="https://englishpusher.in.ua"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-brand hover:text-brand/80 transition-colors"
+          >
+            Tetiana Pushkar
+          </a>
+        </span>
         <a
-          href="https://englishpusher.in.ua"
+          href="https://www.instagram.com/teti_push_english?igsh=MWMxbGxodnJrOHI2"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-brand hover:text-brand/80 transition-colors"
+          aria-label="Follow on Instagram"
+          className="hidden sm:flex items-center gap-1.5 text-sm text-neutral-400 hover:text-[#e1306c] transition-colors"
         >
-          Englishpusher
+          <Instagram size={16} />
+          <span>@teti_push_english</span>
         </a>
       </div>
     </footer>

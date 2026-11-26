@@ -415,15 +415,12 @@ export default function Index() {
     : cardsForLevel(CARDS, activeTab).map(cardTile);
 
   return (
-    <motion.div
-      className="relative min-h-screen flex flex-col"
-      variants={pageVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    // Header and footer stay still (like every other page); only the content fades + slides in.
+    // Animating the whole page used to slide the header down 20 px on load, showing a strip above it.
+    <div className="relative min-h-screen flex flex-col">
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <header className="bg-neutral-900 border-b border-neutral-700/50 px-6 py-4">
-        <div className="mx-auto flex max-w-5xl items-center gap-3">
+        <div className="mx-auto flex max-w-page items-center gap-3">
           <img src="/logo.png" alt="Englishpusher logo" className="h-9 w-auto" />
           <h1 className="font-display text-xl font-bold leading-tight text-white">
             Englishpusher <span className="text-brand">App</span>
@@ -452,7 +449,7 @@ export default function Index() {
           gradient="from-blue-300/[0.22]"
           className="left-[24%] top-[4%]" />
 
-        <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col gap-10 md:flex-row md:items-center md:gap-14">
+        <motion.div variants={pageVariants} initial="hidden" animate="visible" className="relative z-10 mx-auto flex w-full max-w-5xl flex-col gap-10 md:flex-row md:items-center md:gap-14">
 
           {/* ── Left: hero text ─────────────────────────────────────────── */}
           <div className="flex flex-col gap-5 md:w-[380px] md:shrink-0">
@@ -538,13 +535,13 @@ export default function Index() {
               ))}
             </motion.div>
           </div>
-        </div>
+        </motion.div>
       </main>
 
       {/* ── Footer ─────────────────────────────────────────────────────── */}
       <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-4">
         <Seasonal />
-        <div className="mx-auto flex max-w-5xl flex-col items-center gap-2 sm:flex-row sm:justify-between">
+        <div className="mx-auto flex max-w-page flex-col items-center gap-2 sm:flex-row sm:justify-between">
           <span className="text-sm text-neutral-400">
             Copyright &copy; 2026 &mdash; Developed by{" "}
             <a
@@ -569,6 +566,6 @@ export default function Index() {
           </a>
         </div>
       </footer>
-    </motion.div>
+    </div>
   );
 }

@@ -129,7 +129,8 @@ export default function App() {
 
       {/* Main */}
       <main className="flex flex-1 items-start justify-center px-6 py-14">
-        <div className="w-full max-w-4xl flex flex-col gap-8">
+        {/* Hero pages keep a centred 64rem block inside the 90rem header/footer frame */}
+        <div className="w-full max-w-5xl flex flex-col gap-8">
 
           {/* Hero row */}
           <div className="flex items-end gap-6">
