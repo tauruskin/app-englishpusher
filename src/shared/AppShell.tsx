@@ -4,7 +4,7 @@ import { useSessionUser } from "./auth.tsx";
 import { Seasonal } from "./Seasonal.tsx";
 
 // Page frame: every page (the hub included) puts header, content and footer in
-// `mx-auto max-w-5xl`, so the logo and account button never jump between pages.
+// `mx-auto max-w-page` (90rem, tailwind.config.js), so the logo and account button never jump between pages.
 // Keep the literal class (Tailwind needs it) in sync with Index.tsx if it changes.
 
 // Account entry point, shared by the hub header and AppShell. Guests get an
@@ -70,7 +70,7 @@ export function AppHeader({
 }: AppHeaderProps) {
   return (
     <header className="bg-neutral-900 border-b border-neutral-700/50 px-6 py-4">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-3">
+      <div className="mx-auto flex max-w-page items-center justify-between gap-3">
         {/* Left: logo + title */}
         <div className="flex items-center gap-3">
           <img src="/logo.png" alt="Englishpusher logo" className="h-9 w-auto" />
@@ -140,7 +140,7 @@ export function AppFooter({ onTopics, showTopics }: AppFooterProps) {
     <footer className="bg-neutral-900 border-t border-neutral-700/50 px-6 py-4">
       <Seasonal />
       {/* Mobile nav — hidden on desktop */}
-      <div className="md:hidden mx-auto max-w-5xl flex items-center justify-between gap-4 text-sm mb-3">
+      <div className="md:hidden mx-auto max-w-page flex items-center justify-between gap-4 text-sm mb-3">
         {showTopics && onTopics ? (
           <button
             onClick={onTopics}
@@ -161,7 +161,7 @@ export function AppFooter({ onTopics, showTopics }: AppFooterProps) {
       </div>
 
       {/* Copyright + Instagram, laid out like the hub footer (phones: copyright only, to keep study space) */}
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-2 sm:flex-row sm:justify-between">
+      <div className="mx-auto flex max-w-page flex-col items-center gap-2 sm:flex-row sm:justify-between">
         <span className="text-xs sm:text-sm text-neutral-400">
           Copyright &copy; 2026 &mdash; Developed by{" "}
           <a

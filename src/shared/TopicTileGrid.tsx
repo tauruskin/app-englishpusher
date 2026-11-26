@@ -5,8 +5,8 @@ import teacherThinking from "../assets/teacher-thinking.png";
 // grammar equivalents. Two looks that match the original vocabulary screens exactly:
 //   "flashcards" = orange, no teacher, no stagger
 //   "quiz"       = blue, teacher in the hero, staggered tiles
-// Both use the shared page frame (max-w-5xl, same as header/footer) and a grid that grows
-// from 1 column (phones) to 2 (tablets) to 3 (laptops and wider).
+// Both use the shared page frame (max-w-page, same as header/footer) and a grid that grows
+// from 1 column (phones) to 2 (tablets), 3 (laptops) and 4 (1280 px and wider).
 
 export interface TopicTile {
   id: string;
@@ -42,7 +42,7 @@ function FlashcardsGrid({ badge, heading, subtitle, tiles, onSelect }: TopicTile
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="w-full max-w-5xl flex flex-col gap-6"
+      className="w-full max-w-page flex flex-col gap-6"
     >
       <div className="flex flex-col gap-1">
         <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-brand uppercase tracking-wide w-fit">
@@ -56,7 +56,7 @@ function FlashcardsGrid({ badge, heading, subtitle, tiles, onSelect }: TopicTile
         </p>
       </div>
 
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {tiles.map((tile) => (
           <button
             key={tile.id}
@@ -86,7 +86,7 @@ function QuizGrid({ badge, heading, subtitle, tiles, onSelect }: TopicTileGridPr
     <motion.div
       initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.35, ease: "easeOut" }}
-      className="w-full max-w-5xl flex flex-col gap-8"
+      className="w-full max-w-page flex flex-col gap-8"
     >
       {/* Hero row */}
       <div className="flex items-end gap-6">
@@ -103,7 +103,7 @@ function QuizGrid({ badge, heading, subtitle, tiles, onSelect }: TopicTileGridPr
       </div>
 
       {/* Topic cards */}
-      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {tiles.map(tile => (
           <motion.button
             key={tile.id} variants={itemVariants} whileHover={{ scale: 1.02 }}

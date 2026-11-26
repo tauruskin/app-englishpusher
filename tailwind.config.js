@@ -7,6 +7,8 @@ export default {
         display: ['"Space Grotesk"', "sans-serif"],
         body: ["Inter", "sans-serif"],
       },
+      // Page frame shared by every page (header, content, footer): see AppShell.tsx
+      maxWidth: { page: "90rem" },
       colors: {
         brand: "#f07c1a",
         // Grammar theme tokens. Their values exist only inside `.grammar-app` (src/grammar/grammar.css),

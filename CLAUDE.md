@@ -535,7 +535,7 @@ import { AppFooter } from "../shared/AppShell.tsx";
 
 ### Page frame (2026-11-26)
 
-Every page, the hub included, uses `mx-auto max-w-5xl` for its header, content and footer, so the logo and account button stay in the same place on every page. The app footer now matches the hub footer (copyright left, Instagram right; on phones only the copyright shows). Topic lists (`TopicTileGrid`, C1 flashcards/trivia) use 1 / 2 / 3 columns (`sm:grid-cols-2 lg:grid-cols-3`). New pages should use the same `max-w-5xl` frame.
+Every page, the hub included, uses `mx-auto max-w-page` (90rem = 1440 px, defined in `tailwind.config.js`) for its header, content and footer, so the logo and account button stay in the same place on every page. The app footer matches the hub footer (copyright left, Instagram right; on phones only the copyright shows). Topic lists (`TopicTileGrid`, C1 flashcards/trivia) use 1 / 2 / 3 / 4 columns (`sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`). Chooser pages keep the hero row and the activity cards at `max-w-5xl` inside the frame (two cards across 1440 px look too wide). On the hub, the accordion column is capped at 820 px on xl screens. New pages should use `max-w-page`.
 
 ### Rules for new activities
 
@@ -616,7 +616,7 @@ Both vocabulary cards open a **chooser page** (`/b1-vocabulary/`, `/c1-business/
 
 ## Animations (motion/react)
 
-- Page: fade + slide up (`opacity 0→1`, `y 20→0`, 0.35 s ease-out)
+- Page: the content fades + slides up (`opacity 0→1`, `y 20→0`, 0.35 s ease-out). The header and footer never animate: animating the whole page slid the header 20 px down on load and showed a cream strip above it (fixed 2026-11-26).
 - Cards: stagger from left (`x -24→0`, spring, staggerChildren 0.1 s, delayChildren 0.15 s)
 - ElegantShape entry: `y -150→0`, `opacity 0→1`, staggered delays
 - ElegantShape float: `y [0, 15, 0]`, 12 s infinite easeInOut

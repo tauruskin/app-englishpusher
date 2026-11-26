@@ -101,7 +101,7 @@ function TopicSelectScreen({ topics, onSelect }: { topics: Topic[]; onSelect: (t
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="w-full max-w-5xl flex flex-col gap-6"
+      className="w-full max-w-page flex flex-col gap-6"
     >
       <div className="flex flex-col gap-1">
         <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700 uppercase tracking-wide w-fit">
@@ -115,7 +115,7 @@ function TopicSelectScreen({ topics, onSelect }: { topics: Topic[]; onSelect: (t
         </p>
       </div>
 
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {topics.map((topic) => (
           <button
             key={topic.id}
