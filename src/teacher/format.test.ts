@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  accountsText, archiveConfirmText, archiveError, attemptsText, attentionText, dateLabel, daysAgo, delta, filterCandidates, friendlyError, levelLabel, mergeError, mergeWarning, moodleRange, pct, periodLabel, personName, QUIZ_LEVELS, quizLevelError, scoreText, shorten, sourceLabel, wrongAnswersText,
+  accountsText, archiveConfirmText, archiveError, attemptsText, attentionText, dateLabel, daysAgo, delta, filterCandidates, friendlyError, levelLabel, mergeError, mergeWarning, moodleRange, moodleVisitText, pct, periodLabel, personName, QUIZ_LEVELS, quizLevelError, scoreText, shorten, sourceLabel, wrongAnswersText,
 } from "./format.ts";
 
 test("moodleRange shows first try and latest", () => {
@@ -225,4 +225,14 @@ test("mergeError explains refusals in plain words", () => {
   );
   assert.equal(mergeError({ status: 401 }), "Your session has expired. Please sign in again.");
   assert.equal(mergeError({}), "Couldn't save the change. Check your connection and try again.");
+});
+
+test("moodleVisitText: 'Moodle: today' style, null for no visit", () => {
+  const now = Date.parse("2026-11-23T12:00:00Z");
+  assert.equal(moodleVisitText("2026-11-23T08:00:00Z", now), "Moodle: today");
+  assert.equal(moodleVisitText("2026-11-22T10:00:00Z", now), "Moodle: yesterday");
+  assert.equal(moodleVisitText("2026-11-13T12:00:00Z", now), "Moodle: 10 days ago");
+  assert.equal(moodleVisitText(null, now), null);
+  assert.equal(moodleVisitText(undefined, now), null);
+  assert.equal(moodleVisitText("not a date", now), null);
 });

@@ -72,6 +72,8 @@ export interface RosterRow {
   accuracy_prev: number | null;
   answers: number;
   last_active: string | null;
+  /** Last time the student opened Moodle (any page); null/missing = no Moodle account or no visit yet. */
+  moodle_last_visit?: string | null;
   weakest_topic: { topic_key: string; title: string; accuracy: number | null } | null;
   sources: string[];
 }
@@ -133,6 +135,8 @@ export interface StudentDetail {
   archived_at?: string | null;
   /** The student's Quiz Bot level; null = no Quiz Bot account. Missing on an older backend (treat like null). */
   quiz?: { level: QuizLevel } | null;
+  /** Last time the student opened Moodle; null/missing = none. Never part of the results. */
+  moodle_last_visit?: string | null;
 }
 
 /** One archived student in `analytics_teacher_archived` (newest archive first). */

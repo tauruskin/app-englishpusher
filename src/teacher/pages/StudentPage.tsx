@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "../api.ts";
 import { addDays, dayLabel } from "../charts/columns.ts";
 import { StackedColumns } from "../charts/StackedColumns.tsx";
-import { archiveConfirmText, dateLabel, daysAgo, levelLabel, pct, personName, QUIZ_LEVELS, scoreText, sourceLabel, type QuizLevel } from "../format.ts";
+import { archiveConfirmText, dateLabel, daysAgo, levelLabel, moodleVisitText, pct, personName, QUIZ_LEVELS, scoreText, sourceLabel, type QuizLevel } from "../format.ts";
 import { lookup } from "../lookup.ts";
 import { INK } from "../theme.ts";
 import { useData } from "../useData.ts";
@@ -106,6 +106,7 @@ function StudentView({ href, personId }: PageProps & { personId: string }) {
   }
 
   const s = data.summary;
+  const moodleVisit = moodleVisitText(data.moodle_last_visit);
   const isStudent = data.person?.role === "student";
   const weeks = data.trend.map((w) => ({
     key: w.week,
@@ -127,6 +128,7 @@ function StudentView({ href, personId }: PageProps & { personId: string }) {
             <h1 className="font-display text-2xl font-bold text-neutral-900">{personName(data.person?.display_name)}</h1>
             <p className="mt-1 flex flex-wrap items-center gap-3 font-body text-sm text-neutral-500">
               Last active {daysAgo(s.last_active)} <SourceDots sources={Object.keys(data.sources)} />
+              {moodleVisit && <span>{moodleVisit}</span>}
             </p>
           </div>
           {isStudent && (

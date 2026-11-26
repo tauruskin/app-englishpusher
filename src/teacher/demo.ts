@@ -29,9 +29,9 @@ const BASE = {
     ],
   } as Overview,
   students: [
-    { ...people[0], accuracy: 86, accuracy_prev: 80, answers: 120, last_active: iso(0), weakest_topic: { topic_key: "b1:grammar:modifiers", title: "Modifiers", accuracy: 58 }, sources: ["app", "bot"] },
+    { ...people[0], accuracy: 86, accuracy_prev: 80, answers: 120, last_active: iso(0), moodle_last_visit: iso(0), weakest_topic: { topic_key: "b1:grammar:modifiers", title: "Modifiers", accuracy: 58 }, sources: ["app", "bot"] },
     { ...people[1], accuracy: 61, accuracy_prev: 84, answers: 74, last_active: iso(1), weakest_topic: { topic_key: "b1:grammar:irregular-verbs", title: "Irregular Verbs", accuracy: 40 }, sources: ["bot"] },
-    { ...people[2], accuracy: 77, accuracy_prev: null, answers: 55, last_active: iso(3), weakest_topic: null, sources: ["bot"] },
+    { ...people[2], accuracy: 77, accuracy_prev: null, answers: 55, last_active: iso(3), moodle_last_visit: iso(2), weakest_topic: null, sources: ["bot"] },
     { ...people[3], accuracy: null, accuracy_prev: 70, answers: 0, last_active: iso(12), weakest_topic: null, sources: ["app"] },
   ] as RosterRow[],
   topics: {
@@ -97,6 +97,7 @@ const BASE = {
   } as TopicDetail,
   student: {
     person: { id: "d1", display_name: "Anna", role: "student" },
+    moodle_last_visit: iso(1),
     summary: { accuracy: 86, accuracy_prev: 80, answers: 120, streak: 6, words_learned: 214, active_days_month: 9, last_active: iso(0) },
     weak_topics: [],
     topics: [
