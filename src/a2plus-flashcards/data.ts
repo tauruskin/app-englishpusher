@@ -5,7 +5,7 @@ import type { Topic } from "../levels/types.ts";
 export const TOPICS: Topic[] = [
   {
     id: "lesson-14-actions",
-    title: "Lesson 14: Actions",
+    title: "Actions",
     icon: "🏃",
     description: "Everyday verb phrases like cancel, answer, carry and hold",
     triviaUrl: "/a2plus-trivia/?topic=lesson-14-actions",

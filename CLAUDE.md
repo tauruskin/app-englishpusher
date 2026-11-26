@@ -47,11 +47,11 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Stative Verbs | https://app.englishpusher.in.ua/b1-flashcards/?topic=stative-verbs |
 | Personality & Relationships | https://app.englishpusher.in.ua/b1-flashcards/?topic=personality-relationships |
 | Adverbs of Frequency | https://app.englishpusher.in.ua/b1-flashcards/?topic=adverbs-frequency |
-| Lesson 6: Jobs & Work | https://app.englishpusher.in.ua/b1-flashcards/?topic=jobs |
-| Lesson 15: Story Words | https://app.englishpusher.in.ua/b1-flashcards/?topic=story-words |
-| Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-flashcards/?topic=collocations-get-make |
-| Lesson 18: Unit 2 Review | https://app.englishpusher.in.ua/b1-flashcards/?topic=lesson-18-review |
-| Lesson 19: Facts and Figures | https://app.englishpusher.in.ua/b1-flashcards/?topic=lesson-19-facts-figures |
+| Jobs & Work | https://app.englishpusher.in.ua/b1-flashcards/?topic=jobs |
+| Story Words | https://app.englishpusher.in.ua/b1-flashcards/?topic=story-words |
+| Get & Make Collocations | https://app.englishpusher.in.ua/b1-flashcards/?topic=collocations-get-make |
+| Unit 2 Review | https://app.englishpusher.in.ua/b1-flashcards/?topic=lesson-18-review |
+| Facts and Figures | https://app.englishpusher.in.ua/b1-flashcards/?topic=lesson-19-facts-figures |
 | Common Phrases | https://app.englishpusher.in.ua/b1-flashcards/?topic=common-phrases |
 | Conversation Topics | https://app.englishpusher.in.ua/b1-flashcards/?topic=conversation-topics |
 | Decisions | https://app.englishpusher.in.ua/b1-flashcards/?topic=decisions |
@@ -85,11 +85,11 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 | Stative Verbs | https://app.englishpusher.in.ua/b1-trivia/?topic=stative-verbs |
 | Personality & Relationships | https://app.englishpusher.in.ua/b1-trivia/?topic=personality-relationships |
 | Adverbs of Frequency | https://app.englishpusher.in.ua/b1-trivia/?topic=adverbs-frequency |
-| Lesson 6: Jobs & Work | https://app.englishpusher.in.ua/b1-trivia/?topic=jobs |
-| Lesson 15: Story Words | https://app.englishpusher.in.ua/b1-trivia/?topic=story-words |
-| Lesson 16: Get & Make Collocations | https://app.englishpusher.in.ua/b1-trivia/?topic=collocations-get-make |
-| Lesson 18: Unit 2 Review | https://app.englishpusher.in.ua/b1-trivia/?topic=lesson-18-review |
-| Lesson 19: Facts and Figures | https://app.englishpusher.in.ua/b1-trivia/?topic=lesson-19-facts-figures |
+| Jobs & Work | https://app.englishpusher.in.ua/b1-trivia/?topic=jobs |
+| Story Words | https://app.englishpusher.in.ua/b1-trivia/?topic=story-words |
+| Get & Make Collocations | https://app.englishpusher.in.ua/b1-trivia/?topic=collocations-get-make |
+| Unit 2 Review | https://app.englishpusher.in.ua/b1-trivia/?topic=lesson-18-review |
+| Facts and Figures | https://app.englishpusher.in.ua/b1-trivia/?topic=lesson-19-facts-figures |
 | Common Phrases | https://app.englishpusher.in.ua/b1-trivia/?topic=common-phrases |
 | Conversation Topics | https://app.englishpusher.in.ua/b1-trivia/?topic=conversation-topics |
 | Decisions | https://app.englishpusher.in.ua/b1-trivia/?topic=decisions |
@@ -137,19 +137,19 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 
 | Topic | Direct link |
 |---|---|
-| Lesson 51: Clothes & Appearance | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-51-clothes-appearance |
-| Lesson 56: Directions | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-56-directions |
-| Lesson 5: Adjectives for Feelings | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-5-adjectives-feelings |
-| Lesson 53: Types of Transport | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-53-types-of-transport |
-| Lesson 53: Transport Collocations | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-53-transport-collocations |
-| Lesson 59: Skills and Qualities | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-59-skills-and-qualities |
-| Lesson 35: Shops | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-35-shops |
+| Clothes & Appearance | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-51-clothes-appearance |
+| Directions | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-56-directions |
+| Adjectives for Feelings | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-5-adjectives-feelings |
+| Types of Transport | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-53-types-of-transport |
+| Transport Collocations | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-53-transport-collocations |
+| Skills and Qualities | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-59-skills-and-qualities |
+| Shops | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-35-shops |
 | Common Adjectives | https://app.englishpusher.in.ua/a2-flashcards/?topic=common-adjectives |
 | Eating Out | https://app.englishpusher.in.ua/a2-flashcards/?topic=eating-out |
 | Food and Drinks | https://app.englishpusher.in.ua/a2-flashcards/?topic=food-and-drinks |
-| Lesson 2: Professions | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-2-professions |
+| Professions | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-2-professions |
 | Rooms and Furniture | https://app.englishpusher.in.ua/a2-flashcards/?topic=rooms-and-furniture |
-| Lesson 1: Hello! | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-1-hello |
+| Hello! | https://app.englishpusher.in.ua/a2-flashcards/?topic=lesson-1-hello |
 | Everyday Objects | https://app.englishpusher.in.ua/a2-flashcards/?topic=everyday-objects |
 | Colours | https://app.englishpusher.in.ua/a2-flashcards/?topic=colours |
 | Countries and Nationalities | https://app.englishpusher.in.ua/a2-flashcards/?topic=countries-and-nationalities |
@@ -177,19 +177,19 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 
 | Topic | Direct link |
 |---|---|
-| Lesson 51: Clothes & Appearance | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-51-clothes-appearance |
-| Lesson 56: Directions | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-56-directions |
-| Lesson 5: Adjectives for Feelings | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-5-adjectives-feelings |
-| Lesson 53: Types of Transport | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-53-types-of-transport |
-| Lesson 53: Transport Collocations | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-53-transport-collocations |
-| Lesson 59: Skills and Qualities | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-59-skills-and-qualities |
-| Lesson 35: Shops | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-35-shops |
+| Clothes & Appearance | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-51-clothes-appearance |
+| Directions | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-56-directions |
+| Adjectives for Feelings | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-5-adjectives-feelings |
+| Types of Transport | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-53-types-of-transport |
+| Transport Collocations | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-53-transport-collocations |
+| Skills and Qualities | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-59-skills-and-qualities |
+| Shops | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-35-shops |
 | Common Adjectives | https://app.englishpusher.in.ua/a2-trivia/?topic=common-adjectives |
 | Eating Out | https://app.englishpusher.in.ua/a2-trivia/?topic=eating-out |
 | Food and Drinks | https://app.englishpusher.in.ua/a2-trivia/?topic=food-and-drinks |
-| Lesson 2: Professions | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-2-professions |
+| Professions | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-2-professions |
 | Rooms and Furniture | https://app.englishpusher.in.ua/a2-trivia/?topic=rooms-and-furniture |
-| Lesson 1: Hello! | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-1-hello |
+| Hello! | https://app.englishpusher.in.ua/a2-trivia/?topic=lesson-1-hello |
 | Everyday Objects | https://app.englishpusher.in.ua/a2-trivia/?topic=everyday-objects |
 | Colours | https://app.englishpusher.in.ua/a2-trivia/?topic=colours |
 | Countries and Nationalities | https://app.englishpusher.in.ua/a2-trivia/?topic=countries-and-nationalities |
@@ -217,7 +217,7 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 
 | Topic | Direct link |
 |---|---|
-| Lesson 14: Actions | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=lesson-14-actions |
+| Actions | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=lesson-14-actions |
 | Air Travel | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=air-travel |
 | Everyday Activities | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=everyday-activities |
 | Jobs | https://app.englishpusher.in.ua/a2plus-flashcards/?topic=jobs |
@@ -251,7 +251,7 @@ All flash card apps support `?topic=<id>` deep links. The teacher can copy and s
 
 | Topic | Direct link |
 |---|---|
-| Lesson 14: Actions | https://app.englishpusher.in.ua/a2plus-trivia/?topic=lesson-14-actions |
+| Actions | https://app.englishpusher.in.ua/a2plus-trivia/?topic=lesson-14-actions |
 | Air Travel | https://app.englishpusher.in.ua/a2plus-trivia/?topic=air-travel |
 | Everyday Activities | https://app.englishpusher.in.ua/a2plus-trivia/?topic=everyday-activities |
 | Jobs | https://app.englishpusher.in.ua/a2plus-trivia/?topic=jobs |
