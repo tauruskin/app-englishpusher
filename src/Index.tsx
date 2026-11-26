@@ -449,10 +449,10 @@ export default function Index() {
           gradient="from-blue-300/[0.22]"
           className="left-[24%] top-[4%]" />
 
-        <motion.div variants={pageVariants} initial="hidden" animate="visible" className="relative z-10 mx-auto flex w-full max-w-page flex-col gap-10 md:flex-row md:items-center md:gap-14">
+        <motion.div variants={pageVariants} initial="hidden" animate="visible" className="relative z-10 mx-auto flex w-full max-w-5xl flex-col gap-10 md:flex-row md:items-center md:gap-14">
 
           {/* ── Left: hero text ─────────────────────────────────────────── */}
-          <div className="flex flex-col gap-5 md:w-[380px] xl:w-[440px] md:shrink-0">
+          <div className="flex flex-col gap-5 md:w-[380px] md:shrink-0">
             <div className="flex flex-wrap items-center gap-2">
               <a
                 href="https://englishpusher.in.ua"
@@ -491,8 +491,7 @@ export default function Index() {
           </div>
 
           {/* ── Right: accordion (desktop) / cards (mobile) ─────────────── */}
-          {/* capped on wide screens so the open panel does not stretch into an empty slab */}
-          <div className="flex-1 min-w-0 xl:max-w-[820px] xl:ml-auto flex flex-col gap-4">
+          <div className="flex-1 min-w-0 flex flex-col gap-4">
 
             {/* Tabs */}
             <div className="flex flex-wrap gap-2">

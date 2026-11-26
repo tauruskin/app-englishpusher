@@ -129,10 +129,11 @@ export default function App() {
 
       {/* Main */}
       <main className="flex flex-1 items-start justify-center px-6 py-14">
-        <div className="w-full max-w-page flex flex-col gap-8">
+        {/* Hero pages keep a centred 64rem block inside the 90rem header/footer frame */}
+        <div className="w-full max-w-5xl flex flex-col gap-8">
 
-          {/* Hero row: same width as the cards, so the teacher stays above them */}
-          <div className="flex w-full max-w-5xl items-end gap-6">
+          {/* Hero row */}
+          <div className="flex items-end gap-6">
             <div className="flex-1">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -167,7 +168,7 @@ export default function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
-            className="grid w-full max-w-5xl grid-cols-1 md:grid-cols-2 gap-5"
+            className="grid grid-cols-1 md:grid-cols-2 gap-5"
           >
             {ITEMS.map((item) => (
               <ActivityCard key={item.id} item={item} />

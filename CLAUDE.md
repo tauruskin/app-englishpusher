@@ -535,7 +535,7 @@ import { AppFooter } from "../shared/AppShell.tsx";
 
 ### Page frame (2026-11-26)
 
-Every page, the hub included, uses `mx-auto max-w-page` (90rem = 1440 px, defined in `tailwind.config.js`) for its header, content and footer, so the logo and account button stay in the same place on every page. The app footer matches the hub footer (copyright left, Instagram right; on phones only the copyright shows). Topic lists (`TopicTileGrid`, C1 flashcards/trivia) use 1 / 2 / 3 / 4 columns (`sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`). Chooser pages keep the hero row and the activity cards at `max-w-5xl` inside the frame (two cards across 1440 px look too wide). On the hub, the accordion column is capped at 820 px on xl screens. New pages should use `max-w-page`.
+Every page, the hub included, uses `mx-auto max-w-page` (90rem = 1440 px, defined in `tailwind.config.js`) for its header, content and footer, so the logo and account button stay in the same place on every page. The app footer matches the hub footer (copyright left, Instagram right; on phones only the copyright shows). Topic lists (`TopicTileGrid`, C1 flashcards/trivia) use 1 / 2 / 3 / 4 columns (`sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`). Exception: hero pages (the hub main section and the chooser pages) keep their content in a centred `max-w-5xl` block; at 1440 px the accordion panel and the two activity cards stretched into empty slabs. Rule for new pages: header/footer always `max-w-page`; lists and grids `max-w-page`; single-hero pages `max-w-5xl`, centred.
 
 ### Rules for new activities
 
