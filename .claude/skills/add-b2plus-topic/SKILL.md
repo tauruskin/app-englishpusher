@@ -26,7 +26,7 @@ interface Word {
 
 interface Topic {
   id: string;             // kebab-case, stable — NEVER rename after publishing
-  title: string;          // "Lesson N: Short Title" if a lesson number is given
+  title: string;          // short descriptive title, NEVER "Lesson N:" (lesson numbers are not shown; teacher request 2026-11-26)
   icon: string;           // single emoji representing the topic
   description: string;    // one-line description for the topic card
   words: Word[];
@@ -75,7 +75,7 @@ The sentence is used in the "Fill in the sentence" trivia question.
 
 ```
 id          → kebab-case slug of the topic name; for numbered lessons "lesson-N-<slug>"
-title       → "Lesson N: Short Description" if a lesson number is given, otherwise descriptive
+title       → Short descriptive title. Never prefix "Lesson N:" even if a lesson number is given (it may go in the id only)
 icon        → one emoji that fits the topic
 description → one phrase, 5–10 words, shown under the title on the card
 ```

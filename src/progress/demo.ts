@@ -19,8 +19,8 @@ const topics: StudentTopic[] = [
   { topic_key: "b1:grammar:modifiers", kind: "grammar", level: "b1", title: "Modifiers", answers: 14, accuracy: 57, mastery: "needs_work", last_at: iso(2) },
   { topic_key: "b1:grammar:irregular-verbs", kind: "grammar", level: "b1", title: "Irregular Verbs", answers: 20, accuracy: 65, mastery: "learning", last_at: iso(1) },
   { topic_key: "a2:grammar:present-simple", kind: "grammar", level: "a2", title: "Present Simple", answers: 20, accuracy: 95, mastery: "mastered", last_at: iso(20) },
-  { topic_key: "b1:vocab:jobs", kind: "vocab", level: "b1", title: "Lesson 6: Jobs & Work", answers: 18, accuracy: 83, mastery: "strong", last_at: iso(0) },
-  { topic_key: "b1:vocab:travel", kind: "vocab", level: "b1", title: "Lesson 4: Travel", answers: 9, accuracy: 70, mastery: "learning", last_at: iso(5) },
+  { topic_key: "b1:vocab:jobs", kind: "vocab", level: "b1", title: "Jobs & Work", answers: 18, accuracy: 83, mastery: "strong", last_at: iso(0) },
+  { topic_key: "b1:vocab:travel", kind: "vocab", level: "b1", title: "Travel", answers: 9, accuracy: 70, mastery: "learning", last_at: iso(5) },
   { topic_key: "b1plus:vocab:feelings", kind: "vocab", level: "b1plus", title: "Feelings and Emotions", answers: 3, accuracy: 67, mastery: "not_enough_data", last_at: iso(9) },
 ];
 

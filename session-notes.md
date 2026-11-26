@@ -275,3 +275,8 @@ Teacher report: B1 Adverbs of Frequency sentence "She meets her tutor ___ to pra
 - Checked in headless Edge at 1920, 1280, 800 and 390 px: the logo has the same x position on the hub, flashcards, trivia, chooser and grammar pages.
 - Follow-up, same day: the frame is now `max-w-page` (90rem, `tailwind.config.js`) and the topic grid has 4 columns from 1280 px. The hub's accordion column is capped at 820 px on xl screens. The chooser hero and cards stay at `max-w-5xl`. The hub header no longer slides in on load (it used to leave a ~20 px strip above the header); only the content animates now.
 - Second follow-up: the hub's main section and the chooser pages are back to a centred `max-w-5xl` block (inside the 90rem header/footer). Pinned left, the chooser left a big empty area on the right; at 1440 px the hub's open accordion panel was too wide. Topic lists keep 90rem / 4 columns.
+
+## 2026-11-26 — Topic titles without "Lesson N:"
+
+- Teacher request: removed the "Lesson N: " prefix from the 15 topic titles that had it (A2 9, A2+ 1, B1 5). Ids are unchanged, so `?topic=` links, saved words and progress still work. The topic-creation skills (A2, B1, B1+, B2+) now say never to add the prefix. The CLAUDE.md link tables and the demo data were updated too.
+- Teacher dashboard / My progress read titles from `analytics.topics`, filled by `scripts/analytics/app_topics_sql.py` in moodle-task-builder. Regenerate that SQL and run it in the Supabase SQL Editor so the dashboard shows the new titles (the upsert updates titles).

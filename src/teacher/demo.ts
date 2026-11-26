@@ -38,7 +38,7 @@ const BASE = {
     topics: [
       { topic_key: "b1:grammar:irregular-verbs", title: "Irregular Verbs", kind: "grammar", level: "b1", answers: 60, accuracy: 56 },
       { topic_key: "b1:grammar:modifiers", title: "Modifiers", kind: "grammar", level: "b1", answers: 44, accuracy: 68 },
-      { topic_key: "b1:vocab:jobs", title: "Lesson 6: Jobs & Work", kind: "vocab", level: "b1", answers: 30, accuracy: 83 },
+      { topic_key: "b1:vocab:jobs", title: "Jobs & Work", kind: "vocab", level: "b1", answers: 30, accuracy: 83 },
     ],
     students: people,
     cells: [
@@ -103,7 +103,7 @@ const BASE = {
     topics: [
       { topic_key: "b1:grammar:modifiers", kind: "grammar", level: "b1", title: "Modifiers", answers: 12, accuracy: 58, mastery: "needs_work", last_at: iso(2) },
       { topic_key: "b1:grammar:irregular-verbs", kind: "grammar", level: "b1", title: "Irregular Verbs", answers: 20, accuracy: 75, mastery: "learning", last_at: iso(1) },
-      { topic_key: "b1:vocab:jobs", kind: "vocab", level: "b1", title: "Lesson 6: Jobs & Work", answers: 18, accuracy: 94, mastery: "mastered", last_at: iso(0) },
+      { topic_key: "b1:vocab:jobs", kind: "vocab", level: "b1", title: "Jobs & Work", answers: 18, accuracy: 94, mastery: "mastered", last_at: iso(0) },
       { topic_key: "b1:vocab:stative-verbs", kind: "vocab", level: "b1", title: "Stative Verbs", answers: 2, accuracy: 50, mastery: "not_enough_data", last_at: iso(9) },
     ],
     trend: Array.from({ length: 8 }, (_, i) => ({ week: day((7 - i) * 7), answers: 8 + ((i * 5) % 11), accuracy: 70 + i * 2 })),
@@ -111,7 +111,7 @@ const BASE = {
     sources: { bot: 100, app: 20 },
     recent_mistakes: [
       { topic_key: "b1:grammar:modifiers", title: "Modifiers", item: "b40", item_label: "It was ___ cold that we stayed inside.", source: "bot", activity: "quiz", occurred_at: iso(1), correct_answer: "so", your_answer: "such" },
-      { topic_key: "b1:vocab:jobs", title: "Lesson 6: Jobs & Work", item: "w:plumber", item_label: "plumber", source: "app", activity: "trivia", occurred_at: iso(2), correct_answer: null, your_answer: null },
+      { topic_key: "b1:vocab:jobs", title: "Jobs & Work", item: "w:plumber", item_label: "plumber", source: "app", activity: "trivia", occurred_at: iso(2), correct_answer: null, your_answer: null },
       // Long answers are cut with "…" (full text in the tooltip).
       { topic_key: "b1:grammar:modifiers", title: "Modifiers", item: "b77", item_label: "Choose the sentence that is correct.", source: "bot", activity: "quiz", occurred_at: iso(3), correct_answer: "If I had known about the delay, I would have taken an earlier train to the station.", your_answer: "If I would have known about the delay, I would have taken an earlier train to the station." },
     ],

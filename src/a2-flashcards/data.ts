@@ -4,7 +4,7 @@ import type { Topic } from "../levels/types.ts";
 export const TOPICS: Topic[] = [
   {
     id: "lesson-51-clothes-appearance",
-    title: "Lesson 51: Clothes & Appearance",
+    title: "Clothes & Appearance",
     icon: "👕",
     description: "Clothing items and words for describing people's appearance",
     triviaUrl: "/a2-trivia/?topic=lesson-51-clothes-appearance",
@@ -42,7 +42,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: "lesson-56-directions",
-    title: "Lesson 56: Directions",
+    title: "Directions",
     icon: "🧭",
     description: "Phrases and words for asking for and giving directions",
     triviaUrl: "/a2-trivia/?topic=lesson-56-directions",
@@ -67,7 +67,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: "lesson-5-adjectives-feelings",
-    title: "Lesson 5: Adjectives for Feelings",
+    title: "Adjectives for Feelings",
     icon: "😊",
     description: "Adjectives for describing feelings and emotions",
     triviaUrl: "/a2-trivia/?topic=lesson-5-adjectives-feelings",
@@ -93,7 +93,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: "lesson-53-types-of-transport",
-    title: "Lesson 53: Types of Transport",
+    title: "Types of Transport",
     icon: "🚌",
     description: "Words for different kinds of vehicles and ways to travel",
     triviaUrl: "/a2-trivia/?topic=lesson-53-types-of-transport",
@@ -118,7 +118,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: "lesson-53-transport-collocations",
-    title: "Lesson 53: Transport Collocations",
+    title: "Transport Collocations",
     icon: "🚏",
     description: "Phrases for taking, boarding and leaving transport",
     triviaUrl: "/a2-trivia/?topic=lesson-53-transport-collocations",
@@ -157,7 +157,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: "lesson-59-skills-and-qualities",
-    title: "Lesson 59: Skills and Qualities",
+    title: "Skills and Qualities",
     icon: "🛠️",
     description: "Verbs and phrases for talents, abilities and skills",
     triviaUrl: "/a2-trivia/?topic=lesson-59-skills-and-qualities",
@@ -186,7 +186,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: "lesson-35-shops",
-    title: "Lesson 35: Shops",
+    title: "Shops",
     icon: "🛍️",
     description: "Names of different shops and places to go shopping",
     triviaUrl: "/a2-trivia/?topic=lesson-35-shops",
@@ -327,7 +327,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: "lesson-2-professions",
-    title: "Lesson 2: Professions",
+    title: "Professions",
     icon: "💼",
     description: "Everyday jobs and words for being out of work",
     triviaUrl: "/a2-trivia/?topic=lesson-2-professions",
@@ -405,7 +405,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: "lesson-1-hello",
-    title: "Lesson 1: Hello!",
+    title: "Hello!",
     icon: "👋",
     description: "Greetings and common question words for getting to know someone",
     triviaUrl: "/a2-trivia/?topic=lesson-1-hello",

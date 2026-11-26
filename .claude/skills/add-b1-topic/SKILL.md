@@ -27,7 +27,7 @@ interface B1Word {
 ```ts
 interface Topic {
   id: string;            // kebab-case, stable — NEVER rename after publishing
-  title: string;         // "Lesson N: Short Title" if lesson number given
+  title: string;         // short descriptive title, NEVER "Lesson N:" (lesson numbers are not shown; teacher request 2026-11-26)
   icon: string;          // single emoji representing the topic
   description: string;   // one-line description for the topic card
   words: B1Word[];
@@ -99,7 +99,7 @@ id          → kebab-case slug of the topic name (e.g., "collocations-get-make"
               For numbered lessons the existing pattern is "lesson-N-<slug>"
               (e.g., "lesson-19-facts-figures"). Keep it short and stable.
 
-title       → If teacher gave a lesson number: "Lesson N: Short Description"
+title       → Short descriptive title. Never prefix "Lesson N:" even if the teacher gives a lesson number (it may go in the id only)
               Otherwise: descriptive title matching the words (e.g., "Adjectives for Feelings")
 
 icon        → Pick a single emoji that fits the topic:

@@ -192,7 +192,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: "jobs",
-    title: "Lesson 6: Jobs & Work",
+    title: "Jobs & Work",
     icon: "💼",
     description: "Job titles, responsibilities and employment vocabulary",
     triviaUrl: "/b1-trivia/?topic=jobs",
@@ -232,7 +232,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: "story-words",
-    title: "Lesson 15: Story Words",
+    title: "Story Words",
     icon: "🎬",
     description: "Films, genres and storytelling vocabulary",
     triviaUrl: "/b1-trivia/?topic=story-words",
@@ -259,7 +259,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: "collocations-get-make",
-    title: "Lesson 16: Get & Make Collocations",
+    title: "Get & Make Collocations",
     icon: "🤝",
     description: "Common collocations with get and make",
     triviaUrl: "/b1-trivia/?topic=collocations-get-make",
@@ -276,7 +276,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: "lesson-18-review",
-    title: "Lesson 18: Unit 2 Review",
+    title: "Unit 2 Review",
     icon: "📚",
     description: "Feelings adjectives and film & story vocabulary review",
     triviaUrl: "/b1-trivia/?topic=lesson-18-review",
@@ -315,7 +315,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: "lesson-19-facts-figures",
-    title: "Lesson 19: Facts and Figures",
+    title: "Facts and Figures",
     icon: "🧠",
     description: "Knowledge vocabulary — memory, data, facts and figures",
     triviaUrl: "/b1-trivia/?topic=lesson-19-facts-figures",
