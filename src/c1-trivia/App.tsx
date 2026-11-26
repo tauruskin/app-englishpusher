@@ -240,7 +240,7 @@ function TopicSelectScreen({ topics, onSelect }: { topics: Topic[]; onSelect: (t
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="w-full max-w-4xl flex flex-col gap-6"
+      className="w-full max-w-5xl flex flex-col gap-6"
     >
       <div className="flex flex-col gap-1">
         <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-bold text-purple-700 uppercase tracking-wide w-fit">
@@ -254,15 +254,15 @@ function TopicSelectScreen({ topics, onSelect }: { topics: Topic[]; onSelect: (t
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {topics.map((topic) => (
           <button
             key={topic.id}
             onClick={() => onSelect(topic)}
             disabled={topic.words.length === 0}
-            className="rounded-2xl bg-white border-2 border-neutral-200 px-6 py-5 text-left hover:border-purple-300 hover:shadow-md transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-2xl bg-white border-2 border-neutral-200 px-5 py-4 text-left hover:border-purple-300 hover:shadow-md transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <div className="text-3xl mb-3">{topic.icon}</div>
+            <div className="text-3xl mb-2">{topic.icon}</div>
             <h3 className="font-display font-bold text-lg text-neutral-900 group-hover:text-purple-700 transition-colors">
               {topic.title}
             </h3>

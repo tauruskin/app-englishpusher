@@ -3,8 +3,10 @@ import teacherThinking from "../assets/teacher-thinking.png";
 
 // The topic list used by every level page: vocabulary flash cards, vocabulary trivia and the
 // grammar equivalents. Two looks that match the original vocabulary screens exactly:
-//   "flashcards" = orange, max-w-3xl, no teacher, no stagger
-//   "quiz"       = blue, max-w-4xl, teacher in the hero, staggered tiles
+//   "flashcards" = orange, no teacher, no stagger
+//   "quiz"       = blue, teacher in the hero, staggered tiles
+// Both use the shared page frame (max-w-5xl, same as header/footer) and a grid that grows
+// from 1 column (phones) to 2 (tablets) to 3 (laptops and wider).
 
 export interface TopicTile {
   id: string;
@@ -40,7 +42,7 @@ function FlashcardsGrid({ badge, heading, subtitle, tiles, onSelect }: TopicTile
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="w-full max-w-3xl flex flex-col gap-6"
+      className="w-full max-w-5xl flex flex-col gap-6"
     >
       <div className="flex flex-col gap-1">
         <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-brand uppercase tracking-wide w-fit">
@@ -54,15 +56,15 @@ function FlashcardsGrid({ badge, heading, subtitle, tiles, onSelect }: TopicTile
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {tiles.map((tile) => (
           <button
             key={tile.id}
             onClick={() => onSelect(tile.id)}
             disabled={tile.count === null}
-            className="rounded-2xl bg-white border-2 border-neutral-200 px-6 py-5 text-left hover:border-orange-300 hover:shadow-md transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-2xl bg-white border-2 border-neutral-200 px-5 py-4 text-left hover:border-orange-300 hover:shadow-md transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <div className="text-3xl mb-3">{tile.icon}</div>
+            <div className="text-3xl mb-2">{tile.icon}</div>
             <h3 className="font-display font-bold text-lg text-neutral-900 group-hover:text-brand transition-colors">
               {tile.title}
             </h3>
@@ -84,7 +86,7 @@ function QuizGrid({ badge, heading, subtitle, tiles, onSelect }: TopicTileGridPr
     <motion.div
       initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.35, ease: "easeOut" }}
-      className="w-full max-w-4xl flex flex-col gap-8"
+      className="w-full max-w-5xl flex flex-col gap-8"
     >
       {/* Hero row */}
       <div className="flex items-end gap-6">
@@ -101,15 +103,15 @@ function QuizGrid({ badge, heading, subtitle, tiles, onSelect }: TopicTileGridPr
       </div>
 
       {/* Topic cards */}
-      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid gap-4 sm:grid-cols-2">
+      <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {tiles.map(tile => (
           <motion.button
             key={tile.id} variants={itemVariants} whileHover={{ scale: 1.02 }}
             onClick={() => onSelect(tile.id)}
             disabled={tile.count === null}
-            className="rounded-2xl bg-white border-2 border-neutral-200 px-6 py-5 text-left hover:border-blue-300 hover:shadow-md transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-2xl bg-white border-2 border-neutral-200 px-5 py-4 text-left hover:border-blue-300 hover:shadow-md transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <div className="text-3xl mb-3">{tile.icon}</div>
+            <div className="text-3xl mb-2">{tile.icon}</div>
             <h3 className="font-display font-bold text-lg text-neutral-900 group-hover:text-blue-700 transition-colors">{tile.title}</h3>
             <p className="text-sm text-neutral-500 mt-1 leading-snug">{tile.description}</p>
             <p className="text-xs text-neutral-400 mt-3 font-medium">

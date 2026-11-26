@@ -267,3 +267,9 @@ Teacher report: B1 Adverbs of Frequency sentence "She meets her tutor ___ to pra
 - Site title "Englishpusher Learning Apps" → "Englishpusher App" (header, tab/og title, manifest, B1/C1 subtitles); merged and live
 - Teacher asked for a list of words in Flash Cards so students needn't click through every card. New `src/shared/WordList.tsx`: teacher-with-magnifier floating button → searchable word list, tap to jump; wired into b1-flashcards and c1-flashcards. Verified locally at desktop and 390px (search 'ann' → Enter → card 7/27). Branch `flashcards-word-list`, PR for the user to merge
 - Same avatar is used for the Moodle lesson-search button (moodle-task-builder `moodle-snippets/lesson-search.html`)
+
+## 2026-11-26 — One page frame + responsive topic grid
+
+- Problem: the hub used a 1024 px frame (`max-w-5xl`), the app header/footer used 896 px (`max-w-4xl`) and the topic lists used 768 px (`max-w-3xl`), so the logo and avatar moved about 64 px between pages and the topics sat in a narrow 2-column strip.
+- Fix: AppHeader, AppFooter, TopicTileGrid (both variants), ActivityChoicePage, C1 Business and the C1 flashcards/trivia topic lists all use `max-w-5xl` now. The topic grid is 1 / 2 / 3 columns and the tiles are slightly more compact. AppFooter copies the hub footer (copyright "Developed by Tetiana Pushkar" on the left, Instagram on the right; on phones only the copyright shows, in smaller text).
+- Checked in headless Edge at 1920, 1280, 800 and 390 px: the logo has the same x position on the hub, flashcards, trivia, chooser and grammar pages.

@@ -533,6 +533,10 @@ import { AppFooter } from "../shared/AppShell.tsx";
 - On **mobile**: shows "‹ Topics" (if applicable) on left, "Home" icon on right, then copyright
 - On **desktop**: shows copyright only (nav is in the header)
 
+### Page frame (2026-11-26)
+
+Every page, the hub included, uses `mx-auto max-w-5xl` for its header, content and footer, so the logo and account button stay in the same place on every page. The app footer now matches the hub footer (copyright left, Instagram right; on phones only the copyright shows). Topic lists (`TopicTileGrid`, C1 flashcards/trivia) use 1 / 2 / 3 columns (`sm:grid-cols-2 lg:grid-cols-3`). New pages should use the same `max-w-5xl` frame.
+
 ### Rules for new activities
 
 1. **Always** import and use `AppHeader` + `AppFooter` — never write a custom header/footer
