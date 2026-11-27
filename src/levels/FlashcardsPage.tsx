@@ -80,7 +80,8 @@ function FlashCard({
   const exampleParts = word.example.split("___");
 
   return (
-    <AnimatePresence mode="wait">
+    // initial={false}: a new card slides in via SwipeCard; only flips animate here.
+    <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={`${index}-${isFlipped ? "back" : "front"}-${reversed ? "r" : "n"}`}
         initial={{ opacity: 0, y: 12, scale: 0.98 }}
@@ -301,7 +302,7 @@ export default function FlashcardsPage() {
       />
 
       {/* Main */}
-      <main className="flex flex-1 items-start justify-center px-6 py-5 overflow-y-auto">
+      <main className="flex flex-1 items-start justify-center px-6 py-5 overflow-y-auto overflow-x-hidden">
         <AnimatePresence mode="wait">
           {phase === "select" && (
             <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
@@ -325,6 +326,7 @@ export default function FlashcardsPage() {
                 teacherFlipped={isFlipped}
                 onPrev={goPrev}
                 onNext={goNext}
+                onFlip={() => setIsFlipped((f) => !f)}
                 toolbar={
                   <button
                     onClick={() => { setReversed(r => !r); setIsFlipped(false); }}

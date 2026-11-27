@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
+import { motion, AnimatePresence, animate, useMotionValue, useTransform, type PanInfo } from "motion/react";
 import { Zap } from "lucide-react";
 import teacherThinking from "../assets/teacher-thinking.png";
 import teacherCorrect from "../assets/teacher-correct.png";
@@ -52,6 +52,199 @@ export function DeckProgressBar({ current, total }: { current: number; total: nu
 }
 
 // ---------------------------------------------------------------------------
+// Swipe + tap + keyboard navigation (all flash card decks)
+// ---------------------------------------------------------------------------
+
+const SWIPE_LEARNED_KEY = "ep-swipe-learned";
+/** A swipe counts when the finger travels this far, or flicks this fast (px/s). */
+const SWIPE_DISTANCE = 70;
+const SWIPE_VELOCITY = 400;
+
+function media(query: string): boolean {
+  return typeof window !== "undefined" && !!window.matchMedia?.(query).matches;
+}
+
+function readLearned(): boolean {
+  try { return localStorage.getItem(SWIPE_LEARNED_KEY) === "1"; } catch { return false; }
+}
+
+/** Has this student swiped a card before? Until then phones show the swipe hint. */
+export function useSwipeLearned(): [boolean, () => void] {
+  const [learned, setLearned] = useState(readLearned);
+  const markLearned = () => {
+    if (learned) return;
+    setLearned(true);
+    try { localStorage.setItem(SWIPE_LEARNED_KEY, "1"); } catch { /* private mode */ }
+  };
+  return [learned, markLearned];
+}
+
+/** Clicks on these inside a card do their own job and never flip it. */
+const INTERACTIVE = "button, a, input, textarea, select, label, [role='button']";
+
+function isTyping(el: EventTarget | null): boolean {
+  if (!(el instanceof HTMLElement)) return false;
+  return el.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(el.tagName);
+}
+
+/**
+ * Desktop keys: ← / → move between cards, Space flips. Ignored while typing,
+ * with a modifier key held, or while a dialog (the word list) is open.
+ * Space on a focused button is left to the button.
+ */
+export function useDeckKeys(opts: {
+  canPrev: boolean; canNext: boolean; onPrev: () => void; onNext: () => void; onFlip?: () => void;
+}) {
+  const ref = useRef(opts);
+  ref.current = opts;
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      const o = ref.current;
+      if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (isTyping(e.target) || document.querySelector("[role='dialog']")) return;
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        if (o.canNext) o.onNext();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        if (o.canPrev) o.onPrev();
+      } else if (e.key === " " && o.onFlip) {
+        if (e.target instanceof HTMLElement && e.target.closest(INTERACTIVE)) return;
+        e.preventDefault();
+        o.onFlip();
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+}
+
+/** Keeps a mouse click from leaving focus on Previous/Next (so Space flips the card, not the button). Tab focus still works. */
+export const keepFocusOff = (e: MouseEvent) => e.preventDefault();
+
+const slide = {
+  enter: (dir: number) => ({ x: dir * 80, opacity: 0 }),
+  center: { x: 0, opacity: 1, transition: { duration: 0.22, ease: "easeOut" } },
+  exit: (dir: number) => ({ x: dir * -240, opacity: 0, transition: { duration: 0.16, ease: "easeIn" } }),
+};
+
+function DraggableCard({
+  canPrev, canNext, onPrev, onNext, onFlip, wiggle, onSwiped, children,
+}: {
+  canPrev: boolean; canNext: boolean; onPrev: () => void; onNext: () => void;
+  onFlip?: () => void; wiggle: boolean; onSwiped: () => void; children: ReactNode;
+}) {
+  const x = useMotionValue(0);
+  const rotate = useTransform(x, [-240, 240], [-5, 5]);
+  const dragged = useRef(false);
+
+  // First card for a student who never swiped: a small nudge to the left shows the card moves.
+  useEffect(() => {
+    if (!wiggle || media("(prefers-reduced-motion: reduce)")) return;
+    const controls = animate(x, [0, -36, 0], { duration: 0.8, delay: 0.7, ease: "easeInOut" });
+    return () => controls.stop();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function onDragEnd(_: unknown, info: PanInfo) {
+    const { offset, velocity } = info;
+    if (canNext && (offset.x < -SWIPE_DISTANCE || (velocity.x < -SWIPE_VELOCITY && offset.x < -20))) {
+      onSwiped();
+      onNext();
+    } else if (canPrev && (offset.x > SWIPE_DISTANCE || (velocity.x > SWIPE_VELOCITY && offset.x > 20))) {
+      onSwiped();
+      onPrev();
+    }
+  }
+
+  return (
+    <motion.div
+      variants={slide}
+      initial="enter"
+      animate="center"
+      exit="exit"
+      style={{ x, rotate }}
+      drag="x"
+      dragConstraints={{ left: 0, right: 0 }}
+      // At the first/last card the card only stretches a little and springs back.
+      dragElastic={{ left: canNext ? 0.8 : 0.12, right: canPrev ? 0.8 : 0.12 }}
+      onDragStart={() => { dragged.current = true; }}
+      onDragEnd={onDragEnd}
+      onPointerDownCapture={() => { dragged.current = false; }}
+      // A drag ends with a click on whatever was under the finger; swallow it.
+      onClickCapture={(e) => {
+        if (dragged.current) { e.stopPropagation(); e.preventDefault(); dragged.current = false; }
+      }}
+      onClick={(e) => {
+        if (!onFlip || (e.target as HTMLElement).closest(INTERACTIVE)) return;
+        onFlip();
+      }}
+      className={`relative ${onFlip ? "cursor-pointer" : ""}`}
+      data-testid="swipe-card"
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/**
+ * The card slot of a deck: swipe left/right to move (phones and mouse drag),
+ * tap the card to flip (when `onFlip` is given), and a direction-aware slide
+ * whenever the card changes, also from the buttons or keys.
+ */
+export function SwipeCard({
+  index, total, onPrev, onNext, onFlip, learned, onSwiped, children,
+}: {
+  index: number; total: number; onPrev: () => void; onNext: () => void;
+  /** Tap-anywhere flip. Leave out when the card handles taps itself (grammar cards). */
+  onFlip?: () => void;
+  /** From useSwipeLearned(), shared with DeckHint. */
+  learned: boolean;
+  onSwiped: () => void;
+  children: ReactNode;
+}) {
+  const prevIndex = useRef(index);
+  const dir = index > prevIndex.current ? 1 : index < prevIndex.current ? -1 : 0;
+  useEffect(() => { prevIndex.current = index; }, [index]);
+
+  const canPrev = index > 0;
+  const canNext = index < total - 1;
+  const wiggle = !learned && index === 0 && total > 1 && media("(pointer: coarse)");
+
+  return (
+    <AnimatePresence mode="wait" initial={false} custom={dir}>
+      <DraggableCard
+        key={index}
+        canPrev={canPrev}
+        canNext={canNext}
+        onPrev={onPrev}
+        onNext={onNext}
+        onFlip={onFlip}
+        wiggle={wiggle}
+        onSwiped={onSwiped}
+      >
+        {children}
+      </DraggableCard>
+    </AnimatePresence>
+  );
+}
+
+/** Small grey line under the buttons: the swipe hint on phones (until the first swipe), the keys on desktop. */
+export function DeckHint({ canFlip, learned }: { canFlip: boolean; learned: boolean }) {
+  return (
+    <>
+      {!learned && (
+        <p className="hidden [@media(pointer:coarse)]:block text-center text-xs text-neutral-400 -mt-1">
+          Swipe the card to move · tap it to flip
+        </p>
+      )}
+      <p className="hidden [@media(hover:hover)_and_(pointer:fine)]:block text-center text-xs text-neutral-400 -mt-1">
+        <kbd className="font-sans">←</kbd> <kbd className="font-sans">→</kbd> to move{canFlip ? " · Space to flip" : ""}
+      </p>
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Study layout: badge + progress, teacher column, card slot, Previous/Next, test prompt
 // ---------------------------------------------------------------------------
 
@@ -64,6 +257,10 @@ export interface DeckLayoutProps {
   teacherFlipped: boolean;
   onPrev: () => void;
   onNext: () => void;
+  /** Flips the card: Space on desktop, and a tap anywhere on the card unless `tapToFlip` is false. */
+  onFlip?: () => void;
+  /** False when the card handles taps itself (grammar cards). Default true. */
+  tapToFlip?: boolean;
   /** Right of the progress bar (vocabulary: Reverse toggle). */
   toolbar?: ReactNode;
   /** Shown on the last card only. */
@@ -73,9 +270,11 @@ export interface DeckLayoutProps {
 }
 
 export function DeckLayout({
-  badge, index, total, teacherFlipped, onPrev, onNext, toolbar, prompt, children,
+  badge, index, total, teacherFlipped, onPrev, onNext, onFlip, tapToFlip = true, toolbar, prompt, children,
 }: DeckLayoutProps) {
   const teacher = teacherFlipped ? teacherCorrect : teacherThinking;
+  const [swipeLearned, markSwiped] = useSwipeLearned();
+  useDeckKeys({ canPrev: index > 0, canNext: index < total - 1, onPrev, onNext, onFlip });
 
   return (
     <div className="w-full max-w-4xl flex flex-col gap-6">
@@ -113,11 +312,22 @@ export function DeckLayout({
         {/* Card + navigation */}
         <div className="flex-1 flex flex-col gap-4">
           <div className="relative">
-            {children}
+            <SwipeCard
+              index={index}
+              total={total}
+              onPrev={onPrev}
+              onNext={onNext}
+              onFlip={tapToFlip ? onFlip : undefined}
+              learned={swipeLearned}
+              onSwiped={markSwiped}
+            >
+              {children}
+            </SwipeCard>
           </div>
 
           <div className="flex gap-3">
             <button
+              onMouseDown={keepFocusOff}
               onClick={onPrev}
               disabled={index === 0}
               className="flex-1 rounded-xl bg-white border-2 border-neutral-200 text-neutral-700 font-display font-bold py-3.5 text-sm hover:border-neutral-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
@@ -125,6 +335,7 @@ export function DeckLayout({
               ← Previous
             </button>
             <button
+              onMouseDown={keepFocusOff}
               onClick={onNext}
               disabled={index === total - 1}
               className="flex-1 rounded-xl bg-brand text-white font-display font-bold py-3.5 text-sm hover:bg-brand/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
@@ -132,6 +343,8 @@ export function DeckLayout({
               Next →
             </button>
           </div>
+
+          <DeckHint canFlip={!!onFlip} learned={swipeLearned} />
 
           {/* Test yourself prompt — shown on last card */}
           <AnimatePresence>

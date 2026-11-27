@@ -80,7 +80,7 @@ export default function GrammarFlashcardsPage({ level, topics }: { level: Gramma
         showTopics={phase === "studying"}
       />
 
-      <main className="flex flex-1 items-start justify-center px-6 py-5 overflow-y-auto">
+      <main className="flex flex-1 items-start justify-center px-6 py-5 overflow-y-auto overflow-x-hidden">
         <AnimatePresence mode="wait">
           {phase === "select" && (
             <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
@@ -110,6 +110,8 @@ export default function GrammarFlashcardsPage({ level, topics }: { level: Gramma
                 teacherFlipped={isFlipped}
                 onPrev={goPrev}
                 onNext={goNext}
+                onFlip={() => setIsFlipped((f) => !f)}
+                tapToFlip={false}
                 prompt={{
                   title: "Ready to test yourself?",
                   subtitle: `Take the ${topic.name} test`,

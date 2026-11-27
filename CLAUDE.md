@@ -544,6 +544,17 @@ Every page, the hub included, uses `mx-auto max-w-page` (90rem = 1440 px, define
 3. Pass app-specific controls (score badge, mute button, restart) via the `controls` prop
 4. The landing page (`Index.tsx`) has its own header/footer — do not use `AppShell` there
 
+## Swipe, tap and keys on flash cards — `src/shared/FlashcardDeck.tsx` (2026-11-27)
+
+All flash card decks (A2–B2+ vocabulary, grammar cards, C1) share this:
+
+- **Phones:** swipe the card left = next, right = previous (`SwipeCard`, motion `drag="x"`; counts at 70 px or a quick flick). At the first/last card it only stretches and springs back. Vertical scrolling is untouched. A click that ends a drag is swallowed, so buttons on the card never fire by accident.
+- **Tap the card to flip** (`onFlip`). Taps on buttons/links on the card (speaker, star, See Translation) do their own job. Grammar cards flip on tap themselves, so `GrammarFlashcardsPage` passes `tapToFlip={false}`.
+- **Desktop:** ← / → move, Space flips (`useDeckKeys`). Ignored while typing, with Ctrl/Alt/Cmd, or while a `role="dialog"` is open (word list). Space on a focused button is left to the button; Previous/Next don't keep focus after a mouse click (`keepFocusOff`), so Space flips right after clicking Next.
+- **Hints** (`DeckHint`): phones show "Swipe the card to move · tap it to flip" and the first card nudges once, until the student's first swipe (localStorage `ep-swipe-learned`); desktop shows "← → to move · Space to flip".
+- Previous/Next buttons stay on every screen (teacher decision 2026-11-27).
+- Card faces use `AnimatePresence initial={false}`: `SwipeCard` slides a new card in from the side it came from; the face only animates on flip. The page `main` has `overflow-x-hidden` so the leaving card doesn't cause a sideways scrollbar.
+
 ## Shared component — `src/shared/WordList.tsx` (flashcards word list)
 
 Floating teacher-with-magnifier button (`src/assets/teacher-search.png`, same picture as the Moodle lesson-search button) shown on A2, A2+, B1 and C1 flashcard topics, My Words included. Opens a searchable list of the topic's words (word + translation, or C1 definition clamped to 2 lines; current card highlighted, starred words marked). Tap / Enter jumps to the card (`onJump` sets `index`, unflips). Bottom sheet on phones, panel above the button on desktop. Props: `items` ({word, hint}), `current`, `saved?`, `onJump`. Added 2026-10-22 at the teacher's request.

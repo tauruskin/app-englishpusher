@@ -72,7 +72,8 @@ export default function RuleCardView({
   }, []);
 
   return (
-    <AnimatePresence mode="wait">
+    // initial={false}: a new card slides in via SwipeCard; only flips animate here.
+    <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={`${index}-${isFlipped ? "back" : "front"}`}
         initial={{ opacity: 0, y: 12, scale: 0.98 }}

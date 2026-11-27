@@ -7,6 +7,7 @@ import {
 } from "../shared/savedWords.tsx";
 import { logStudyEvent } from "../shared/progress.ts";
 import { WordList } from "../shared/WordList.tsx";
+import { SwipeCard, DeckHint, useDeckKeys, useSwipeLearned, keepFocusOff } from "../shared/FlashcardDeck.tsx";
 import { speakWord } from "../shared/speakWord.ts";
 import { TOPICS, type Topic, type C1Word } from "./data.ts";
 import teacherThinking from "../assets/teacher-thinking.png";
@@ -166,7 +167,8 @@ function FlashCard({
   const meaningLabel = word.definition ? "Definition" : "Translation";
 
   return (
-    <AnimatePresence mode="wait">
+    // initial={false}: a new card slides in via SwipeCard; only flips animate here.
+    <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={`${index}-${isFlipped ? "back" : "front"}-${reversed ? "r" : "n"}`}
         initial={{ opacity: 0, y: 12, scale: 0.98 }}
@@ -370,6 +372,16 @@ export default function App() {
     setIndex((i) => Math.max(i - 1, 0));
   }
 
+  const flip = () => setIsFlipped((f) => !f);
+  const [swipeLearned, markSwiped] = useSwipeLearned();
+  useDeckKeys({
+    canPrev: phase === "studying" && index > 0,
+    canNext: phase === "studying" && !!topic && index < topic.words.length - 1,
+    onPrev: goPrev,
+    onNext: goNext,
+    onFlip: phase === "studying" ? flip : undefined,
+  });
+
   const teacher = isFlipped ? teacherCorrect : teacherThinking;
 
   return (
@@ -382,7 +394,7 @@ export default function App() {
       />
 
       {/* Main */}
-      <main className="flex flex-1 items-start justify-center px-6 py-5 overflow-y-auto">
+      <main className="flex flex-1 items-start justify-center px-6 py-5 overflow-y-auto overflow-x-hidden">
         <AnimatePresence mode="wait">
           {phase === "select" && (
             <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex justify-center">
@@ -442,6 +454,15 @@ export default function App() {
                   {/* Card + navigation */}
                   <div className="flex-1 flex flex-col gap-4">
                     <div className="relative">
+                      <SwipeCard
+                        index={index}
+                        total={topic.words.length}
+                        onPrev={goPrev}
+                        onNext={goNext}
+                        onFlip={flip}
+                        learned={swipeLearned}
+                        onSwiped={markSwiped}
+                      >
                       {starsEnabled && (
                         <div className="absolute top-3 left-3 z-10">
                           <StarButton
@@ -463,12 +484,14 @@ export default function App() {
                         index={index}
                         isFlipped={isFlipped}
                         reversed={reversed}
-                        onFlip={() => setIsFlipped((f) => !f)}
+                        onFlip={flip}
                       />
+                      </SwipeCard>
                     </div>
 
                     <div className="flex gap-3">
                       <button
+                        onMouseDown={keepFocusOff}
                         onClick={goPrev}
                         disabled={index === 0}
                         className="flex-1 rounded-xl bg-white border-2 border-neutral-200 text-neutral-700 font-display font-bold py-3.5 text-sm hover:border-neutral-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
@@ -476,6 +499,7 @@ export default function App() {
                         ← Previous
                       </button>
                       <button
+                        onMouseDown={keepFocusOff}
                         onClick={goNext}
                         disabled={index === topic.words.length - 1}
                         className="flex-1 rounded-xl bg-purple-600 text-white font-display font-bold py-3.5 text-sm hover:bg-purple-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
@@ -483,6 +507,8 @@ export default function App() {
                         Next →
                       </button>
                     </div>
+
+                    <DeckHint canFlip learned={swipeLearned} />
 
                     {/* Test yourself prompt — shown on last card */}
                     <AnimatePresence>
