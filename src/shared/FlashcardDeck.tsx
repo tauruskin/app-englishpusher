@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { motion, AnimatePresence, animate, useMotionValue, useTransform, type PanInfo } from "motion/react";
-import { Zap } from "lucide-react";
+import { Pointer, Zap } from "lucide-react";
 import teacherThinking from "../assets/teacher-thinking.png";
 import teacherCorrect from "../assets/teacher-correct.png";
 
@@ -137,12 +137,13 @@ function DraggableCard({
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-240, 240], [-5, 5]);
   const dragged = useRef(false);
+  const nudge = useRef<{ stop: () => void } | null>(null);
 
-  // First card for a student who never swiped: a small nudge to the left shows the card moves.
+  // First card for a student who never swiped: the card nudges left twice, in step with the hand hint.
   useEffect(() => {
-    if (!wiggle || media("(prefers-reduced-motion: reduce)")) return;
-    const controls = animate(x, [0, -36, 0], { duration: 0.8, delay: 0.7, ease: "easeInOut" });
-    return () => controls.stop();
+    if (!wiggle) return;
+    nudge.current = animate(x, [0, 0, -28, 0], { ...HAND_TIMING, times: [0, 0.2, 0.6, 1] });
+    return () => nudge.current?.stop();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function onDragEnd(_: unknown, info: PanInfo) {
@@ -169,7 +170,7 @@ function DraggableCard({
       dragElastic={{ left: canNext ? 0.8 : 0.12, right: canPrev ? 0.8 : 0.12 }}
       onDragStart={() => { dragged.current = true; }}
       onDragEnd={onDragEnd}
-      onPointerDownCapture={() => { dragged.current = false; }}
+      onPointerDownCapture={() => { dragged.current = false; nudge.current?.stop(); }}
       // A drag ends with a click on whatever was under the finger; swallow it.
       onClickCapture={(e) => {
         if (dragged.current) { e.stopPropagation(); e.preventDefault(); dragged.current = false; }
@@ -182,6 +183,30 @@ function DraggableCard({
       data-testid="swipe-card"
     >
       {children}
+    </motion.div>
+  );
+}
+
+/** One pass = hand appears on the right, slides left, fades. Two passes. */
+const HAND_TIMING = { duration: 1.3, delay: 0.6, repeat: 1, repeatDelay: 0.35, ease: "easeInOut" } as const;
+
+/** Phones, first card, until the first swipe: a "Swipe" hand slides across the card. */
+function SwipeHandHint({ onDone }: { onDone: () => void }) {
+  return (
+    <motion.div
+      aria-hidden
+      className="pointer-events-none absolute inset-x-0 top-[58%] z-20 flex justify-center"
+      initial={{ opacity: 0, x: 56 }}
+      animate={{ opacity: [0, 1, 1, 0], x: [56, 56, -56, -56] }}
+      exit={{ opacity: 0, transition: { duration: 0.15 } }}
+      transition={{ ...HAND_TIMING, times: [0, 0.2, 0.75, 1] }}
+      onAnimationComplete={onDone}
+      data-testid="swipe-hand"
+    >
+      <div className="flex items-center gap-1.5 rounded-full bg-neutral-900/85 px-4 py-2 text-sm font-semibold text-white shadow-lg">
+        <Pointer size={18} className="-rotate-12" />
+        Swipe
+      </div>
     </motion.div>
   );
 }
@@ -208,9 +233,18 @@ export function SwipeCard({
 
   const canPrev = index > 0;
   const canNext = index < total - 1;
-  const wiggle = !learned && index === 0 && total > 1 && media("(pointer: coarse)");
+  // Decided once when the deck opens; reduced-motion devices keep only the text hint.
+  const [hintOnOpen] = useState(
+    () => !learned && index === 0 && total > 1 && media("(pointer: coarse)") && !media("(prefers-reduced-motion: reduce)"),
+  );
+  const [handVisible, setHandVisible] = useState(hintOnOpen);
+  const wiggle = handVisible && index === 0 && !learned;
 
   return (
+    <div className="relative" onPointerDownCapture={() => setHandVisible(false)}>
+    <AnimatePresence>
+      {wiggle && <SwipeHandHint key="hand" onDone={() => setHandVisible(false)} />}
+    </AnimatePresence>
     <AnimatePresence mode="wait" initial={false} custom={dir}>
       <DraggableCard
         key={index}
@@ -225,6 +259,7 @@ export function SwipeCard({
         {children}
       </DraggableCard>
     </AnimatePresence>
+    </div>
   );
 }
 

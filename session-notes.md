@@ -286,5 +286,6 @@ Teacher report: B1 Adverbs of Frequency sentence "She meets her tutor ___ to pra
 - All flash card decks (vocabulary A2–B2+, grammar cards, C1): swipe left/right on phones, tap the card to flip, ← / → and Space on desktop. Previous/Next buttons kept (teacher decision).
 - One-time phone hint + first-card nudge until the first swipe; desktop key hint under the buttons.
 - Code: `SwipeCard`, `useDeckKeys`, `DeckHint`, `useSwipeLearned` in `src/shared/FlashcardDeck.tsx`; C1 uses them directly. Tests in `FlashcardDeck.vitest.tsx`; swipe checked in headless Edge (phone touch + desktop keys, 39 checks).
+- Added after review: a "Swipe" hand pill slides across the first card twice (phones, until the first swipe), in step with the card nudge.
 - Status: on beta for review; merge to main after the teacher tries it on a phone.
 
