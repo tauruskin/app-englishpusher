@@ -287,5 +287,5 @@ Teacher report: B1 Adverbs of Frequency sentence "She meets her tutor ___ to pra
 - One-time phone hint + first-card nudge until the first swipe; desktop key hint under the buttons.
 - Code: `SwipeCard`, `useDeckKeys`, `DeckHint`, `useSwipeLearned` in `src/shared/FlashcardDeck.tsx`; C1 uses them directly. Tests in `FlashcardDeck.vitest.tsx`; swipe checked in headless Edge (phone touch + desktop keys, 39 checks).
 - Added after review: a "Swipe" hand pill slides across the first card twice (phones, until the first swipe), in step with the card nudge.
-- Status: on beta for review; merge to main after the teacher tries it on a phone.
+- Status: live in production 2026-11-27 (merged from beta, browser checks re-run on the live site).
 
