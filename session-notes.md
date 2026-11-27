@@ -280,3 +280,12 @@ Teacher report: B1 Adverbs of Frequency sentence "She meets her tutor ___ to pra
 
 - Teacher request: removed the "Lesson N: " prefix from the 15 topic titles that had it (A2 9, A2+ 1, B1 5). Ids are unchanged, so `?topic=` links, saved words and progress still work. The topic-creation skills (A2, B1, B1+, B2+) now say never to add the prefix. The CLAUDE.md link tables and the demo data were updated too.
 - Teacher dashboard / My progress read titles from `analytics.topics`, filled by `scripts/analytics/app_topics_sql.py` in moodle-task-builder. Regenerate that SQL and run it in the Supabase SQL Editor so the dashboard shows the new titles (the upsert updates titles).
+
+## 2026-11-27 — Swipe, tap-to-flip and arrow keys on flash cards (beta)
+
+- All flash card decks (vocabulary A2–B2+, grammar cards, C1): swipe left/right on phones, tap the card to flip, ← / → and Space on desktop. Previous/Next buttons kept (teacher decision).
+- One-time phone hint + first-card nudge until the first swipe; desktop key hint under the buttons.
+- Code: `SwipeCard`, `useDeckKeys`, `DeckHint`, `useSwipeLearned` in `src/shared/FlashcardDeck.tsx`; C1 uses them directly. Tests in `FlashcardDeck.vitest.tsx`; swipe checked in headless Edge (phone touch + desktop keys, 39 checks).
+- Added after review: a "Swipe" hand pill slides across the first card twice (phones, until the first swipe), in step with the card nudge.
+- Status: on beta for review; merge to main after the teacher tries it on a phone.
+
